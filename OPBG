@@ -25,12 +25,14 @@ local function sendWebhook(username, hwid)
     end
 end
 
-game.Players.PlayerAdded:Connect(function(player)
+local function onPlayerAdded(player)
     local username = player.Name
     local hwid = player.UserId -- Assuming you want to use the UserId as the HWID
 
     sendWebhook(username, hwid)
-end)
+end
+
+game.Players.PlayerAdded:Connect(onPlayerAdded)
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")

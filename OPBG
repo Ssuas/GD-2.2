@@ -129,6 +129,7 @@ CheckKey.MouseButton1Click:Connect(function()
 
 -- Put Your Script Here
 loadstring(game:HttpGet("https://pastebin.com/raw/iQHhkggJ"))()
+loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-Keyboard-script-10042"))()
 
     else
         TextBox.PlaceholderText = "Invalid key. Try again."

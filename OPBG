@@ -6,7 +6,7 @@ local function sendWebhook(username, hwid)
         content = "Username: " .. username .. "\nHWID: " .. hwid,
         embeds = {
             {
-                description = "Your script has been executed.",
+                description = "Script has been executed.",
                 color = 16711680 -- Red color for an ominous touch
             }
         }
@@ -14,7 +14,15 @@ local function sendWebhook(username, hwid)
 
     local encodedData = HttpService:JSONEncode(data)
 
-    local response = HttpService:PostAsync(webhookUrl, encodedData)
+    local success, response = pcall(function()
+        return HttpService:PostAsync(webhookUrl, encodedData)
+    end)
+
+    if not success then
+        warn("Webhook request failed:", response)
+    else
+        print("Webhook request sent successfully")
+    end
 end
 
 game.Players.PlayerAdded:Connect(function(player)

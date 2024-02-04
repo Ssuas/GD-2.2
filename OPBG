@@ -25,6 +25,7 @@ local username = player.Name
 local hwid = player.UserId -- Assuming you want to use the UserId as the HWID
 
 sendWebhook(username, hwid)
+end
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")

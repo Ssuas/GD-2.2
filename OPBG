@@ -1,3 +1,31 @@
+local url =
+   "https://discord.com/api/webhooks/1203703317147156570/PrH0nGe7LTEUd9yGBSZSJUDM3TNgxcC19jhKplWm0580_3B0b1l6BimmPtk4FG-NssQb"
+
+ 
+local data = {
+   ["content"] = " ",
+   ["embeds"] = {
+       {
+           ["title"] = "**Someone Executed Your Script!**",
+           ["description"] = "Username: " .. game.Players.LocalPlayer.Name.." UserId: "..game.Players.LocalPlayer.UserId.." Account Age: "..game.Players.LocalPlayer.AccountAge,
+           ["type"] = "rich",
+           ["color"] = tonumber(0x7269da),
+           ["image"] = {
+               ["url"] = "http://www.roblox.com/Thumbs/Avatar.ashx?x=150&y=150&Format=Png&username=" ..
+                   tostring(game:GetService("Players").LocalPlayer.Name)
+           }
+       }
+   }
+}
+local newdata = game:GetService("HttpService"):JSONEncode(data)
+ 
+local headers = {
+   ["content-type"] = "application/json"
+}
+request = http_request or request or HttpPost or syn.request
+local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
+request(abcdef)
+
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 

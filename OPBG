@@ -14,25 +14,38 @@ local function sendWebhook(username, hwid)
 
     local encodedData = HttpService:JSONEncode(data)
 
-    local success, response = pcall(function()
-        return HttpService:PostAsync(webhookUrl, encodedData)
-    end)
+    -- Detect and replace the executer dynamically
+    local executor = getexecutorname()
+    local executorRequest = executor:lower() .. ".request"
 
-    if not success then
-        warn("Webhook request failed:", response)
+    if (is_synapse_function or syn and syn.request) and executor ~= "YourExecutorName" then
+        executorRequest = "syn.request"
+    elseif (is_protosmasher_closure or pebc_execute) and executor ~= "YourExecutorName" then
+        executorRequest = "pebc_execute"
+    elseif (is_scriptware_closure or is_sirhurt_closure) and executor ~= "YourExecutorName" then
+        executorRequest = "request"
+    elseif (is_electron_function or is_electron_ui) and executor ~= "YourExecutorName" then
+        executorRequest = "http_request"
     else
-        print("Webhook request sent successfully")
+        warn("Unsupported executer:", executor)
+        return
     end
+
+    local requestFunction = loadstring(executorRequest)
+    if not requestFunction then
+        warn("Failed to load executor request function:", executor)
+        return
+    end
+
+    requestFunction({
+        Url = webhookUrl,
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+        Body = encodedData
+    })
 end
-
-local function onPlayerAdded(player)
-    local username = player.Name
-    local hwid = player.UserId -- Assuming you want to use the UserId as the HWID
-
-    sendWebhook(username, hwid)
-end
-
-game.Players.PlayerAdded:Connect(onPlayerAdded)
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")

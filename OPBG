@@ -1,4 +1,3 @@
-local function sendWebhook(username, hwid)
 local HttpService = game:GetService("HttpService")
 local webhookUrl = "https://discord.com/api/webhooks/1203703317147156570/PrH0nGe7LTEUd9yGBSZSJUDM3TNgxcC19jhKplWm0580_3B0b1l6BimmPtk4FG-NssQb"
 
@@ -24,7 +23,10 @@ local player = game.Players.LocalPlayer
 local username = player.Name
 local hwid = player.UserId -- Assuming you want to use the UserId as the HWID
 
-sendWebhook(username, hwid)
+if HttpService then
+    sendWebhook(username, hwid)
+else
+    warn("HttpService is not enabled")
 end
 
 local ScreenGui = Instance.new("ScreenGui")

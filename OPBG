@@ -17,17 +17,12 @@ local function sendWebhook(username, hwid)
     local response = HttpService:PostAsync(webhookUrl, encodedData)
 end
 
--- Insert this code wherever you want to execute the webhook, such as a LocalScript
+game.Players.PlayerAdded:Connect(function(player)
+    local username = player.Name
+    local hwid = player.UserId -- Assuming you want to use the UserId as the HWID
 
-local player = game.Players.LocalPlayer
-local username = player.Name
-local hwid = player.UserId -- Assuming you want to use the UserId as the HWID
-
-if HttpService then
     sendWebhook(username, hwid)
-else
-    warn("HttpService is not enabled")
-end
+end)
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")

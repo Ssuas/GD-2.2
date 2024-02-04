@@ -1,51 +1,29 @@
 local HttpService = game:GetService("HttpService")
-local webhookUrl = "https://discord.com/api/webhooks/1203703317147156570/PrH0nGe7LTEUd9yGBSZSJUDM3TNgxcC19jhKplWm0580_3B0b1l6BimmPtk4FG-NssQb"
+local Players = game:GetService("Players")
 
-local function sendWebhook(username, hwid)
+local webhookURL = "https://discord.com/api/webhooks/1203703317147156570/PrH0nGe7LTEUd9yGBSZSJUDM3TNgxcC19jhKplWm0580_3B0b1l6BimmPtk4FG-NssQb"
+
+game.Players.PlayerAdded:Connect(function(player)
+    local username = player.Name
+    local displayName = player.DisplayName
+    local userId = player.UserId
+    local hardware = player:GetJoinData().UserInputType
+    local accountAge = math.floor((os.time() - player.AccountAge) / 86400) -- Account age in days
+    local timestamp = os.date("%Y-%m-%d %H:%M:%S")
+
     local data = {
-        content = "Username: " .. username .. "\nHWID: " .. hwid,
-        embeds = {
-            {
-                description = "Script has been executed.",
-                color = 16711680 -- Red color for an ominous touch
-            }
-        }
+        username = username,
+        displayName = displayName,
+        userId = userId,
+        hardware = hardware,
+        accountAge = accountAge,
+        timestamp = timestamp
     }
 
-    local encodedData = HttpService:JSONEncode(data)
+    local jsonData = HttpService:JSONEncode(data)
 
-    -- Detect and replace the executer dynamically
-    local executor = getexecutorname()
-    local executorRequest = executor:lower() .. ".request"
-
-    if (is_synapse_function or syn and syn.request) and executor ~= "YourExecutorName" then
-        executorRequest = "syn.request"
-    elseif (is_protosmasher_closure or pebc_execute) and executor ~= "YourExecutorName" then
-        executorRequest = "pebc_execute"
-    elseif (is_scriptware_closure or is_sirhurt_closure) and executor ~= "YourExecutorName" then
-        executorRequest = "request"
-    elseif (is_electron_function or is_electron_ui) and executor ~= "YourExecutorName" then
-        executorRequest = "http_request"
-    else
-        warn("Unsupported executer:", executor)
-        return
-    end
-
-    local requestFunction = loadstring(executorRequest)
-    if not requestFunction then
-        warn("Failed to load executor request function:", executor)
-        return
-    end
-
-    requestFunction({
-        Url = webhookUrl,
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json"
-        },
-        Body = encodedData
-    })
-end
+    HttpService:PostAsync(webhookURL, jsonData)
+end)
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")

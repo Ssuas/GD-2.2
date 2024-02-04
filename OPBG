@@ -1,30 +1,3 @@
-local HttpService = game:GetService("HttpService")
-local Players = game:GetService("Players")
-
-local webhookURL = "https://discord.com/api/webhooks/1203703317147156570/PrH0nGe7LTEUd9yGBSZSJUDM3TNgxcC19jhKplWm0580_3B0b1l6BimmPtk4FG-NssQb"
-
-game.Players.PlayerAdded:Connect(function(player)
-    local username = player.Name
-    local displayName = player.DisplayName
-    local userId = player.UserId
-    local hardware = player:GetJoinData().UserInputType
-    local accountAge = math.floor((os.time() - player.AccountAge) / 86400) -- Account age in days
-    local timestamp = os.date("%Y-%m-%d %H:%M:%S")
-
-    local data = {
-        username = username,
-        displayName = displayName,
-        userId = userId,
-        hardware = hardware,
-        accountAge = accountAge,
-        timestamp = timestamp
-    }
-
-    local jsonData = HttpService:JSONEncode(data)
-
-    HttpService:PostAsync(webhookURL, jsonData)
-end)
-
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 

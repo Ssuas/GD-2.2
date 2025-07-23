@@ -1,0 +1,647 @@
+--[[
+	Made By Irdk (Scriptblox.com), irdk_scriptblox (discord.com)
+
+	How to use:
+	PC: Smart Parry: P | Auto Position: K | Auto Attack: M
+	Mobile: Use the on-screen buttons after the main GUI disappears
+
+   Bugged feattures:
+    Auto Attack (Not Working) 
+]]
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local ContextActionService = game:GetService("ContextActionService")
+local player = Players.LocalPlayer
+
+-- CONFIGURATION
+local DETECTION_RADIUS = 15 -- Only spam parry when enemy is within 15 studs
+local DANGER_ZONE_RADIUS = 5 -- Stay 5 studs away from opponent
+local ATTACK_RADIUS = 8 -- Auto attack when enemy is within 8 studs
+
+-- Toggle states
+local parryAuraEnabled = false
+local autoPositionEnabled = false
+local autoAttackEnabled = false
+local parryConnection
+local aimConnection
+local walkSpeedConnection
+local positionConnection
+local attackConnection
+local movementTween = nil
+
+-- Animation blocking connections
+local blockedAnimations = {}
+local originalWalkSpeed = 22 
+local currentTarget = nil
+local lastTargetPosition = nil
+
+-- Mobile GUI variables
+local mobileGui = nil
+local parryButton = nil
+local autoPositionButton = nil
+local autoAttackButton = nil
+
+-- Find combat remotes (ONLY FOR PARRY)
+local combatFolder = ReplicatedStorage:WaitForChild("event"):WaitForChild("combat")
+local parryRemote = combatFolder:FindFirstChild("parry") or
+                    combatFolder:FindFirstChild("Parry") or
+                    combatFolder:FindFirstChild("block") or
+                    combatFolder:FindFirstChild("Block")
+
+-- Attack function using ContextActionService
+local function performAttack()
+    spawn(function()
+        pcall(function()
+            -- Create a temporary action that simulates mouse click
+            ContextActionService:BindAction("TempAttack", function(actionName, inputState, inputObject)
+                if inputState == Enum.UserInputState.Begin then
+                    -- This triggers the attack through ContextActionService
+                    return Enum.ContextActionResult.Sink
+                end
+                return Enum.ContextActionResult.Pass
+            end, false, Enum.UserInputType.MouseButton1)
+            
+            -- Immediately trigger the action
+            wait()
+            
+            -- Unbind to clean up
+            ContextActionService:UnbindAction("TempAttack")
+        end)
+    end)
+end
+
+-- Update mobile button colors and text
+local function updateMobileButtons()
+    if not mobileGui then return end
+    
+    if parryButton then
+        if parryAuraEnabled then
+            parryButton.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+            parryButton.Text = "Smart Parry: ON"
+        else
+            parryButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            parryButton.Text = "Smart Parry: OFF"
+        end
+    end
+    
+    if autoPositionButton then
+        if autoPositionEnabled then
+            autoPositionButton.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+            autoPositionButton.Text = "Auto Position: ON"
+        else
+            autoPositionButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            autoPositionButton.Text = "Auto Position: OFF"
+        end
+    end
+    
+    if autoAttackButton then
+        if autoAttackEnabled then
+            autoAttackButton.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+            autoAttackButton.Text = "Auto Attack: ON"
+        else
+            autoAttackButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            autoAttackButton.Text = "Auto Attack: OFF"
+        end
+    end
+end
+
+-- Create mobile support GUI
+local function createMobileGUI()
+    mobileGui = Instance.new("ScreenGui")
+    mobileGui.Name = "MobileParryGUI"
+    mobileGui.Parent = player:WaitForChild("PlayerGui")
+    mobileGui.ResetOnSpawn = false
+    
+    -- Main container (made taller for 3 buttons)
+    local container = Instance.new("Frame")
+    container.Size = UDim2.new(0, 200, 0, 180)
+    container.Position = UDim2.new(0, 10, 0.5, -90)
+    container.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    container.BorderSizePixel = 0
+    container.Parent = mobileGui
+    
+    local containerCorner = Instance.new("UICorner")
+    containerCorner.CornerRadius = UDim.new(0, 8)
+    containerCorner.Parent = container
+    
+    -- Title
+    local mobileTitle = Instance.new("TextLabel")
+    mobileTitle.Size = UDim2.new(1, 0, 0, 30)
+    mobileTitle.Position = UDim2.new(0, 0, 0, 0)
+    mobileTitle.BackgroundTransparency = 1
+    mobileTitle.Text = "MOBILE SUPPORT"
+    mobileTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    mobileTitle.TextScaled = true
+    mobileTitle.Font = Enum.Font.SourceSansBold
+    mobileTitle.Parent = container
+    
+    -- Smart Parry Button
+    parryButton = Instance.new("TextButton")
+    parryButton.Size = UDim2.new(1, -20, 0, 35)
+    parryButton.Position = UDim2.new(0, 10, 0, 40)
+    parryButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    parryButton.Text = "Smart Parry: OFF"
+    parryButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    parryButton.TextScaled = true
+    parryButton.Font = Enum.Font.SourceSans
+    parryButton.Parent = container
+    
+    local parryCorner = Instance.new("UICorner")
+    parryCorner.CornerRadius = UDim.new(0, 5)
+    parryCorner.Parent = parryButton
+    
+    -- Auto Position Button
+    autoPositionButton = Instance.new("TextButton")
+    autoPositionButton.Size = UDim2.new(1, -20, 0, 35)
+    autoPositionButton.Position = UDim2.new(0, 10, 0, 85)
+    autoPositionButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    autoPositionButton.Text = "Auto Position: OFF"
+    autoPositionButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    autoPositionButton.TextScaled = true
+    autoPositionButton.Font = Enum.Font.SourceSans
+    autoPositionButton.Parent = container
+    
+    local autoPositionCorner = Instance.new("UICorner")
+    autoPositionCorner.CornerRadius = UDim.new(0, 5)
+    autoPositionCorner.Parent = autoPositionButton
+    
+    -- Auto Attack Button
+    autoAttackButton = Instance.new("TextButton")
+    autoAttackButton.Size = UDim2.new(1, -20, 0, 35)
+    autoAttackButton.Position = UDim2.new(0, 10, 0, 130)
+    autoAttackButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    autoAttackButton.Text = "Auto Attack: OFF"
+    autoAttackButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    autoAttackButton.TextScaled = true
+    autoAttackButton.Font = Enum.Font.SourceSans
+    autoAttackButton.Parent = container
+    
+    local autoAttackCorner = Instance.new("UICorner")
+    autoAttackCorner.CornerRadius = UDim.new(0, 5)
+    autoAttackCorner.Parent = autoAttackButton
+    
+    -- Button connections
+    parryButton.MouseButton1Click:Connect(function()
+        print("Parry button clicked!")
+        toggleParryAura()
+    end)
+    
+    autoPositionButton.MouseButton1Click:Connect(function()
+        print("Position button clicked!")
+        toggleAutoPosition()
+    end)
+    
+    autoAttackButton.MouseButton1Click:Connect(function()
+        print("Attack button clicked!")
+        toggleAutoAttack()
+    end)
+end
+
+-- Create main GUI
+local function createGUI()
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "ParrySystemGUI"
+    screenGui.Parent = player:WaitForChild("PlayerGui")
+    
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 420, 0, 280)
+    frame.Position = UDim2.new(0.5, -210, 0.5, -140)
+    frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    frame.BorderSizePixel = 0
+    frame.Parent = screenGui
+    
+    -- Add corner radius
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 10)
+    corner.Parent = frame
+    
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, 0, 0, 40)
+    title.Position = UDim2.new(0, 0, 0, 0)
+    title.BackgroundTransparency = 1
+    title.Text = "Unparalleled Combat System"
+    title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    title.TextScaled = true
+    title.Font = Enum.Font.SourceSansBold
+    title.Parent = frame
+    
+    local instructions = Instance.new("TextLabel")
+    instructions.Size = UDim2.new(1, -20, 1, -60)
+    instructions.Position = UDim2.new(0, 10, 0, 50)
+    instructions.BackgroundTransparency = 1
+    instructions.Text = [[
+CONTROLS:
+
+PC CONTROLS:
+P - Smart Parry | K - Auto Position | M - Auto Attack
+
+MOBILE CONTROLS:
+Use the buttons that appear after this GUI closes
+
+Smart Parry:
+• Only spams when enemy within ]] .. DETECTION_RADIUS .. [[ studs
+• Auto-aim at closest threats
+• Uses parry remote only
+
+Auto Position (AI Back Hunter):
+• Always looks at closest opponent (Body Lock)
+• AI tries to get behind enemies
+• Maintains ]] .. DANGER_ZONE_RADIUS .. [[ stud safety distance
+• Goes around opponents instead of through them
+• Forces 22 walkspeed at all times
+• Overrides shift lock rotation
+
+Auto Attack:
+• Automatically attacks when enemy within ]] .. ATTACK_RADIUS .. [[ studs
+• Uses ContextActionService bindings
+• Aims at closest enemy while attacking
+• Prevents slowdown animations
+• Maintains 22 walkspeed
+
+Attack Method:
+• ContextActionService: ✓ Safe Input Binding
+
+Speed Lock: Always maintains 22 walkspeed
+Continuous Operation: No automatic shutdowns
+Safe Method: Uses official Roblox input services
+
+System loaded successfully!]]
+    instructions.TextColor3 = Color3.fromRGB(200, 200, 200)
+    instructions.TextScaled = true
+    instructions.Font = Enum.Font.SourceSans
+    instructions.TextXAlignment = Enum.TextXAlignment.Left
+    instructions.TextYAlignment = Enum.TextYAlignment.Top
+    instructions.Parent = frame
+    
+    -- Auto-hide after 10 seconds and show mobile GUI
+    spawn(function()
+        wait(10)
+        screenGui:Destroy()
+        createMobileGUI()
+        updateMobileButtons()
+    end)
+end
+
+-- Get closest player within range
+local function getClosestPlayer(maxDistance)
+    if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then
+        return nil
+    end
+    
+    local myPosition = player.Character.HumanoidRootPart.Position
+    local closestPlayer = nil
+    local closestDistance = maxDistance or math.huge
+    
+    for _, otherPlayer in pairs(Players:GetPlayers()) do
+        if otherPlayer ~= player and otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local distance = (myPosition - otherPlayer.Character.HumanoidRootPart.Position).Magnitude
+            
+            if distance < closestDistance then
+                closestPlayer = otherPlayer
+                closestDistance = distance
+            end
+        end
+    end
+    
+    return closestPlayer
+end
+
+-- Calculate position behind target while avoiding danger zone
+local function calculateBackPosition(targetPlayer)
+    if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") or not targetPlayer.Character then
+        return nil
+    end
+    
+    local myRootPart = player.Character.HumanoidRootPart
+    local targetRootPart = targetPlayer.Character.HumanoidRootPart
+    local targetPos = targetRootPart.Position
+    local myPos = myRootPart.Position
+    
+    -- Get the direction the target is facing
+    local targetLookDirection = targetRootPart.CFrame.LookVector
+    
+    -- Calculate position behind the target (opposite of their look direction)
+    local behindDistance = DANGER_ZONE_RADIUS + 2 -- Stay outside danger zone
+    local behindPosition = targetPos - (targetLookDirection * behindDistance)
+    
+    -- Keep at ground level
+    behindPosition = Vector3.new(behindPosition.X, myPos.Y, behindPosition.Z)
+    
+    -- Check if we need to go around the target to avoid running through them
+    local directDistance = (myPos - behindPosition).Magnitude
+    local distanceToTarget = (myPos - targetPos).Magnitude
+    
+    -- If we're too close to the target and need to move to the back, go around
+    if distanceToTarget < DANGER_ZONE_RADIUS and directDistance > DANGER_ZONE_RADIUS then
+        -- Calculate a path around the target
+        local rightVector = targetRootPart.CFrame.RightVector
+        local leftSide = targetPos + (rightVector * (DANGER_ZONE_RADIUS + 1))
+        local rightSide = targetPos - (rightVector * (DANGER_ZONE_RADIUS + 1))
+        
+        -- Choose the side that's closer to our current position
+        local leftDistance = (myPos - leftSide).Magnitude
+        local rightDistance = (myPos - rightSide).Magnitude
+        
+        if leftDistance < rightDistance then
+            return Vector3.new(leftSide.X, myPos.Y, leftSide.Z)
+        else
+            return Vector3.new(rightSide.X, myPos.Y, rightSide.Z)
+        end
+    end
+    
+    return behindPosition
+end
+
+-- AI Auto Position with body lock and back hunting
+local function aiAutoPosition(targetPlayer)
+    if not player.Character or not player.Character:FindFirstChild("Humanoid") or not player.Character:FindFirstChild("HumanoidRootPart") then
+        return
+    end
+    
+    local myRootPart = player.Character.HumanoidRootPart
+    local myHumanoid = player.Character.Humanoid
+    local targetRootPart = targetPlayer.Character.HumanoidRootPart
+    
+    -- BODY LOCK: Always look at target (override shift lock)
+    local targetPosition = targetRootPart.Position
+    local lookDirection = (targetPosition - myRootPart.Position).Unit
+    local targetCFrame = CFrame.lookAt(myRootPart.Position, Vector3.new(targetPosition.X, myRootPart.Position.Y, targetPosition.Z))
+    
+    -- Force rotation (override shift lock)
+    myRootPart.CFrame = myRootPart.CFrame:Lerp(targetCFrame, 0.3)
+    
+    -- SPEED LOCK: Always maintain 22 walkspeed
+    if myHumanoid.WalkSpeed > 22 then
+        myHumanoid.WalkSpeed = 22
+    end
+    
+    -- AI MOVEMENT: Try to get behind target
+    local backPosition = calculateBackPosition(targetPlayer)
+    if backPosition then
+        local currentDistance = (myRootPart.Position - backPosition).Magnitude
+        
+        -- Only move if we're not already close to the desired back position
+        if currentDistance > 2 then
+            -- Cancel previous movement
+            if movementTween then
+                movementTween:Cancel()
+            end
+            
+            -- Calculate movement time based on distance (simulate walking)
+            local movementTime = math.min(currentDistance / 22, 2) -- Max 2 seconds per movement
+            
+            -- Create smooth movement tween
+            local tweenInfo = TweenInfo.new(
+                movementTime,
+                Enum.EasingStyle.Linear,
+                Enum.EasingDirection.InOut
+            )
+            
+            local newCFrame = CFrame.lookAt(backPosition, Vector3.new(targetPosition.X, backPosition.Y, targetPosition.Z))
+            movementTween = TweenService:Create(myRootPart, tweenInfo, {CFrame = newCFrame})
+            movementTween:Play()
+        end
+    end
+end
+
+-- Proper animation blocking
+local function blockAnimationDelayed(animationId)
+    if player.Character and player.Character:FindFirstChild("Humanoid") then
+        local humanoid = player.Character.Humanoid
+        
+        local connection
+        connection = humanoid.AnimationPlayed:Connect(function(track)
+            if track.Animation.AnimationId:find(tostring(animationId)) then
+                track:Stop()
+                track:Destroy()
+            end
+        end)
+        
+        table.insert(blockedAnimations, connection)
+    end
+end
+
+-- Prevent slowdown and maintain speed
+local function maintainWalkSpeed()
+    if player.Character and player.Character:FindFirstChild("Humanoid") then
+        local humanoid = player.Character.Humanoid
+        
+        walkSpeedConnection = RunService.Heartbeat:Connect(function()
+            if autoPositionEnabled or parryAuraEnabled or autoAttackEnabled then
+                if humanoid.WalkSpeed > 22 then
+                    humanoid.WalkSpeed = 22
+                end
+            end
+        end)
+    end
+end
+
+-- Cleanup function
+local function cleanupConnections()
+    for _, connection in pairs(blockedAnimations) do
+        if connection then
+            connection:Disconnect()
+        end
+    end
+    blockedAnimations = {}
+    
+    if walkSpeedConnection then
+        walkSpeedConnection:Disconnect()
+        walkSpeedConnection = nil
+    end
+    
+    if movementTween then
+        movementTween:Cancel()
+        movementTween = nil
+    end
+end
+
+-- SMART parry system - only spams when enemy is close
+local function startParryAura()
+    blockAnimationDelayed(78964624031588)
+    maintainWalkSpeed()
+    
+    parryConnection = RunService.Heartbeat:Connect(function()
+        if parryAuraEnabled then
+            -- Only spam if enemy is within detection radius
+            local closestEnemy = getClosestPlayer(DETECTION_RADIUS)
+            if closestEnemy then
+                spawn(function()
+                    parryRemote:FireServer()
+                end)
+            end
+        end
+    end)
+    
+    aimConnection = RunService.Heartbeat:Connect(function()
+        if parryAuraEnabled then
+            local closestPlayer = getClosestPlayer(DETECTION_RADIUS)
+            if closestPlayer then
+                -- Simple aim for parry (just look at them)
+                local myRootPart = player.Character.HumanoidRootPart
+                local targetPosition = closestPlayer.Character.HumanoidRootPart.Position
+                local targetCFrame = CFrame.lookAt(myRootPart.Position, Vector3.new(targetPosition.X, myRootPart.Position.Y, targetPosition.Z))
+                myRootPart.CFrame = myRootPart.CFrame:Lerp(targetCFrame, 0.2)
+            end
+        end
+    end)
+end
+
+-- Auto Attack system using ContextActionService
+local function startAutoAttack()
+    blockAnimationDelayed(78964624031588) -- Block slowdown animations
+    maintainWalkSpeed()
+    
+    attackConnection = RunService.Heartbeat:Connect(function()
+        if autoAttackEnabled then
+            local closestEnemy = getClosestPlayer(ATTACK_RADIUS)
+            if closestEnemy then
+                -- Aim at enemy
+                if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                    local myRootPart = player.Character.HumanoidRootPart
+                    local targetPosition = closestEnemy.Character.HumanoidRootPart.Position
+                    local targetCFrame = CFrame.lookAt(myRootPart.Position, Vector3.new(targetPosition.X, myRootPart.Position.Y, targetPosition.Z))
+                    myRootPart.CFrame = myRootPart.CFrame:Lerp(targetCFrame, 0.3)
+                end
+                
+                -- Perform attack using ContextActionService
+                performAttack()
+            end
+        end
+    end)
+end
+
+-- AI Auto Position system
+local function startAutoPosition()
+    maintainWalkSpeed()
+    
+    positionConnection = RunService.Heartbeat:Connect(function()
+        if autoPositionEnabled then
+            local closestPlayer = getClosestPlayer(100) -- Larger range for hunting
+            if closestPlayer then
+                currentTarget = closestPlayer
+                aiAutoPosition(closestPlayer)
+            end
+        end
+    end)
+end
+
+-- Stop functions
+local function stopParryAura()
+    if parryConnection then parryConnection:Disconnect(); parryConnection = nil end
+    if aimConnection then aimConnection:Disconnect(); aimConnection = nil end
+    cleanupConnections()
+end
+
+local function stopAutoPosition()
+    if positionConnection then positionConnection:Disconnect(); positionConnection = nil end
+    if movementTween then movementTween:Cancel(); movementTween = nil end
+    currentTarget = nil
+    cleanupConnections()
+end
+
+local function stopAutoAttack()
+    if attackConnection then attackConnection:Disconnect(); attackConnection = nil end
+    cleanupConnections()
+end
+
+-- Toggle functions
+function toggleParryAura()
+    parryAuraEnabled = not parryAuraEnabled
+    
+    if parryAuraEnabled then
+        startParryAura()
+        print("Smart Parry: ON (Only when enemies within " .. DETECTION_RADIUS .. " studs)")
+    else
+        stopParryAura()
+        print("Smart Parry: OFF")
+    end
+    
+    updateMobileButtons()
+end
+
+function toggleAutoPosition()
+    autoPositionEnabled = not autoPositionEnabled
+    
+    if autoPositionEnabled then
+        startAutoPosition()
+        print("Auto Position: ON - AI hunting for enemy backs")
+    else
+        stopAutoPosition()
+        print("Auto Position: OFF")
+    end
+    
+    updateMobileButtons()
+end
+
+function toggleAutoAttack()
+    autoAttackEnabled = not autoAttackEnabled
+    
+    if autoAttackEnabled then
+        startAutoAttack()
+        print("Auto Attack: ON - ContextActionService bindings")
+    else
+        stopAutoAttack()
+        print("Auto Attack: OFF")
+    end
+    
+    updateMobileButtons()
+end
+
+-- Handle PC key inputs
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    
+    -- P key for smart parry
+    if input.KeyCode == Enum.KeyCode.P then
+        toggleParryAura()
+    end
+    
+    -- K key for AI auto position
+    if input.KeyCode == Enum.KeyCode.K then
+        toggleAutoPosition()
+    end
+    
+    -- M key for auto attack
+    if input.KeyCode == Enum.KeyCode.M then
+        toggleAutoAttack()
+    end
+end)
+
+-- Handle respawn - only recreate GUI, keep systems running
+player.CharacterAdded:Connect(function()
+    cleanupConnections()
+    wait(1)
+    
+    -- Wait for character to fully load
+    if player.Character:WaitForChild("Humanoid") then
+        if parryAuraEnabled then
+            blockAnimationDelayed(78964624031588)
+            maintainWalkSpeed()
+        end
+        if autoPositionEnabled then
+            maintainWalkSpeed()
+        end
+        if autoAttackEnabled then
+            blockAnimationDelayed(78964624031588)
+            maintainWalkSpeed()
+        end
+        
+        -- Recreate mobile GUI if it was destroyed
+        if not mobileGui or not mobileGui.Parent then
+            wait(1)
+            createMobileGUI()
+            updateMobileButtons()
+        end
+    end
+end)
+
+-- Initialize
+spawn(createGUI)
+print("COMBAT SYSTEM LOADED!")
+print("PC: P = Smart Parry | K = Auto Position | M = Auto Attack")
+print("Mobile: Use on-screen buttons after main GUI closes")

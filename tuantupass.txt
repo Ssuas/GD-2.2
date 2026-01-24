@@ -1,0 +1,1054 @@
+-- Script Path: game:GetService("Players").JapanGoblin2.PlayerGui.MenuGui.LocalScript
+-- Took 1.34s to decompile.
+-- Executor: Delta (1.1.703.1353)
+
+-- Decompiled with Konstant V2.1, a fast Luau decompiler made in Luau by plusgiant5 (https://discord.gg/brNTY8nX8t)
+-- Decompiled on 2026-01-24 05:30:36
+-- Luau version 6, Types version 3
+-- Time taken: 0.294125 seconds
+
+local ReplicatedStorage_upvr_4 = game:GetService("ReplicatedStorage")
+local CurrentCamera_upvr = workspace.CurrentCamera
+local UserInputService_upvr_2 = game:GetService("UserInputService")
+local TweenService_upvr_3 = game:GetService("TweenService")
+function RunConsoleText(arg1, arg2) -- Line 7
+    for i = 1, string.len(arg1) do
+        arg2.Text = string.sub(arg1, 1, i)
+        local clone_2 = script["Switches Clicks Buttons Various Versions 7 (SFX)"]:Clone()
+        clone_2.Parent = workspace
+        clone_2:Play()
+        game.Debris:AddItem(clone_2, 5)
+        if string.sub(arg1, i, i) == '.' then
+            task.wait(1)
+        else
+            task.wait(0.01)
+        end
+    end
+    return arg2
+end
+local Players_upvr_3 = game:GetService("Players")
+local LocalPlayer_upvr = Players_upvr_3.LocalPlayer
+local any_GetRoleInGroup_result1_4 = LocalPlayer_upvr:GetRoleInGroup(35806307)
+local var775_upvr
+if any_GetRoleInGroup_result1_4 ~= "Tester" then
+    var775_upvr = true
+    if any_GetRoleInGroup_result1_4 ~= "Contributor" then
+        var775_upvr = true
+        if any_GetRoleInGroup_result1_4 ~= "Dev" then
+            var775_upvr = true
+            if any_GetRoleInGroup_result1_4 ~= "tuantu" then
+                var775_upvr = true
+                if any_GetRoleInGroup_result1_4 ~= "Lead Tester" then
+                    var775_upvr = true
+                    if any_GetRoleInGroup_result1_4 ~= "Ask" then
+                        var775_upvr = true
+                        if any_GetRoleInGroup_result1_4 ~= "Lead community manager" then
+                            if any_GetRoleInGroup_result1_4 ~= "Mod" then
+                                var775_upvr = false
+                            else
+                                var775_upvr = true
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+local var776_upvw
+local var777_upvw
+local var778_upvw = false
+local var779_upvw = false
+local tbl_5_upvw = {}
+local Hovering_upvr_3 = script.Parent:WaitForChild("Hovering")
+local var784_upvw = 0
+if LocalPlayer_upvr.Name == "askwashere" and ReplicatedStorage_upvr_4:FindFirstChild("ALB") then
+    ReplicatedStorage_upvr_4.ALB.Parent = ReplicatedStorage_upvr_4:WaitForChild("Modifiers")
+end
+for _, v_upvr in ReplicatedStorage_upvr_4:WaitForChild("Modifiers"):GetChildren() do
+    local Name_upvr = v_upvr.Name
+    local var789_upvr
+    local function INLINED_16() -- Internal function, doesn't exist in bytecode
+        var789_upvr = v_upvr.CustomBGColor.Value
+        return var789_upvr
+    end
+    if not v_upvr:FindFirstChild("CustomBGColor") or not INLINED_16() then
+        var789_upvr = Color3.fromRGB(170, 255, 255)
+    end
+    local any_Lerp_result1_upvr_2 = Color3.fromRGB(255, 255, 255):Lerp(var789_upvr, 0.5)
+    local clone_7_upvr = script:WaitForChild("ModifierTemplate"):Clone()
+    clone_7_upvr.Name = Name_upvr
+    clone_7_upvr.ModifierTemplate.Text = Name_upvr
+    clone_7_upvr.Parent = script.Parent:WaitForChild("ServerFrame"):WaitForChild("ModifiersFrame")
+    local var792_upvw = false
+    local any_NextNumber_result1_upvr = Random.new():NextNumber(1, 10)
+    local any_Create_result1_upvr_4 = TweenService_upvr_3:Create(Hovering_upvr_3:WaitForChild("ImageLabel"), TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+        Size = UDim2.fromScale(1, 1);
+    })
+    clone_7_upvr.ModifierTemplate.MouseEnter:Connect(function() -- Line 81
+        --[[ Upvalues[12]:
+            [1]: var792_upvw (read and write)
+            [2]: tbl_5_upvw (read and write)
+            [3]: Name_upvr (readonly)
+            [4]: clone_7_upvr (readonly)
+            [5]: any_Lerp_result1_upvr_2 (readonly)
+            [6]: v_upvr (readonly)
+            [7]: var784_upvw (read and write)
+            [8]: any_NextNumber_result1_upvr (readonly)
+            [9]: any_Create_result1_upvr_4 (readonly)
+            [10]: UserInputService_upvr_2 (readonly)
+            [11]: Hovering_upvr_3 (readonly)
+            [12]: var789_upvr (readonly)
+        ]]
+        if var792_upvw == false then
+            var792_upvw = true
+            if not table.find(tbl_5_upvw, Name_upvr) then
+                clone_7_upvr.ModifierTemplate.BackgroundColor3 = any_Lerp_result1_upvr_2
+            end
+            if v_upvr:FindFirstChild("Description") then
+                script["Switches Clicks Buttons Various Versions 7 (SFX)"]:Play()
+                var784_upvw = any_NextNumber_result1_upvr
+                any_Create_result1_upvr_4:Cancel()
+                local any_GetMouseLocation_result1_3 = UserInputService_upvr_2:GetMouseLocation()
+                Hovering_upvr_3.ImageLabel.Size = UDim2.fromScale(1, 0)
+                Hovering_upvr_3.ImageLabel.Frame.TextLabel.Text = v_upvr.Description.Value
+                Hovering_upvr_3.ImageLabel.Frame.TextLabel.TextColor3 = any_Lerp_result1_upvr_2
+                Hovering_upvr_3.ImageLabel.ImageLabel.ImageColor3 = var789_upvr
+                Hovering_upvr_3.Position = UDim2.fromOffset(any_GetMouseLocation_result1_3.X, any_GetMouseLocation_result1_3.Y)
+                Hovering_upvr_3.Visible = true
+                any_Create_result1_upvr_4:Play()
+            end
+        end
+    end)
+    clone_7_upvr.ModifierTemplate.MouseLeave:Connect(function() -- Line 102
+        --[[ Upvalues[7]:
+            [1]: var792_upvw (read and write)
+            [2]: tbl_5_upvw (read and write)
+            [3]: Name_upvr (readonly)
+            [4]: clone_7_upvr (readonly)
+            [5]: any_NextNumber_result1_upvr (readonly)
+            [6]: var784_upvw (read and write)
+            [7]: Hovering_upvr_3 (readonly)
+        ]]
+        if var792_upvw == true then
+            var792_upvw = false
+            if not table.find(tbl_5_upvw, Name_upvr) then
+                clone_7_upvr.ModifierTemplate.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            end
+            if any_NextNumber_result1_upvr == var784_upvw then
+                var784_upvw = 0
+                Hovering_upvr_3.Visible = false
+            end
+        end
+    end)
+    local var799_upvw = false
+    local tbl_76_upvr = {}
+    local any_Create_result1_upvr_7 = TweenService_upvr_3:Create(CurrentCamera_upvr, TweenInfo.new(15, Enum.EasingStyle.Quad), {
+        CFrame = workspace.CameraPart.CFrame;
+    })
+    local mouse_upvr = LocalPlayer_upvr:GetMouse()
+    local children_6_upvr = ReplicatedStorage_upvr_4.Clerks.Hairs:GetChildren()
+    local children_upvr = ReplicatedStorage_upvr_4.Clerks.Faces:GetChildren()
+    clone_7_upvr.ModifierTemplate.MouseButton1Click:Connect(function() -- Line 115
+        --[[ Upvalues[16]:
+            [1]: tbl_5_upvw (read and write)
+            [2]: Name_upvr (readonly)
+            [3]: var799_upvw (read and write)
+            [4]: clone_7_upvr (readonly)
+            [5]: var789_upvr (readonly)
+            [6]: var792_upvw (read and write)
+            [7]: any_Lerp_result1_upvr_2 (readonly)
+            [8]: v_upvr (readonly)
+            [9]: TweenService_upvr_3 (readonly)
+            [10]: tbl_76_upvr (readonly)
+            [11]: any_Create_result1_upvr_7 (readonly)
+            [12]: CurrentCamera_upvr (readonly)
+            [13]: UserInputService_upvr_2 (readonly)
+            [14]: mouse_upvr (readonly)
+            [15]: children_6_upvr (readonly)
+            [16]: children_upvr (readonly)
+        ]]
+        local var821
+        if not table.find(tbl_5_upvw, Name_upvr) and var799_upvw == true then
+        else
+            var821 = script.Parent
+            var821["Click Sound"]:Play()
+            var821 = tbl_5_upvw
+            local table_find_result1_4 = table.find(var821, Name_upvr)
+            local var823
+            if not table_find_result1_4 then
+                var823 = clone_7_upvr
+                var821 = var823.ModifierTemplate
+                var823 = var789_upvr
+                var821.BackgroundColor3 = var823
+                var823 = clone_7_upvr
+                var821 = var823.ModifierTemplate
+                var823 = Color3.fromRGB(255, 255, 255)
+                var821.TextColor3 = var823
+                var823 = tbl_5_upvw
+                var821 = table.insert
+                var821(var823, Name_upvr)
+            else
+                var823 = clone_7_upvr
+                var821 = var823.ModifierTemplate
+                local function INLINED_17() -- Internal function, doesn't exist in bytecode
+                    var823 = any_Lerp_result1_upvr_2
+                    return var823
+                end
+                if var792_upvw ~= true or not INLINED_17() then
+                    var823 = Color3.fromRGB(255, 255, 255)
+                end
+                var821.BackgroundColor3 = var823
+                var823 = clone_7_upvr
+                var821 = var823.ModifierTemplate
+                var823 = Color3.fromRGB(131, 131, 131)
+                var821.TextColor3 = var823
+                var821 = table.remove
+                var823 = tbl_5_upvw
+                var821(var823, table_find_result1_4)
+            end
+            var821 = v_upvr.Name
+            if var821 == "ALB" then
+                if table.find(tbl_5_upvw, "ALB") then
+                    var821 = true
+                else
+                    var821 = false
+                end
+                var799_upvw = var821
+                var821 = script.Parent.TLBMenu
+                var821.Visible = not var799_upvw
+                var821 = script.Parent.ALBMenu
+                var821.Visible = var799_upvw
+                var821 = script.Static:Play
+                var821()
+                var821 = script.Parent.StaticFrame
+                var821.ImageTransparency = 0
+                var821 = TweenService_upvr_3
+                local _ = {
+                    ImageTransparency = 1;
+                }
+                var821 = var821:Create(script.Parent.StaticFrame, TweenInfo.new(0.09, Enum.EasingStyle.Linear), _):Play
+                var821()
+                var821 = script.Parent.RetroFrame
+                var821.Visible = var799_upvw
+                var821 = pairs(tbl_76_upvr)
+                local pairs_result1_2, pairs_result2_20, pairs_result3_11 = pairs(tbl_76_upvr)
+                for _, v_8 in pairs_result1_2, pairs_result2_20, pairs_result3_11 do
+                    v_8:Disconnect()
+                end
+                pairs_result1_2 = any_Create_result1_upvr_7.PlaybackState
+                if pairs_result1_2 == Enum.PlaybackState.Playing then
+                    pairs_result1_2 = any_Create_result1_upvr_7:Cancel
+                    pairs_result1_2()
+                end
+                pairs_result1_2 = CurrentCamera_upvr
+                pairs_result1_2.CFrame = workspace.CameraPart.CFrame
+                pairs_result1_2 = var799_upvw
+                if pairs_result1_2 == true then
+                    pairs_result1_2 = pairs(tbl_5_upvw)
+                    local pairs_result1_22_upvw, pairs_result2_19, pairs_result3_10 = pairs(tbl_5_upvw)
+                    for _, v_9 in pairs_result1_22_upvw, pairs_result2_19, pairs_result3_10 do
+                        if v_9 ~= "ALB" then
+                            local SOME_2 = script.Parent.ServerFrame.ModifiersFrame:FindFirstChild(v_9)
+                            SOME_2.ModifierTemplate.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                            SOME_2.ModifierTemplate.TextColor3 = Color3.fromRGB(131, 131, 131)
+                        end
+                    end
+                    pairs_result1_22_upvw = {}
+                    pairs_result1_22_upvw[1] = "ALB"
+                    tbl_5_upvw = pairs_result1_22_upvw
+                    pairs_result1_22_upvw = workspace.EvilMap:PivotTo
+                    pairs_result1_22_upvw(workspace.Map:GetPivot())
+                    pairs_result1_22_upvw = workspace.Map:PivotTo
+                    pairs_result1_22_upvw(CFrame.new(0, 999, 0))
+                    pairs_result1_22_upvw = workspace.Neutral03
+                    pairs_result1_22_upvw.PlaybackSpeed = 1
+                    pairs_result1_22_upvw = workspace["Emergency Alarm"]
+                    pairs_result1_22_upvw.PlaybackSpeed = 0
+                    pairs_result1_22_upvw = 0
+                    local tick_result1_upvw_2 = tick()
+                    local var834_upvw = math.random(30, 90) / 100
+                    tbl_76_upvr[1] = game:GetService("RunService").RenderStepped:Connect(function(arg1) -- Line 163
+                        --[[ Upvalues[9]:
+                            [1]: UserInputService_upvr_2 (copied, readonly)
+                            [2]: pairs_result1_22_upvw (read and write)
+                            [3]: mouse_upvr (copied, readonly)
+                            [4]: CurrentCamera_upvr (copied, readonly)
+                            [5]: tick_result1_upvw_2 (read and write)
+                            [6]: var834_upvw (read and write)
+                            [7]: children_6_upvr (copied, readonly)
+                            [8]: children_upvr (copied, readonly)
+                            [9]: TweenService_upvr_3 (copied, readonly)
+                        ]]
+                        pairs_result1_22_upvw += arg1 * 2
+                        CurrentCamera_upvr.CFrame = CurrentCamera_upvr.CFrame:Lerp(workspace.CameraPart.CFrame * CFrame.Angles(math.rad((mouse_upvr.Y - mouse_upvr.ViewSizeY / 2) / mouse_upvr.ViewSizeY * -5) + math.rad(math.sin(pairs_result1_22_upvw) / 2), math.rad((mouse_upvr.X - mouse_upvr.ViewSizeX / 2) / mouse_upvr.ViewSizeX * -10) + math.rad(math.cos(pairs_result1_22_upvw) / 2), 0), arg1 * 3)
+                        if var834_upvw <= tick() - tick_result1_upvw_2 then
+                            tick_result1_upvw_2 = tick()
+                            var834_upvw = math.random(50, 180) / 100
+                            local randint_3 = math.random(1, 2)
+                            local clone_17 = workspace.EvilMap.Clerks["Template"..randint_3]:Clone()
+                            local var837 = workspace.EvilMap.Clerks["Template"..randint_3.."Endpos"]
+                            local Position_3 = (var837.CFrame * CFrame.new(math.random(-1100, 1100) / 100, 0, math.random(-100, 100) / 100)).Position
+                            children_6_upvr[math.random(1, #children_6_upvr)]:Clone().Parent = clone_17
+                            children_upvr[math.random(1, #children_upvr)]:FindFirstChildWhichIsA("Decal"):Clone().Parent = clone_17.Head
+                            clone_17:PivotTo(CFrame.lookAt((clone_17.HumanoidRootPart.CFrame * CFrame.new(math.random(-1100, 1100) / 100, 0, math.random(-100, 100) / 100)).Position, Position_3))
+                            clone_17.Name = "Clerk"
+                            clone_17.Parent = workspace.EvilMap.Clerks
+                            clone_17.Humanoid:LoadAnimation(clone_17.Animation):Play(0)
+                            local TweenInfo_new_result1_8 = TweenInfo.new((var837.Position - clone_17.HumanoidRootPart.Position).Magnitude / 14, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+                            TweenService_upvr_3:Create(clone_17.HumanoidRootPart, TweenInfo_new_result1_8, {
+                                CFrame = CFrame.new(Position_3) * CFrame.Angles(math.rad(clone_17.HumanoidRootPart.Orientation.X), math.rad(clone_17.HumanoidRootPart.Orientation.Y), math.rad(clone_17.HumanoidRootPart.Orientation.Z));
+                            }):Play()
+                            game.Debris:AddItem(clone_17, TweenInfo_new_result1_8.Time)
+                        end
+                    end)
+                else
+                    workspace.Neutral03.PlaybackSpeed = 0
+                    workspace["Emergency Alarm"].PlaybackSpeed = 1
+                    workspace.Map:PivotTo(workspace.EvilMap:GetPivot())
+                    workspace.EvilMap:PivotTo(CFrame.new(0, 999, 0))
+                end
+                for _, v_10 in pairs(workspace.EvilMap.Clerks:GetChildren()) do
+                    if v_10:IsA("Model") and v_10.Name ~= "Template1" and v_10.Name ~= "Template2" then
+                        v_10:Destroy()
+                    end
+                end
+                for _, v_11 in pairs(script.Parent.ServerFrame.ModifiersFrame:GetChildren()) do
+                    if v_11:IsA("Frame") and v_11:FindFirstChild("ModifierTemplate") and v_11.Name ~= "ALB" then
+                        local Out_4 = Enum.EasingDirection.Out
+                        local tbl_80 = {}
+                        if var799_upvw == true then
+                            Out_4 = 0.9
+                        else
+                            Out_4 = 0
+                        end
+                        tbl_80.Size = UDim2.new(Out_4, 0, 0, 2)
+                        TweenService_upvr_3:Create(v_11.ModifierTemplate.Disabled, TweenInfo.new(0.25, Enum.EasingStyle.Back, Out_4), tbl_80):Play()
+                    end
+                end
+            end
+        end
+    end)
+end
+function RunConnection(arg1) -- Line 207
+    --[[ Upvalues[2]:
+        [1]: TweenService_upvr_3 (readonly)
+        [2]: tbl_5_upvw (read and write)
+    ]]
+    script.Parent.TLBMenu.Visible = false
+    script.Parent.ALBMenu.Visible = false
+    script.Parent.ServerFrame.Visible = false
+    script.Parent.ServerListFrame.Visible = false
+    script.Parent.SearchBox.Visible = false
+    script.Parent.CodeBox.Visible = false
+    script.Parent.ServerCodeButton.Visible = false
+    script.Parent.CreditsFrame.Visible = false
+    script.Parent.RefreshButton.Visible = false
+    script.Parent.PasswordFrame.Visible = false
+    script.Parent.IntroText.Text = ""
+    TweenService_upvr_3:Create(script.Parent.IntroText, TweenInfo.new(1, Enum.EasingStyle.Linear), {
+        TextTransparency = 0;
+    }):Play()
+    RunConsoleText(arg1, script.Parent.IntroText)
+    task.wait(10)
+    local Parent_3 = script.Parent
+    if not table.find(tbl_5_upvw, "ALB") then
+        Parent_3 = true
+    else
+        Parent_3 = false
+    end
+    Parent_3.TLBMenu.Visible = Parent_3
+    Parent_3 = script.Parent
+    if table.find(tbl_5_upvw, "ALB") then
+        Parent_3 = true
+    else
+        Parent_3 = false
+    end
+    Parent_3.ALBMenu.Visible = Parent_3
+    Parent_3 = script.Parent
+    Parent_3 = 1
+    Parent_3.IntroText.TextTransparency = Parent_3
+end
+local var851_upvw = false
+function RefreshServerList() -- Line 229
+    --[[ Upvalues[7]:
+        [1]: var851_upvw (read and write)
+        [2]: ReplicatedStorage_upvr_4 (readonly)
+        [3]: var779_upvw (read and write)
+        [4]: Players_upvr_3 (readonly)
+        [5]: LocalPlayer_upvr (readonly)
+        [6]: var776_upvw (read and write)
+        [7]: var777_upvw (read and write)
+    ]]
+    if var851_upvw then
+    else
+        var851_upvw = true
+        pcall(function() -- Line 235
+            --[[ Upvalues[6]:
+                [1]: ReplicatedStorage_upvr_4 (copied, readonly)
+                [2]: var779_upvw (copied, read and write)
+                [3]: Players_upvr_3 (copied, readonly)
+                [4]: LocalPlayer_upvr (copied, readonly)
+                [5]: var776_upvw (copied, read and write)
+                [6]: var777_upvw (copied, read and write)
+            ]]
+            -- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+            for _, v_12 in script.Parent.ServerListFrame:GetChildren() do
+                if not v_12:IsA("UIListLayout") and not v_12:IsA("UIPadding") then
+                    v_12:Destroy()
+                end
+            end
+            for _, v_13_upvr in ReplicatedStorage_upvr_4.ServerListGet:InvokeServer(), nil do
+                if v_13_upvr and typeof(v_13_upvr) == "table" then
+                    local _5_upvr_2 = v_13_upvr[5]
+                    if var779_upvw then
+                        if v_13_upvr[7] then
+                            -- KONSTANTWARNING: GOTO [58] #45
+                        end
+                    else
+                        local var881
+                        if not v_13_upvr[7] or v_13_upvr[2] == "tuantu968" or v_13_upvr[2] == "cakeisfakess" then
+                            local clone_16 = script.ServerFrameHolder:Clone()
+                            clone_16.ActualName.Value = v_13_upvr[2]
+                            var881 = v_13_upvr[4]
+                            clone_16.Name = (100 - var881) * -1
+                            var881 = script
+                            clone_16.Parent = var881.Parent.ServerListFrame
+                            local ServerFrame_upvr_3 = clone_16.ServerFrame
+                            if _5_upvr_2 == "" then
+                                var881 = false
+                            else
+                                var881 = true
+                            end
+                            ServerFrame_upvr_3.PasswordLabel.Visible = var881
+                            var881 = v_13_upvr[2].."'s Facility"
+                            ServerFrame_upvr_3.FacilityLabel.Text = var881
+                            var881 = v_13_upvr[4].."/50 Agents"
+                            ServerFrame_upvr_3.NumLabel.Text = var881
+                            var881 = "- Day "..v_13_upvr[3].." -"
+                            ServerFrame_upvr_3.DayLabel.Text = var881
+                            var881 = "Region: "..v_13_upvr[8]
+                            ServerFrame_upvr_3.RegionLabel.Text = var881
+                            var881 = nil
+                            for _, v_14_upvr in v_13_upvr[9], var881 do
+                                task.spawn(function() -- Line 290
+                                    --[[ Upvalues[4]:
+                                        [1]: ServerFrame_upvr_3 (readonly)
+                                        [2]: Players_upvr_3 (copied, readonly)
+                                        [3]: v_14_upvr (readonly)
+                                        [4]: LocalPlayer_upvr (copied, readonly)
+                                    ]]
+                                    local var885
+                                    if not ServerFrame_upvr_3 or not ServerFrame_upvr_3:FindFirstChild("PlrScrollingList") then
+                                    else
+                                        var885 = Enum.ThumbnailType.HeadShot
+                                        local any_GetUserThumbnailAsync_result1_4, any_GetUserThumbnailAsync_result2 = Players_upvr_3:GetUserThumbnailAsync(v_14_upvr, var885, Enum.ThumbnailSize.Size420x420)
+                                        var885 = script
+                                        local clone_10 = var885.PlayerIconHolder:Clone()
+                                        var885 = ServerFrame_upvr_3:WaitForChild("PlrScrollingList")
+                                        clone_10.Parent = var885
+                                        local function INLINED_18() -- Internal function, doesn't exist in bytecode
+                                            var885 = any_GetUserThumbnailAsync_result1_4
+                                            return var885
+                                        end
+                                        if not any_GetUserThumbnailAsync_result2 or not INLINED_18() then
+                                            var885 = clone_10.Image
+                                        end
+                                        clone_10.Image = var885
+                                        var885 = LocalPlayer_upvr:IsFriendsWith(v_14_upvr)
+                                        if var885 then
+                                            var885 = clone_10.UIStroke
+                                            var885.Color = Color3.fromRGB(0, 255, 255)
+                                        end
+                                    end
+                                end)
+                                local var889
+                            end
+                            var881 = var889.ConnectButton
+                            local _1_upvr = v_13_upvr[1]
+                            var881.MouseButton1Click:Connect(function() -- Line 309
+                                --[[ Upvalues[7]:
+                                    [1]: _5_upvr_2 (readonly)
+                                    [2]: var776_upvw (copied, read and write)
+                                    [3]: _1_upvr (readonly)
+                                    [4]: var777_upvw (copied, read and write)
+                                    [5]: ReplicatedStorage_upvr_4 (copied, readonly)
+                                    [6]: v_13_upvr (readonly)
+                                    [7]: var779_upvw (copied, read and write)
+                                ]]
+                                script.Parent.ConsoleBeep:Play()
+                                if _5_upvr_2 ~= "" then
+                                    var776_upvw = _1_upvr
+                                    var777_upvw = _5_upvr_2
+                                    script.Parent.PasswordFrame.Visible = true
+                                else
+                                    local _7 = v_13_upvr[7]
+                                    if not _7 then
+                                        _7 = var779_upvw
+                                    end
+                                    if ReplicatedStorage_upvr_4.TeleportEvent:InvokeServer(false, false, _1_upvr, nil, nil, _7) then
+                                        RunConnection("Connecting...")
+                                        return
+                                    end
+                                    script.Parent["Incorrect Buzzer"]:Play()
+                                end
+                            end)
+                        end
+                    end
+                end
+            end
+        end)
+        print("Server List Finished")
+        var851_upvw = false
+    end
+end
+function SearchServerListFilter() -- Line 333
+    for _, v_2 in script.Parent.ServerListFrame:GetChildren() do
+        if v_2:FindFirstChild("ActualName") then
+            if script.Parent.SearchBox.Text == "" or string.find(string.lower(v_2.ActualName.Value), string.lower(script.Parent.SearchBox.Text), 1, true) then
+                v_2.Visible = true
+            else
+                v_2.Visible = false
+            end
+        end
+    end
+end
+local tbl_18_upvr = {}
+Name_upvr = 574787933
+any_Lerp_result1_upvr_2 = 1128937841
+clone_7_upvr = 501315522
+tbl_18_upvr[1] = 1761479639
+tbl_18_upvr[2] = 1978152594
+tbl_18_upvr[3] = Name_upvr
+tbl_18_upvr[4] = 468617779
+tbl_18_upvr[5] = any_Lerp_result1_upvr_2
+tbl_18_upvr[6] = clone_7_upvr
+tbl_18_upvr[7] = (function(arg1) -- Line 347, Named "omori"
+    local string_4 = string
+    local any_gsub_result1_4 = string_4.gsub("#\":%^(#HE!_@J&@^*$TGEH^)&B':.,:\"b()!$)O\">C<>PK#)W))$^K<)#PWy%(@(*!*!(#)$@E%)^)J(t^*)#*BJ^<>JIKS<!>V%:#Me", "[%u%p]", "")
+    local var902 = ""
+    for i_4 = 1, 8 do
+        var902 = var902..string_4[any_gsub_result1_4](string_4.sub(arg1, i_4, i_4))
+    end
+    return tonumber(var902)
+end)("\x05\x01\x03\x01\x03\a\x06\x01")
+any_Lerp_result1_upvr_2 = script
+Name_upvr = any_Lerp_result1_upvr_2.Parent.PasswordFrame
+function Name_upvr() -- Line 359
+    --[[ Upvalues[5]:
+        [1]: var777_upvw (read and write)
+        [2]: tbl_18_upvr (readonly)
+        [3]: ReplicatedStorage_upvr_4 (readonly)
+        [4]: var776_upvw (read and write)
+        [5]: var779_upvw (read and write)
+    ]]
+    if var777_upvw and (var777_upvw == script.Parent.PasswordFrame.TextBox.Text or table.find(tbl_18_upvr, game.Players.LocalPlayer.UserId)) then
+        if ReplicatedStorage_upvr_4.TeleportEvent:InvokeServer(false, false, var776_upvw, nil, nil, var779_upvw) then
+            RunConnection("Connecting...")
+            return
+        end
+        script.Parent["Incorrect Buzzer"]:Play()
+    end
+end
+Name_upvr.JoinButton.MouseButton1Click:Connect(Name_upvr)
+any_Lerp_result1_upvr_2 = script
+Name_upvr = any_Lerp_result1_upvr_2.Parent.PasswordFrame
+function Name_upvr() -- Line 375
+    script.Parent.PasswordFrame.Visible = false
+end
+Name_upvr.BackButton.MouseButton1Click:Connect(Name_upvr)
+RefreshServerList()
+SearchServerListFilter()
+Name_upvr = script
+Name_upvr = "Text"
+function Name_upvr() -- Line 381
+    --[[ Upvalues[1]:
+        [1]: var851_upvw (read and write)
+    ]]
+    repeat
+        task.wait()
+    until not var851_upvw
+    SearchServerListFilter()
+end
+Name_upvr.Parent.SearchBox:GetPropertyChangedSignal(Name_upvr):Connect(Name_upvr)
+Name_upvr = script.Parent
+function Name_upvr() -- Line 386
+    --[[ Upvalues[2]:
+        [1]: ReplicatedStorage_upvr_4 (readonly)
+        [2]: var779_upvw (read and write)
+    ]]
+    if ReplicatedStorage_upvr_4.TeleportEvent:InvokeServer(false, false, nil, nil, nil, var779_upvw, script.Parent.CodeBox.Text) then
+        RunConnection("Connecting...")
+    else
+        script.Parent["Incorrect Buzzer"]:Play()
+    end
+end
+Name_upvr.ServerCodeButton.MouseButton1Click:Connect(Name_upvr)
+clone_7_upvr = script
+any_Lerp_result1_upvr_2 = clone_7_upvr.Parent
+Name_upvr = any_Lerp_result1_upvr_2.RefreshButton.MouseButton1Click
+local var909_upvw = true
+local var910_upvw = 0
+function any_Lerp_result1_upvr_2() -- Line 398
+    --[[ Upvalues[3]:
+        [1]: var909_upvw (read and write)
+        [2]: TweenService_upvr_3 (readonly)
+        [3]: var910_upvw (read and write)
+    ]]
+    if not var909_upvw then
+    else
+        var909_upvw = false
+        script.Parent["ui_refresh-feed"]:Play()
+        script.Parent.RefreshButton.TextLabel.Visible = true
+        RefreshServerList()
+        TweenService_upvr_3:Create(script.Parent.RefreshButton.ImageLabel, TweenInfo.new(1), {
+            Rotation = var910_upvw + 180;
+        }):Play()
+        var910_upvw += 180
+        for i_17 = 1, 10 do
+            script.Parent.RefreshButton.TextLabel.Text = "Wait "..(10 - i_17).." seconds before refreshing again."
+            task.wait(1)
+        end
+        script.Parent.RefreshButton.TextLabel.Visible = false
+        var909_upvw = true
+    end
+end
+Name_upvr = Name_upvr:Connect
+Name_upvr(any_Lerp_result1_upvr_2)
+Name_upvr = game
+any_Lerp_result1_upvr_2 = "BadgeService"
+Name_upvr = Name_upvr:GetService(any_Lerp_result1_upvr_2)
+local tbl_58_upvr = {}
+any_Lerp_result1_upvr_2 = {}
+local var914 = any_Lerp_result1_upvr_2
+clone_7_upvr = 302139742059154
+var914[1] = clone_7_upvr
+var914[2] = "Progression"
+clone_7_upvr = {}
+local var915 = clone_7_upvr
+var915[1] = 2153258102501444
+var915[2] = "Progression"
+tbl_58_upvr[1] = var914
+tbl_58_upvr[2] = var915
+tbl_58_upvr[3] = {1784875395065212, "Progression"}
+tbl_58_upvr[4] = {2143926816561587, "Meltdown"}
+tbl_58_upvr[5] = {2583167523427660, "Meltdown"}
+tbl_58_upvr[6] = {2461148669053131, "Meltdown"}
+tbl_58_upvr[7] = {668063531421644, "Meltdown"}
+tbl_58_upvr[8] = {4165034969358782, "Meltdown"}
+tbl_58_upvr[9] = {686845520228024, "Meltdown"}
+tbl_58_upvr[10] = {3372957832064367, "Meltdown"}
+tbl_58_upvr[11] = {3029160277730705, "Meltdown"}
+var914 = {}
+local var925_upvr = var914
+var915 = 3372957832064367
+var925_upvr[var915] = {"Beyond one's Courage", "Be the first to suppress The Red Mist, <font color=\"rgb(122, 0, 0)\">strongest never means unbeatable.</font>", 468617779, 945741629, 1552238728, 437897056, 1690454644, 1922519282, 62965876}
+var915 = 3029160277730705
+var925_upvr[var915] = {"Warm embrace of the Future; Acknowledging the hollow Past.", "Be the first to suppress Hokma's Core Meltdown, <font color=\"rgb(166, 255, 156)\">you'll always pay the price.</font>", 468617779, 868989095, 1616948623, 152740242, 2004913711, 291256111, 620339763, 382700305, 1910954309, 1525831623, 446649580, 533883831, 168666421, 377793234, 5476941665, 500830004, 92100450, 1752888268, 4688077045, 1774772937, 155883879, 4490598497, 853444960, 184584525, 1647745610, 641176979, 2036245114, 3795607206, 3923505288}
+var915 = 0
+local var928_upvw = var915
+task.spawn(function() -- Line 484
+    --[[ Upvalues[6]:
+        [1]: tbl_58_upvr (readonly)
+        [2]: var925_upvr (readonly)
+        [3]: Name_upvr (readonly)
+        [4]: LocalPlayer_upvr (readonly)
+        [5]: var928_upvw (read and write)
+        [6]: TweenService_upvr_3 (readonly)
+    ]]
+    -- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+    for i_5, v_3 in tbl_58_upvr do
+        local _1_upvr_2 = v_3[1]
+        local var939 = var925_upvr[_1_upvr_2]
+        local pcall_result1_6, pcall_result2 = pcall(function() -- Line 488
+            --[[ Upvalues[2]:
+                [1]: Name_upvr (copied, readonly)
+                [2]: _1_upvr_2 (readonly)
+            ]]
+            return Name_upvr:GetBadgeInfoAsync(_1_upvr_2)
+        end)
+        local var943
+        if not pcall_result1_6 then
+            var943 = warn
+            var943("Failed to get badge info! "..tostring(pcall_result2))
+            return
+        end
+        local function INLINED_19() -- Internal function, doesn't exist in bytecode
+            var943 = table.find(var939, LocalPlayer_upvr.UserId)
+            return var943
+        end
+        if not var939 or not INLINED_19() then
+            var943 = false
+        end
+        local clone_5_upvr = script.BadgeFrame:Clone()
+        clone_5_upvr.Frame.IconHolder.Icon.Image = "rbxassetid://"..pcall_result2.IconImageId
+        clone_5_upvr.Frame.Information.Title.ActualText.Text = pcall_result2.Name
+        clone_5_upvr.Frame.Information.Category.Text = "Category: "..v_3[2]
+        clone_5_upvr.Frame.Information.Description.Text = string.gsub(pcall_result2.Description, '\n', " | ")
+        clone_5_upvr.LayoutOrder = i_5
+        clone_5_upvr.Parent = script.Parent.BadgeListFrame.Contents
+        local pcall_result1_2, pcall_result2_6 = pcall(function() -- Line 506
+            --[[ Upvalues[3]:
+                [1]: Name_upvr (copied, readonly)
+                [2]: LocalPlayer_upvr (copied, readonly)
+                [3]: _1_upvr_2 (readonly)
+            ]]
+            return Name_upvr:UserHasBadgeAsync(LocalPlayer_upvr.UserId, _1_upvr_2)
+        end)
+        if not pcall_result1_2 then
+            warn("Error while checking if player has badge! "..tostring(pcall_result2_6))
+            return
+        end
+        if var943 then
+        end
+        if true then
+            var928_upvw += 1
+        end
+        local Information_4 = clone_5_upvr.Frame.Information
+        -- KONSTANTERROR: Expression was reused, decompilation is incorrect
+        if true then
+            Information_4 = "Achieved: True"
+        else
+            Information_4 = "Achieved: False"
+        end
+        Information_4.Achieved.Text = Information_4
+        -- KONSTANTERROR: Expression was reused, decompilation is incorrect
+        if not true or not Color3.fromRGB(100, 255, 92) then
+        end
+        clone_5_upvr.Frame.Information.Achieved.TextColor3 = Color3.fromRGB(255, 57, 57)
+        -- KONSTANTERROR: Expression was reused, decompilation is incorrect
+        if not true or not Color3.fromRGB(255, 255, 255) then
+        end
+        clone_5_upvr.Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        clone_5_upvr.Frame.UIStroke.Color = clone_5_upvr.Frame.BackgroundColor3
+        if var943 then
+            clone_5_upvr.Frame.Information.Description.RichText = true
+            clone_5_upvr.Frame.Information.Title.ActualText.Text = var939[1]
+            clone_5_upvr.Frame.Information.Title.ActualText.Fille.Text = var939[1]
+            clone_5_upvr.Frame.Information.Description.Text = var939[2]
+            clone_5_upvr.Frame.Information.Achieved.Text = "First Beater!"
+            clone_5_upvr.Frame.Information.Achieved.BackgroundTransparency = 0.9
+            clone_5_upvr.Frame.UIStroke.Transparency = 0.5
+            clone_5_upvr.Frame.Information.Title.Star.Visible = true
+            local tbl_74_upvr = {clone_5_upvr.Frame.Information.Achieved, clone_5_upvr.Frame.Information.Title.ActualText, clone_5_upvr.Frame, clone_5_upvr.Frame.UIStroke, clone_5_upvr.Frame.Information.Title.Star}
+            task.spawn(function() -- Line 532
+                --[[ Upvalues[3]:
+                    [1]: clone_5_upvr (readonly)
+                    [2]: tbl_74_upvr (readonly)
+                    [3]: TweenService_upvr_3 (copied, readonly)
+                ]]
+                local TweenInfo_new_result1 = TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+                local tbl_72 = {Color3.fromRGB(254, 0, 0), Color3.fromRGB(255, 127, 0), Color3.fromRGB(255, 221, 1), Color3.fromRGB(0, 200, 0), Color3.fromRGB(0, 160, 199), Color3.fromRGB(0, 55, 230), Color3.fromRGB(129, 16, 210)}
+                while true do
+                    local var957
+                    if clone_5_upvr == nil then break end
+                    if clone_5_upvr.Parent == nil then break end
+                    var957 += 1
+                    if #tbl_72 + 1 <= var957 then
+                        var957 = 1
+                    end
+                    for _, v_4 in pairs(tbl_74_upvr) do
+                        if v_4:IsA("UIStroke") then
+                            TweenService_upvr_3:Create(v_4, TweenInfo_new_result1, {
+                                Color = tbl_72[var957];
+                            }):Play()
+                        else
+                            TweenService_upvr_3:Create(v_4, TweenInfo_new_result1, {
+                                BackgroundColor3 = tbl_72[var957];
+                            }):Play()
+                            if v_4:IsA("TextLabel") then
+                                TweenService_upvr_3:Create(v_4, TweenInfo_new_result1, {
+                                    TextColor3 = tbl_72[var957];
+                                }):Play()
+                            elseif v_4:IsA("ImageLabel") then
+                                TweenService_upvr_3:Create(v_4, TweenInfo_new_result1, {
+                                    ImageColor3 = tbl_72[var957];
+                                }):Play()
+                            end
+                        end
+                    end
+                    task.wait(TweenInfo_new_result1.Time)
+                end
+            end)
+        end
+        -- KONSTANTERROR: Expression was reused, decompilation is incorrect
+        if not true then
+            tbl_74_upvr = clone_5_upvr.Frame.NotObtained
+            tbl_74_upvr.Visible = true
+        end
+    end
+end)
+repeat
+    task.wait()
+    CurrentCamera_upvr.CameraType = Enum.CameraType.Scriptable
+until CurrentCamera_upvr.CameraType == Enum.CameraType.Scriptable
+CurrentCamera_upvr.CameraType = Enum.CameraType.Scriptable
+CurrentCamera_upvr.CFrame = workspace.StartCam.CFrame
+script.Parent["Mental Disaster"]:Play()
+script.Parent["Milling Machine 8 (SFX)"]:Play()
+script.Parent.beep:Play()
+task.wait(1)
+script.Parent.beep:Play()
+task.wait(1)
+task.wait(2)
+any_Create_result1_upvr_7:Play()
+RunConsoleText("Command console booting up...", script.Parent.IntroText)
+task.wait(1)
+RunConsoleText("User registered: "..game.Players.LocalPlayer.DisplayName..'.', script.Parent.IntroText)
+task.wait(1)
+TweenService_upvr_3:Create(workspace["Emergency Alarm"], TweenInfo.new(5, Enum.EasingStyle.Linear), {
+    Volume = 0.05;
+}):Play()
+RunConsoleText("Welcome to Lobotomy Corporation.", script.Parent.IntroText)
+task.wait(1)
+TweenService_upvr_3:Create(script.Parent.IntroText, TweenInfo.new(2, Enum.EasingStyle.Linear), {
+    TextTransparency = 1;
+}):Play()
+task.wait(1)
+local var967_upvw = false
+local var968_upvw
+local var969_upvw = 1
+local tbl_68_upvr = {script.Parent.ServerListFrame, script.Parent.SearchBox, script.Parent.CodeBox, script.Parent.ServerCodeButton, script.Parent.RefreshButton, script.Parent.ServerFrame, script.Parent.PasswordFrame, script.Parent.BadgeListFrame, script.Parent.CreditsFrame, script.Parent.TestingModeButton, script.Parent.ServerFrame.ModifiersLabel, script.Parent.ServerFrame.ModifiersFrame}
+local tbl_9_upvr = {}
+local var972_upvw = 0
+local function buttonclick_upvr(arg1) -- Line 606, Named "buttonclick"
+    --[[ Upvalues[10]:
+        [1]: tbl_68_upvr (readonly)
+        [2]: var968_upvw (read and write)
+        [3]: tbl_9_upvr (readonly)
+        [4]: var972_upvw (read and write)
+        [5]: var775_upvr (readonly)
+        [6]: var969_upvw (read and write)
+        [7]: var967_upvw (read and write)
+        [8]: var928_upvw (read and write)
+        [9]: tbl_58_upvr (readonly)
+        [10]: TweenService_upvr_3 (readonly)
+    ]]
+    -- KONSTANTERROR: [0] 1. Error Block 41 start (CF ANALYSIS FAILED)
+    for _, v_5 in pairs(tbl_68_upvr) do
+        v_5.Visible = false
+    end
+    script.Parent.ServerFrame.TextBox.Text = ""
+    script.Parent.ConsoleBeep:Play()
+    local var978 = var968_upvw
+    var968_upvw = arg1
+    tbl_9_upvr[arg1.Name]()
+    -- KONSTANTERROR: [0] 1. Error Block 41 end (CF ANALYSIS FAILED)
+    -- KONSTANTERROR: [39] 26. Error Block 4 start (CF ANALYSIS FAILED)
+    tbl_9_upvr[var978.Name]()
+    -- KONSTANTERROR: [39] 26. Error Block 4 end (CF ANALYSIS FAILED)
+    -- KONSTANTERROR: [44] 30. Error Block 5 start (CF ANALYSIS FAILED)
+    var972_upvw = 0
+    -- KONSTANTERROR: [44] 30. Error Block 5 end (CF ANALYSIS FAILED)
+end
+for _, v_6_upvr in pairs(script.Parent.TLBMenu:GetChildren()) do
+    if v_6_upvr:IsA("TextButton") then
+        v_6_upvr.MouseEnter:Connect(function() -- Line 682
+            --[[ Upvalues[1]:
+                [1]: v_6_upvr (readonly)
+            ]]
+            v_6_upvr.BackgroundTransparency = 0.5
+        end)
+        v_6_upvr.MouseLeave:Connect(function() -- Line 685
+            --[[ Upvalues[1]:
+                [1]: v_6_upvr (readonly)
+            ]]
+            v_6_upvr.BackgroundTransparency = 1
+        end)
+        v_6_upvr.MouseButton1Click:Connect(function() -- Line 688
+            --[[ Upvalues[2]:
+                [1]: buttonclick_upvr (readonly)
+                [2]: v_6_upvr (readonly)
+            ]]
+            buttonclick_upvr(v_6_upvr)
+        end)
+    end
+    TweenService_upvr_3:Create(v_6_upvr, TweenInfo.new(2, Enum.EasingStyle.Linear), {
+        TextTransparency = 0;
+    }):Play()
+end
+for i_9, v_7_upvr in pairs(script.Parent.ALBMenu.Frame2:GetChildren()) do
+    if v_7_upvr:IsA("TextButton") then
+        local var989_upvw = false
+        local const_number_upvw_4 = 0
+        local Text_upvr = v_7_upvr.Hide.Text
+        local function updating_upvr(arg1, arg2) -- Line 699, Named "updating"
+            --[[ Upvalues[6]:
+                [1]: var989_upvw (read and write)
+                [2]: var968_upvw (read and write)
+                [3]: v_7_upvr (readonly)
+                [4]: TweenService_upvr_3 (readonly)
+                [5]: const_number_upvw_4 (read and write)
+                [6]: Text_upvr (readonly)
+            ]]
+            -- KONSTANTERROR: [0] 1. Error Block 1 start (CF ANALYSIS FAILED)
+            -- KONSTANTERROR: [0] 1. Error Block 1 end (CF ANALYSIS FAILED)
+            -- KONSTANTERROR: [3] 3. Error Block 2 start (CF ANALYSIS FAILED)
+            -- KONSTANTERROR: [3] 3. Error Block 2 end (CF ANALYSIS FAILED)
+            -- KONSTANTERROR: [5] 4. Error Block 25 start (CF ANALYSIS FAILED)
+            -- KONSTANTERROR: [5] 4. Error Block 25 end (CF ANALYSIS FAILED)
+        end
+        v_7_upvr.Hide.Text = ""
+        v_7_upvr.MouseEnter:Connect(function() -- Line 725
+            --[[ Upvalues[1]:
+                [1]: updating_upvr (readonly)
+            ]]
+            updating_upvr(true)
+        end)
+        v_7_upvr.MouseLeave:Connect(function() -- Line 728
+            --[[ Upvalues[1]:
+                [1]: updating_upvr (readonly)
+            ]]
+            updating_upvr(false)
+        end)
+        v_7_upvr.MouseButton1Click:Connect(function() -- Line 731
+            --[[ Upvalues[2]:
+                [1]: buttonclick_upvr (readonly)
+                [2]: v_7_upvr (readonly)
+            ]]
+            buttonclick_upvr(v_7_upvr)
+        end)
+        tbl_9_upvr[v_7_upvr.Name] = function() -- Line 735
+            --[[ Upvalues[4]:
+                [1]: var968_upvw (read and write)
+                [2]: v_7_upvr (readonly)
+                [3]: TweenService_upvr_3 (readonly)
+                [4]: updating_upvr (readonly)
+            ]]
+            -- KONSTANTERROR: [0] 1. Error Block 44 start (CF ANALYSIS FAILED)
+            local var996
+            local function INLINED_20() -- Internal function, doesn't exist in bytecode
+                var996 = TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+                return var996
+            end
+            if var968_upvw.Name ~= v_7_upvr.Name or not INLINED_20() then
+                var996 = TweenInfo.new(0.15, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out)
+            end
+            local var997 = v_7_upvr
+            if var968_upvw.Name == v_7_upvr.Name then
+                var997 = 0.8
+            else
+                var997 = 1.3
+            end
+            var997.UIScale.Scale = var997
+            if var968_upvw.Name == v_7_upvr.Name then
+                -- KONSTANTWARNING: GOTO [53] #37
+            end
+            -- KONSTANTERROR: [0] 1. Error Block 44 end (CF ANALYSIS FAILED)
+            -- KONSTANTERROR: [52] 36. Error Block 48 start (CF ANALYSIS FAILED)
+            v_7_upvr.BackgroundTransparency = 0.8
+            if var968_upvw.Name == v_7_upvr.Name then
+                -- KONSTANTWARNING: GOTO [72] #51
+            end
+            -- KONSTANTERROR: [52] 36. Error Block 48 end (CF ANALYSIS FAILED)
+        end
+    end
+end
+if var775_upvr then
+    v_7_upvr = script
+    i_9 = v_7_upvr.Parent
+    i_9 = TweenInfo.new
+    v_7_upvr = 2
+    Text_upvr = Enum.EasingStyle.Linear
+    i_9 = i_9(v_7_upvr, Text_upvr)
+    v_7_upvr = {}
+    Text_upvr = 0
+    v_7_upvr.TextTransparency = Text_upvr
+    Text_upvr = 0.5
+    v_7_upvr.BackgroundTransparency = Text_upvr
+    TweenService_upvr_3:Create(i_9.TutorialButton, i_9, v_7_upvr):Play()
+end
+if var775_upvr then
+    i_9 = script
+    i_9.Parent.TestingModeButton.MouseButton1Click:Connect(function() -- Line 751
+        --[[ Upvalues[1]:
+            [1]: var779_upvw (read and write)
+        ]]
+        var779_upvw = not var779_upvw
+        if var779_upvw then
+            script.Parent.TestingModeButton.Text = "Testing Mode: true"
+        else
+            script.Parent.TestingModeButton.Text = "Testing Mode: false"
+        end
+        RefreshServerList()
+    end)
+end
+script.Parent.ServerFrame.NewGameButton.MouseButton1Click:Connect(function() -- Line 764
+    --[[ Upvalues[5]:
+        [1]: var967_upvw (read and write)
+        [2]: tbl_5_upvw (read and write)
+        [3]: ReplicatedStorage_upvr_4 (readonly)
+        [4]: var969_upvw (read and write)
+        [5]: var778_upvw (read and write)
+    ]]
+    script.Parent.ConsoleBeep:Play()
+    local var1000
+    if var967_upvw then
+        var1000 = tbl_5_upvw
+    end
+    if ReplicatedStorage_upvr_4.TeleportEvent:InvokeServer(true, var967_upvw, nil, script.Parent.ServerFrame.TextBox.Text, var969_upvw, var778_upvw, nil, false, var1000) then
+        RunConnection("Setting up the connection...")
+    else
+        script.Parent["Incorrect Buzzer"]:Play()
+    end
+end)
+script.Parent.TutorialButton.MouseButton1Click:Connect(function() -- Line 779
+    --[[ Upvalues[2]:
+        [1]: var775_upvr (readonly)
+        [2]: ReplicatedStorage_upvr_4 (readonly)
+    ]]
+    if not var775_upvr then
+    else
+        script.Parent.ConsoleBeep:Play()
+        if ReplicatedStorage_upvr_4.TeleportEvent:InvokeServer(true, true, nil, nil, 5, true, nil, true) then
+            RunConnection("Requesting...")
+            return
+        end
+        script.Parent["Incorrect Buzzer"]:Play()
+    end
+end)
+if var775_upvr then
+    script.Parent.ServerFrame.TestServerButton.Visible = true
+    script.Parent.ServerFrame.TestServerButton.MouseButton1Click:Connect(function() -- Line 797
+        --[[ Upvalues[1]:
+            [1]: var778_upvw (read and write)
+        ]]
+        var778_upvw = not var778_upvw
+        if var778_upvw then
+            script.Parent.ServerFrame.TestServerButton.Text = "Test Server: true"
+        else
+            script.Parent.ServerFrame.TestServerButton.Text = "Test Server: false"
+        end
+    end)
+end
+script.Parent.ServerFrame.LeftButton.MouseButton1Click:Connect(function() -- Line 808
+    --[[ Upvalues[1]:
+        [1]: var969_upvw (read and write)
+    ]]
+    script.Parent["Click Sound"]:Play()
+    if 1 < var969_upvw then
+        var969_upvw -= 1
+    end
+end)
+script.Parent.ServerFrame.RightButton.MouseButton1Click:Connect(function() -- Line 814
+    --[[ Upvalues[1]:
+        [1]: var969_upvw (read and write)
+    ]]
+    script.Parent["Click Sound"]:Play()
+    if var969_upvw < 4 then
+        var969_upvw += 1
+    end
+end)
+while task.wait() do
+    script.Parent.ServerFrame.SaveIndexLabel.Text = "Connection Slot "..var969_upvw
+    if var969_upvw == 1 then
+        script.Parent.ServerFrame.LeftButton.TextColor3 = Color3.fromRGB(118, 118, 118)
+    else
+        script.Parent.ServerFrame.LeftButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    end
+    if var969_upvw == 4 then
+        script.Parent.ServerFrame.RightButton.TextColor3 = Color3.fromRGB(118, 118, 118)
+    else
+        script.Parent.ServerFrame.RightButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    end
+end

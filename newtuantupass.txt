@@ -1,0 +1,1391 @@
+-- Script Path: game:GetService("Players").JapanGoblin2.PlayerGui.NewMenu.MenuHandler
+-- Took 2.63s to decompile.
+-- Executor: Delta (1.1.703.1353)
+
+-- Decompiled with Konstant V2.1, a fast Luau decompiler made in Luau by plusgiant5 (https://discord.gg/brNTY8nX8t)
+-- Decompiled on 2026-01-24 05:41:17
+-- Luau version 6, Types version 3
+-- Time taken: 0.813320 seconds
+
+-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+local RunService_4 = game:GetService("RunService")
+local TweenService_upvr_3 = game:GetService("TweenService")
+local ReplicatedStorage_upvr_3 = game:GetService("ReplicatedStorage")
+local TeleportService_upvr_2 = game:GetService("TeleportService")
+local Parent_upvr_2 = script.Parent
+local MainMenu_upvr_7 = Parent_upvr_2:WaitForChild("MainMenu")
+local ServerCreation_upvr_7 = Parent_upvr_2:WaitForChild("ServerCreation")
+local ServerBrowser_upvr_4 = Parent_upvr_2:WaitForChild("ServerBrowser")
+local Players_upvr_2 = game:GetService("Players")
+local LocalPlayer_upvr_3 = Players_upvr_2.LocalPlayer
+local any_GetRoleInGroup_result1_3 = LocalPlayer_upvr_3:GetRoleInGroup(35806307)
+local var2973_upvr = true
+if any_GetRoleInGroup_result1_3 ~= "Tester" then
+    var2973_upvr = true
+    if any_GetRoleInGroup_result1_3 ~= "Contributor" then
+        var2973_upvr = true
+        if any_GetRoleInGroup_result1_3 ~= "Dev" then
+            var2973_upvr = true
+            if any_GetRoleInGroup_result1_3 ~= "tuantu" then
+                var2973_upvr = true
+                if any_GetRoleInGroup_result1_3 ~= "Lead Tester" then
+                    var2973_upvr = true
+                    if any_GetRoleInGroup_result1_3 ~= "Ask" then
+                        var2973_upvr = true
+                        if any_GetRoleInGroup_result1_3 ~= "Lead community manager" then
+                            if any_GetRoleInGroup_result1_3 ~= "Mod" then
+                                var2973_upvr = false
+                            else
+                                var2973_upvr = true
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+local tbl_252_upvr = {}
+if var2973_upvr then
+    tbl_252_upvr["Testing Mode"] = false
+end
+workspace:WaitForChild("Map"):Destroy()
+repeat
+    task.wait()
+until workspace:WaitForChild("AssetsLoaded").Value
+local var2975_upvr = ReplicatedStorage_upvr_3.Scenes:GetChildren()[math.random(1, #ReplicatedStorage_upvr_3.Scenes:GetChildren())]
+var2975_upvr.Parent = workspace
+var2975_upvr.PrimaryPart = var2975_upvr.CameraPart
+var2975_upvr:PivotTo(workspace.CameraPart.CFrame)
+function SetupSuit(arg1, arg2, arg3) -- Line 35
+    if arg2:FindFirstChild("Shirt") or arg2:FindFirstChild("Varients") then
+        if arg1:FindFirstChild("Shirt") then
+            arg1.Shirt:Destroy()
+        end
+        if arg1:FindFirstChild("Pants") then
+            arg1.Pants:Destroy()
+        end
+        local var2988
+        local var2989
+        if arg2:FindFirstChild("Shirt") then
+            var2988 = arg2.Shirt:Clone()
+            var2989 = arg2.Pants:Clone()
+        else
+            var2988 = arg2.Varients[arg3].Shirt:Clone()
+            var2989 = arg2.Varients[arg3].Pants:Clone()
+        end
+        var2988.Parent = arg1
+        var2989.Parent = arg1
+    elseif arg2:FindFirstChild("DestroyClothes") then
+        local Shirt_3 = arg1:WaitForChild("Shirt", 3)
+        if not arg1:IsDescendantOf(workspace) then return end
+        if Shirt_3 then
+            Shirt_3:Destroy()
+            arg1.Pants:Destroy()
+        end
+    end
+    if arg2:FindFirstChild("Accessories") then
+        for _, v in arg2.Accessories:GetChildren() do
+            local clone = v:Clone()
+            if clone:IsA("Model") then
+                local SOME_5 = arg1:FindFirstChild(clone.LimbAttached.Value)
+                clone.PrimaryPart = clone:FindFirstChild("TorsoPos")
+                clone:PivotTo(SOME_5.CFrame)
+                local Motor6D_2 = Instance.new("Motor6D")
+                Motor6D_2.Part0 = clone:FindFirstChild("TorsoPos")
+                Motor6D_2.Part1 = SOME_5
+                Motor6D_2.C0 = SOME_5.CFrame
+                Motor6D_2.C1 = SOME_5.CFrame
+                Motor6D_2.Parent = clone:FindFirstChild("TorsoPos")
+            end
+            for i_2, v_2 in clone:GetDescendants() do
+                if v_2:IsA("BasePart") then
+                    v_2.CollisionGroup = "Nothing"
+                    v_2.Massless = true
+                end
+            end
+            clone.Parent = arg1
+        end
+    end
+    if arg2:FindFirstChild("BodyColors") and arg1:FindFirstChild("Body Colors") then
+        for _, v_3 in arg2.BodyColors:GetChildren() do
+            i_2 = v_3.Name:gsub(' ', "")
+            arg1["Body Colors"][i_2.."Color3"] = v_3.Value
+        end
+    end
+    if arg2:FindFirstChild("Shirt Graphic") then
+        arg2["Shirt Graphic"]:Clone().Parent = arg1
+    end
+end
+for _, v_4 in var2975_upvr.Actors:GetChildren() do
+    local class_Decal = v_4.Head:FindFirstChildWhichIsA("Decal")
+    if class_Decal then
+        class_Decal:Destroy()
+    end
+    for _, v_5 in v_4:GetDescendants() do
+        if v_5:IsA("BasePart") then
+            v_5.Color = Color3.fromRGB(255, 204, 153)
+        end
+    end
+    ReplicatedStorage_upvr_3.Clerks.Faces:GetChildren()[math.random(1, #ReplicatedStorage_upvr_3.Clerks.Faces:GetChildren())]:FindFirstChildWhichIsA("Decal"):Clone().Parent = v_4.Head
+    v_4.Name = ReplicatedStorage_upvr_3.Suits:GetChildren()[math.random(1, #ReplicatedStorage_upvr_3.Suits:GetChildren())].Name
+    SetupSuit(v_4, ReplicatedStorage_upvr_3.Suits:GetChildren()[math.random(1, #ReplicatedStorage_upvr_3.Suits:GetChildren())], "ControlDepartment")
+    local clone_33 = ReplicatedStorage_upvr_3.DepartmentBands.ControlDepartment:Clone()
+    clone_33.Parent = v_4
+    local clone_32 = script.BandWeld:Clone()
+    clone_32.Parent = clone_33
+    clone_32.Part0 = v_4["Left Arm"]
+    clone_32.Part1 = clone_33
+end
+local tbl_148_upvr = {MainMenu_upvr_7.NewGameHolder.Button, MainMenu_upvr_7.LoadGameHolder.Button, MainMenu_upvr_7.ServerBrowserHolder.Button, MainMenu_upvr_7.CreditsHolder.Button, ServerBrowser_upvr_4.ReturnButton}
+local CurrentCamera_upvr_2 = workspace.CurrentCamera
+repeat
+    task.wait()
+    CurrentCamera_upvr_2.CameraType = Enum.CameraType.Scriptable
+until CurrentCamera_upvr_2.CameraType == Enum.CameraType.Scriptable
+function RunConsoleText(arg1, arg2) -- Line 166
+    for i_6 = 1, string.len(arg1) do
+        arg2.Text = string.sub(arg1, 1, i_6)
+        local clone_2 = script["Switches Clicks Buttons Various Versions 7 (SFX)"]:Clone()
+        clone_2.Parent = workspace
+        clone_2:Play()
+        game.Debris:AddItem(clone_2, 5)
+        if string.sub(arg1, i_6, i_6) == '.' then
+            task.wait(1)
+        else
+            task.wait(0.01)
+        end
+    end
+    return arg2
+end
+local var3016_upvw = not RunService_4:IsStudio()
+if var3016_upvw then
+    MainMenu_upvr_7.Frame.BackgroundTransparency = 1
+    MainMenu_upvr_7.ImageLabel.ImageTransparency = 1
+    MainMenu_upvr_7.TextLabel.TextTransparency = 1
+    for _, v_6 in tbl_148_upvr do
+        v_6.TextTransparency = 1
+    end
+    for i_8 = 0, 14 do
+        for i_9 = 0, 9 do
+            local Frame_15 = Instance.new("Frame")
+            Frame_15.Size = UDim2.fromScale(0.06666666666666667, 0.1)
+            Frame_15.Position = UDim2.fromScale(i_8 * 0.06666666666666667, i_9 * 0.1)
+            Frame_15.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            Frame_15.BorderSizePixel = 0
+            Frame_15.Parent = script.Parent
+            table.insert({}, Frame_15)
+            local HoverEffect_upvr
+        end
+    end
+    task.spawn(function() -- Line 215
+        --[[ Upvalues[6]:
+            [1]: TweenService_upvr_3 (readonly)
+            [2]: HoverEffect_upvr (readonly)
+            [3]: MainMenu_upvr_7 (readonly)
+            [4]: tbl_148_upvr (readonly)
+            [5]: var3016_upvw (read and write)
+            [6]: var2975_upvr (readonly)
+        ]]
+        script.Parent["Milling Machine 8 (SFX)"]:Play()
+        script.Parent.beep:Play()
+        task.wait(1)
+        script.Parent.beep:Play()
+        task.wait(1)
+        task.wait(2)
+        RunConsoleText("Command console booting up...", script.Parent.IntroText)
+        task.wait(1)
+        RunConsoleText("User registered: "..game.Players.LocalPlayer.DisplayName..'.', script.Parent.IntroText)
+        task.wait(1)
+        RunConsoleText("Welcome to Lobotomy Corporation.", script.Parent.IntroText)
+        task.wait(1)
+        TweenService_upvr_3:Create(script.Parent.IntroText, TweenInfo.new(1, Enum.EasingStyle.Linear), {
+            TextTransparency = 1;
+        }):Play()
+        for _, v_7 in HoverEffect_upvr do
+            v_7.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            TweenService_upvr_3:Create(v_7, TweenInfo.new(math.random(10, 15) / 10, Enum.EasingStyle.Linear), {
+                BackgroundTransparency = 1;
+                BackgroundColor3 = Color3.fromRGB(0, 0, 0);
+            }):Play()
+            game.Debris:AddItem(v_7, 2)
+        end
+        task.wait(1)
+        TweenService_upvr_3:Create(MainMenu_upvr_7.Frame, TweenInfo.new(1, Enum.EasingStyle.Linear), {
+            BackgroundTransparency = 0.5;
+        }):Play()
+        TweenService_upvr_3:Create(MainMenu_upvr_7.ImageLabel, TweenInfo.new(1, Enum.EasingStyle.Linear), {
+            ImageTransparency = 0;
+        }):Play()
+        TweenService_upvr_3:Create(MainMenu_upvr_7.TextLabel, TweenInfo.new(2, Enum.EasingStyle.Linear), {
+            TextTransparency = 0;
+        }):Play()
+        task.wait(1)
+        for i_11, v_8 in tbl_148_upvr do
+            local Position = v_8.Position
+            if i_11 <= 3 then
+                v_8.Position = UDim2.fromScale(-0.1, Position.Y.Scale)
+            end
+            TweenService_upvr_3:Create(v_8, TweenInfo.new(0.5 + 0.5 * i_11, Enum.EasingStyle.Linear), {
+                TextTransparency = 0;
+                Position = Position;
+            }):Play()
+        end
+        var3016_upvw = false
+        var2975_upvr.Soundwork.SoundworkHandler.Enabled = true
+        var2975_upvr.Soundwork.Parent = script.Parent
+    end)
+else
+    HoverEffect_upvr = var2975_upvr.Soundwork.SoundworkHandler
+    HoverEffect_upvr.Enabled = true
+    HoverEffect_upvr = var2975_upvr.Soundwork
+    HoverEffect_upvr.Parent = script.Parent
+end
+HoverEffect_upvr = true
+MainMenu_upvr_7.Visible = HoverEffect_upvr
+function HoverEffect_upvr(arg1, arg2) -- Line 273, Named "HoverEffect"
+    --[[ Upvalues[1]:
+        [1]: var3016_upvw (read and write)
+    ]]
+    if var3016_upvw then
+    else
+        if arg1:FindFirstChild("HoverFrame") then
+            arg1.HoverFrame:Destroy()
+        end
+        if not arg2 then return end
+        local Frame_14 = Instance.new("Frame")
+        Frame_14.Size = UDim2.fromScale(1, 1)
+        Frame_14.Name = "HoverFrame"
+        Frame_14.Parent = arg1
+        Frame_14.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        Frame_14.BorderSizePixel = 0
+        Frame_14.Position = UDim2.fromScale(0.5, 0.5)
+        Frame_14.ZIndex = 0
+        script.Parent.Hover:Play()
+        for i_27 = 1, 15 do
+            if not Frame_14 then break end
+            Frame_14.AnchorPoint = Vector2.new(0.5 + math.random(-10, 10) / 100, 0.5 + math.random(-10, 10) / 100)
+            task.wait(0.01)
+        end
+        if Frame_14 then
+            i_27 = 0.5
+            Frame_14.AnchorPoint = Vector2.new(0.5, i_27)
+        end
+    end
+end
+HoverEffect = HoverEffect_upvr -- Setting global
+HoverEffect_upvr = TweenInfo.new(0.25, Enum.EasingStyle.Linear)
+local var3033_upvr = HoverEffect_upvr
+local const_string_upvw_4 = "NewSave"
+function ButtonClick(arg1) -- Line 313
+    --[[ Upvalues[9]:
+        [1]: var3016_upvw (read and write)
+        [2]: MainMenu_upvr_7 (readonly)
+        [3]: TweenService_upvr_3 (readonly)
+        [4]: var3033_upvr (readonly)
+        [5]: ServerCreation_upvr_7 (readonly)
+        [6]: const_string_upvw_4 (read and write)
+        [7]: tbl_252_upvr (readonly)
+        [8]: ServerBrowser_upvr_4 (readonly)
+        [9]: Parent_upvr_2 (readonly)
+    ]]
+    -- KONSTANTERROR: [0] 1. Error Block 131 start (CF ANALYSIS FAILED)
+    if var3016_upvw then return end
+    script.Parent["Click Sound"]:Play()
+    if arg1.Parent.Name == "CreditsHolder" then
+        if not MainMenu_upvr_7.CreditsFrame.Visible then
+            MainMenu_upvr_7.CreditsFrame.IntroFrame.BackgroundTransparency = 0
+            TweenService_upvr_3:Create(MainMenu_upvr_7.CreditsFrame.IntroFrame, var3033_upvr, {
+                BackgroundTransparency = 1;
+            }):Play()
+            for _, v_9 in MainMenu_upvr_7.CreditsFrame.IntroFrame:GetChildren() do
+                if v_9:IsA("ImageLabel") then
+                    v_9.ImageTransparency = 0
+                    TweenService_upvr_3:Create(v_9, var3033_upvr, {
+                        ImageTransparency = 1;
+                    }):Play()
+                end
+            end
+        end
+        MainMenu_upvr_7.CreditsFrame.Visible = true
+        ServerCreation_upvr_7.Visible = false
+    else
+        MainMenu_upvr_7.CreditsFrame.Visible = false
+    end
+    -- KONSTANTERROR: [0] 1. Error Block 131 end (CF ANALYSIS FAILED)
+    -- KONSTANTERROR: [104] 71. Error Block 14 start (CF ANALYSIS FAILED)
+    -- KONSTANTERROR: [104] 71. Error Block 14 end (CF ANALYSIS FAILED)
+    -- KONSTANTERROR: [110] 74. Error Block 125 start (CF ANALYSIS FAILED)
+    if arg1.Parent.Name == "NewGameHolder" then
+        -- KONSTANTWARNING: GOTO [124] #83
+    end
+    -- KONSTANTERROR: [110] 74. Error Block 125 end (CF ANALYSIS FAILED)
+end
+for _, v_10_upvr in tbl_148_upvr do
+    if v_10_upvr.Name ~= "ReturnButton" then
+        v_10_upvr.MouseEnter:Connect(function() -- Line 479
+            --[[ Upvalues[1]:
+                [1]: v_10_upvr (readonly)
+            ]]
+            HoverEffect(v_10_upvr.Parent, true)
+        end)
+        v_10_upvr.MouseLeave:Connect(function() -- Line 483
+            --[[ Upvalues[1]:
+                [1]: v_10_upvr (readonly)
+            ]]
+            HoverEffect(v_10_upvr.Parent, false)
+        end)
+    end
+    v_10_upvr.MouseButton1Click:Connect(function() -- Line 488
+        --[[ Upvalues[1]:
+            [1]: v_10_upvr (readonly)
+        ]]
+        ButtonClick(v_10_upvr)
+    end)
+end
+task.spawn(function() -- Line 495
+    --[[ Upvalues[3]:
+        [1]: TweenService_upvr_3 (readonly)
+        [2]: ServerCreation_upvr_7 (readonly)
+        [3]: ServerBrowser_upvr_4 (readonly)
+    ]]
+    local any_Create_result1_41 = TweenService_upvr_3:Create(ServerCreation_upvr_7.ConnectionInfo.Frame.Frame.Line1.Frame, TweenInfo.new(5, Enum.EasingStyle.Linear), {
+        Position = UDim2.fromScale(-1, 0);
+    })
+    local any_Create_result1_9 = TweenService_upvr_3:Create(ServerCreation_upvr_7.ConnectionInfo.Frame.Frame.Line2.Frame, TweenInfo.new(5, Enum.EasingStyle.Linear), {
+        Position = UDim2.fromScale(0, 0);
+    })
+    local any_Create_result1_40 = TweenService_upvr_3:Create(ServerCreation_upvr_7.ConnectionInfo.Frame.Frame.Line3.Frame, TweenInfo.new(5, Enum.EasingStyle.Linear), {
+        Position = UDim2.fromScale(-1, 0);
+    })
+    local any_Create_result1_94 = TweenService_upvr_3:Create(ServerCreation_upvr_7.ConnectionInfo.Frame.AbnorFrame.Line1.Frame, TweenInfo.new(5, Enum.EasingStyle.Linear), {
+        Position = UDim2.fromScale(-1, 0);
+    })
+    local any_Create_result1_17 = TweenService_upvr_3:Create(ServerCreation_upvr_7.ConnectionInfo.Frame.AbnorFrame.Line2.Frame, TweenInfo.new(5, Enum.EasingStyle.Linear), {
+        Position = UDim2.fromScale(0, 0);
+    })
+    local any_Create_result1_39 = TweenService_upvr_3:Create(ServerCreation_upvr_7.ConnectionInfo.Frame.AbnorFrame.Line3.Frame, TweenInfo.new(5, Enum.EasingStyle.Linear), {
+        Position = UDim2.fromScale(-1, 0);
+    })
+    local any_Create_result1_74 = TweenService_upvr_3:Create(ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.Frame.Line1.Frame, TweenInfo.new(5, Enum.EasingStyle.Linear), {
+        Position = UDim2.fromScale(-1, 0);
+    })
+    local any_Create_result1_30 = TweenService_upvr_3:Create(ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.Frame.Line2.Frame, TweenInfo.new(5, Enum.EasingStyle.Linear), {
+        Position = UDim2.fromScale(0, 0);
+    })
+    local any_Create_result1_36 = TweenService_upvr_3:Create(ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.Frame.Line3.Frame, TweenInfo.new(5, Enum.EasingStyle.Linear), {
+        Position = UDim2.fromScale(-1, 0);
+    })
+    local any_Create_result1_38 = TweenService_upvr_3:Create(ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.AbnorFrame.Line1.Frame, TweenInfo.new(5, Enum.EasingStyle.Linear), {
+        Position = UDim2.fromScale(-1, 0);
+    })
+    local any_Create_result1_101 = TweenService_upvr_3:Create(ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.AbnorFrame.Line2.Frame, TweenInfo.new(5, Enum.EasingStyle.Linear), {
+        Position = UDim2.fromScale(0, 0);
+    })
+    local any_Create_result1_23 = TweenService_upvr_3:Create(ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.AbnorFrame.Line3.Frame, TweenInfo.new(5, Enum.EasingStyle.Linear), {
+        Position = UDim2.fromScale(-1, 0);
+    })
+    while true do
+        any_Create_result1_41:Play()
+        any_Create_result1_9:Play()
+        any_Create_result1_40:Play()
+        any_Create_result1_94:Play()
+        any_Create_result1_17:Play()
+        any_Create_result1_39:Play()
+        any_Create_result1_74:Play()
+        any_Create_result1_30:Play()
+        any_Create_result1_36:Play()
+        any_Create_result1_38:Play()
+        any_Create_result1_101:Play()
+        any_Create_result1_23:Play()
+        task.wait(5)
+        any_Create_result1_41:Cancel()
+        any_Create_result1_9:Cancel()
+        any_Create_result1_40:Cancel()
+        any_Create_result1_94:Cancel()
+        any_Create_result1_17:Cancel()
+        any_Create_result1_39:Cancel()
+        any_Create_result1_74:Cancel()
+        any_Create_result1_30:Cancel()
+        any_Create_result1_36:Cancel()
+        any_Create_result1_38:Cancel()
+        any_Create_result1_101:Cancel()
+        any_Create_result1_23:Cancel()
+        ServerCreation_upvr_7.ConnectionInfo.Frame.Frame.Line1.Frame.Position = UDim2.fromScale(0, 0)
+        ServerCreation_upvr_7.ConnectionInfo.Frame.Frame.Line2.Frame.Position = UDim2.fromScale(-1, 0)
+        ServerCreation_upvr_7.ConnectionInfo.Frame.Frame.Line3.Frame.Position = UDim2.fromScale(0, 0)
+        ServerCreation_upvr_7.ConnectionInfo.Frame.AbnorFrame.Line1.Frame.Position = UDim2.fromScale(0, 0)
+        ServerCreation_upvr_7.ConnectionInfo.Frame.AbnorFrame.Line2.Frame.Position = UDim2.fromScale(-1, 0)
+        ServerCreation_upvr_7.ConnectionInfo.Frame.AbnorFrame.Line3.Frame.Position = UDim2.fromScale(0, 0)
+        ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.Frame.Line1.Frame.Position = UDim2.fromScale(0, 0)
+        ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.Frame.Line2.Frame.Position = UDim2.fromScale(-1, 0)
+        ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.Frame.Line3.Frame.Position = UDim2.fromScale(0, 0)
+        ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.AbnorFrame.Line1.Frame.Position = UDim2.fromScale(0, 0)
+        ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.AbnorFrame.Line2.Frame.Position = UDim2.fromScale(-1, 0)
+        ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.AbnorFrame.Line3.Frame.Position = UDim2.fromScale(0, 0)
+    end
+end)
+local TweenInfo_new_result1_16 = TweenInfo.new(0.1, Enum.EasingStyle.Back)
+local any_Create_result1_96_upvr = TweenService_upvr_3:Create(ServerCreation_upvr_7.ServerInfo.SetupFrame.IndexLeft.TextLabel, TweenInfo_new_result1_16, {
+    Position = UDim2.fromScale(0.75, 0.5);
+})
+local any_Create_result1_37_upvr = TweenService_upvr_3:Create(ServerCreation_upvr_7.ServerInfo.SetupFrame.IndexRight.TextLabel, TweenInfo_new_result1_16, {
+    Position = UDim2.fromScale(0.25, 0.5);
+})
+local var3077_upvw = 1
+local tbl_146_upvr = {"ControlDepartment", "InformationDepartment", "TrainingDepartment", "SecurityDepartment", "CentralDepartment", "DisciplinaryDepartment", "WelfareDepartment", "RecordDepartment", "ExtractionDepartment", "ArchitectureDepartment"}
+local tbl_156_upvr = {
+    ControlDepartment = 1;
+    InformationDepartment = 1;
+    TrainingDepartment = 1;
+    SecurityDepartment = 1;
+    CentralDepartment = 2;
+    DisciplinaryDepartment = 2;
+    WelfareDepartment = 2;
+    RecordDepartment = 3;
+    ExtractionDepartment = 3;
+    ArchitectureDepartment = 3;
+}
+local var3080_upvw = false
+local var3081_upvw
+for _, v_11_upvr in ServerCreation_upvr_7.ConnectionInfo.Frame.Frame.Frame:GetChildren() do
+    if v_11_upvr:IsA("Frame") then
+        v_11_upvr.TextButton.MouseButton1Click:Connect(function() -- Line 609
+            --[[ Upvalues[6]:
+                [1]: var3080_upvw (read and write)
+                [2]: var3081_upvw (read and write)
+                [3]: ServerCreation_upvr_7 (readonly)
+                [4]: TweenService_upvr_3 (readonly)
+                [5]: var3033_upvr (readonly)
+                [6]: v_11_upvr (readonly)
+            ]]
+            if var3080_upvw then
+            else
+                if not var3081_upvw or not var3081_upvw[2] then return end
+                ServerCreation_upvr_7.ConnectionInfo.IntroFrame.BackgroundTransparency = 0
+                TweenService_upvr_3:Create(ServerCreation_upvr_7.ConnectionInfo.IntroFrame, var3033_upvr, {
+                    BackgroundTransparency = 1;
+                }):Play()
+                for _, v_23 in ServerCreation_upvr_7.ConnectionInfo.IntroFrame:GetChildren() do
+                    if v_23:IsA("ImageLabel") then
+                        v_23.ImageTransparency = 0
+                        TweenService_upvr_3:Create(v_23, var3033_upvr, {
+                            ImageTransparency = 1;
+                        }):Play()
+                    end
+                end
+                ServerCreation_upvr_7.ConnectionInfo.Frame.Frame.Visible = false
+                ServerCreation_upvr_7.ConnectionInfo.Frame.AbnorFrame.Visible = true
+                for _, v_24 in ServerCreation_upvr_7.ConnectionInfo.Frame.AbnorFrame.ScrollingFrame:GetChildren() do
+                    if v_24:IsA("TextLabel") then
+                        v_24:Destroy()
+                    end
+                end
+                for _, v_25 in var3081_upvw[2] do
+                    if v_11_upvr.Name == v_25[3][1] then
+                        local clone_28 = script.AbnorTemplate:Clone()
+                        clone_28.Text = v_25[1]
+                        clone_28.Parent = ServerCreation_upvr_7.ConnectionInfo.Frame.AbnorFrame.ScrollingFrame
+                    end
+                end
+            end
+        end)
+    end
+end
+for _, v_12_upvr in ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.Frame.Frame:GetChildren() do
+    if v_12_upvr:IsA("Frame") then
+        v_12_upvr.TextButton.MouseButton1Click:Connect(function() -- Line 655
+            --[[ Upvalues[4]:
+                [1]: var3080_upvw (read and write)
+                [2]: var3081_upvw (read and write)
+                [3]: ServerBrowser_upvr_4 (readonly)
+                [4]: v_12_upvr (readonly)
+            ]]
+            if var3080_upvw then
+            else
+                if not var3081_upvw or not var3081_upvw[2] then return end
+                ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.Frame.Visible = false
+                ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.AbnorFrame.Visible = true
+                for _, v_26 in ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.AbnorFrame.ScrollingFrame:GetChildren() do
+                    if v_26:IsA("TextLabel") then
+                        v_26:Destroy()
+                    end
+                end
+                for _, v_27 in var3081_upvw[2] do
+                    if v_12_upvr.Name == v_27[3][1] then
+                        local clone_26 = script.AbnorTemplate:Clone()
+                        clone_26.Text = v_27[1]
+                        clone_26.Parent = ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.AbnorFrame.ScrollingFrame
+                    end
+                end
+            end
+        end)
+    end
+end
+ServerCreation_upvr_7.ConnectionInfo.Frame.AbnorFrame.TextButton.MouseButton1Click:Connect(function() -- Line 697
+    --[[ Upvalues[4]:
+        [1]: var3080_upvw (read and write)
+        [2]: ServerCreation_upvr_7 (readonly)
+        [3]: TweenService_upvr_3 (readonly)
+        [4]: var3033_upvr (readonly)
+    ]]
+    if var3080_upvw then
+    else
+        if ServerCreation_upvr_7.ConnectionInfo.Frame.Frame.Visible then return end
+        ServerCreation_upvr_7.ConnectionInfo.IntroFrame.BackgroundTransparency = 0
+        TweenService_upvr_3:Create(ServerCreation_upvr_7.ConnectionInfo.IntroFrame, var3033_upvr, {
+            BackgroundTransparency = 1;
+        }):Play()
+        for _, v_28 in ServerCreation_upvr_7.ConnectionInfo.IntroFrame:GetChildren() do
+            if v_28:IsA("ImageLabel") then
+                v_28.ImageTransparency = 0
+                TweenService_upvr_3:Create(v_28, var3033_upvr, {
+                    ImageTransparency = 1;
+                }):Play()
+            end
+        end
+        ServerCreation_upvr_7.ConnectionInfo.Frame.Frame.Visible = true
+        ServerCreation_upvr_7.ConnectionInfo.Frame.AbnorFrame.Visible = false
+    end
+end)
+local tbl_137_upvr = {}
+local tbl_136_upvr = {}
+task.spawn(function() -- Line 720
+    --[[ Upvalues[5]:
+        [1]: tbl_137_upvr (readonly)
+        [2]: tbl_136_upvr (readonly)
+        [3]: ReplicatedStorage_upvr_3 (readonly)
+        [4]: LocalPlayer_upvr_3 (readonly)
+        [5]: var2973_upvr (readonly)
+    ]]
+    tbl_137_upvr[1] = "Unloaded"
+    tbl_136_upvr[1] = "Unloaded"
+    tbl_137_upvr[2] = "Unloaded"
+    tbl_136_upvr[2] = "Unloaded"
+    tbl_137_upvr[3] = "Unloaded"
+    tbl_136_upvr[3] = "Unloaded"
+    tbl_137_upvr[4] = "Unloaded"
+    tbl_136_upvr[4] = "Unloaded"
+    for i_16 = 1, 4 do
+        tbl_137_upvr[i_16] = ReplicatedStorage_upvr_3.GetFacilityData:InvokeServer(LocalPlayer_upvr_3.UserId, i_16)
+    end
+    if not var2973_upvr then
+    else
+        for var3125 = 1, 4 do
+            tbl_136_upvr[var3125] = ReplicatedStorage_upvr_3.GetFacilityData:InvokeServer(LocalPlayer_upvr_3.UserId, var3125, true)
+        end
+    end
+end)
+function IndexChange(arg1) -- Line 736
+    --[[ Upvalues[13]:
+        [1]: var3080_upvw (read and write)
+        [2]: var3077_upvw (read and write)
+        [3]: ServerCreation_upvr_7 (readonly)
+        [4]: any_Create_result1_96_upvr (readonly)
+        [5]: any_Create_result1_37_upvr (readonly)
+        [6]: tbl_252_upvr (readonly)
+        [7]: tbl_136_upvr (readonly)
+        [8]: tbl_137_upvr (readonly)
+        [9]: var3081_upvw (read and write)
+        [10]: tbl_146_upvr (readonly)
+        [11]: tbl_156_upvr (readonly)
+        [12]: TweenService_upvr_3 (readonly)
+        [13]: var3033_upvr (readonly)
+    ]]
+    -- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+    local var3146
+    if var3146 then
+    else
+        var3146 = true
+        var3080_upvw = var3146
+        var3146 = var3077_upvw
+        var3146 += arg1
+        var3077_upvw = var3146
+        var3146 = ServerCreation_upvr_7.ServerInfo.SetupFrame.SaveIndexLabel
+        var3146.Text = "Connection Slot "..var3077_upvw
+        var3146 = var3077_upvw
+        if var3146 == 1 then
+            var3146 = any_Create_result1_96_upvr:Play
+            var3146()
+            var3146 = ServerCreation_upvr_7.ServerInfo.SetupFrame.IndexLeft.TextLabel
+            var3146.TextColor3 = Color3.fromRGB(118, 118, 118)
+        else
+            var3146 = ServerCreation_upvr_7.ServerInfo.SetupFrame.IndexLeft.TextLabel
+            var3146.TextColor3 = Color3.fromRGB(255, 255, 255)
+        end
+        var3146 = var3077_upvw
+        if var3146 == 4 then
+            var3146 = any_Create_result1_37_upvr:Play
+            var3146()
+            var3146 = ServerCreation_upvr_7.ServerInfo.SetupFrame.IndexRight.TextLabel
+            var3146.TextColor3 = Color3.fromRGB(118, 118, 118)
+        else
+            var3146 = ServerCreation_upvr_7.ServerInfo.SetupFrame.IndexRight.TextLabel
+            var3146.TextColor3 = Color3.fromRGB(255, 255, 255)
+        end
+        local function INLINED_49() -- Internal function, doesn't exist in bytecode
+            var3146 = tbl_136_upvr
+            return var3146
+        end
+        if not tbl_252_upvr["Testing Mode"] or not INLINED_49() then
+            var3146 = tbl_137_upvr
+        end
+        repeat
+            task.wait()
+        until var3146[var3077_upvw] ~= "Unloaded"
+        var3081_upvw = var3146[var3077_upvw]
+        if not var3081_upvw or not "- Day "..var3081_upvw[1].." -" then
+        end
+        ServerCreation_upvr_7.ConnectionInfo.DayLabel.Text = "- Day ??? -"
+        for _, v_29 in tbl_146_upvr do
+            local var3147
+            local function INLINED_50() -- Internal function, doesn't exist in bytecode
+                var3147 = var3081_upvw[4][1][v_29]
+                return var3147
+            end
+            if not var3081_upvw or not var3081_upvw[4] or not var3081_upvw[4][1] or not INLINED_50() then
+                var3147 = 0
+            end
+            local var3148 = ServerCreation_upvr_7.ConnectionInfo.Frame.Frame.Frame[v_29]
+            if 0 >= var3147 then
+            else
+            end
+            var3148.Visible = true
+            if var3147 > 0 then
+                local maximum_4 = math.max(tbl_156_upvr[v_29], 0)
+                local Frame_12 = var3148.Frame
+                if 6 > var3081_upvw[4][2][v_29] then
+                    Frame_12 = false
+                else
+                    Frame_12 = true
+                end
+                Frame_12.CSFrame.Visible = Frame_12
+                for i_35 = 1, 4 do
+                    local var3151
+                    local function INLINED_51() -- Internal function, doesn't exist in bytecode
+                        var3151 = Color3.fromRGB(255, 0, 0)
+                        return var3151
+                    end
+                    if i_35 > var3147 or not INLINED_51() then
+                        var3151 = Color3.fromRGB(0, 0, 0)
+                    end
+                    var3148.Frame['F'..i_35].BackgroundColor3 = var3151
+                end
+            end
+        end
+        local Frame_3 = ServerCreation_upvr_7.ConnectionInfo.Frame.Frame
+        if 1 > maximum_4 then
+            Frame_3 = false
+        else
+            Frame_3 = true
+        end
+        Frame_3["Line"..1].Visible = Frame_3
+        if 2 > maximum_4 then
+            -- KONSTANTWARNING: GOTO [266] #201
+        end
+        ServerCreation_upvr_7.ConnectionInfo.Frame.Frame["Line"..2].Visible = true
+        if 3 > maximum_4 then
+        else
+        end
+        ServerCreation_upvr_7.ConnectionInfo.Frame.Frame["Line"..3].Visible = true
+        ServerCreation_upvr_7.ConnectionInfo.IntroFrame.BackgroundTransparency = 0
+        TweenService_upvr_3:Create(ServerCreation_upvr_7.ConnectionInfo.IntroFrame, var3033_upvr, {
+            BackgroundTransparency = 1;
+        }):Play()
+        for _, v_30 in ServerCreation_upvr_7.ConnectionInfo.IntroFrame:GetChildren() do
+            if v_30:IsA("ImageLabel") then
+                v_30.ImageTransparency = 0
+                TweenService_upvr_3:Create(v_30, var3033_upvr, {
+                    ImageTransparency = 1;
+                }):Play()
+            end
+        end
+        if ServerCreation_upvr_7.ConnectionInfo.Frame.AbnorFrame.Visible then
+            ServerCreation_upvr_7.ConnectionInfo.Frame.Frame.Visible = true
+        end
+        ServerCreation_upvr_7.ConnectionInfo.Frame.AbnorFrame.Visible = false
+        var3080_upvw = false
+    end
+end
+IndexChange(0)
+local any_Create_result1_31_upvr = TweenService_upvr_3:Create(ServerCreation_upvr_7.ServerInfo.SetupFrame.IndexLeft.TextLabel, TweenInfo_new_result1_16, {
+    Position = UDim2.fromScale(0.65, 0.5);
+})
+ServerCreation_upvr_7.ServerInfo.SetupFrame.IndexLeft.MouseEnter:Connect(function() -- Line 826
+    --[[ Upvalues[2]:
+        [1]: var3077_upvw (read and write)
+        [2]: any_Create_result1_31_upvr (readonly)
+    ]]
+    if var3077_upvw <= 1 then
+    else
+        any_Create_result1_31_upvr:Play()
+    end
+end)
+local any_Create_result1_4_upvr = TweenService_upvr_3:Create(ServerCreation_upvr_7.ServerInfo.SetupFrame.IndexRight.TextLabel, TweenInfo_new_result1_16, {
+    Position = UDim2.fromScale(0.35, 0.5);
+})
+ServerCreation_upvr_7.ServerInfo.SetupFrame.IndexRight.MouseEnter:Connect(function() -- Line 832
+    --[[ Upvalues[2]:
+        [1]: var3077_upvw (read and write)
+        [2]: any_Create_result1_4_upvr (readonly)
+    ]]
+    if 4 <= var3077_upvw then
+    else
+        any_Create_result1_4_upvr:Play()
+    end
+end)
+ServerCreation_upvr_7.ServerInfo.SetupFrame.IndexLeft.MouseLeave:Connect(function() -- Line 839
+    --[[ Upvalues[1]:
+        [1]: any_Create_result1_96_upvr (readonly)
+    ]]
+    any_Create_result1_96_upvr:Play()
+end)
+ServerCreation_upvr_7.ServerInfo.SetupFrame.IndexRight.MouseLeave:Connect(function() -- Line 842
+    --[[ Upvalues[1]:
+        [1]: any_Create_result1_37_upvr (readonly)
+    ]]
+    any_Create_result1_37_upvr:Play()
+end)
+ServerCreation_upvr_7.ServerInfo.SetupFrame.IndexLeft.MouseButton1Click:Connect(function() -- Line 846
+    --[[ Upvalues[2]:
+        [1]: var3077_upvw (read and write)
+        [2]: var3080_upvw (read and write)
+    ]]
+    if var3077_upvw <= 1 then
+    else
+        if var3080_upvw then return end
+        IndexChange(-1)
+        script.Parent["Click Sound"]:Play()
+    end
+end)
+ServerCreation_upvr_7.ServerInfo.SetupFrame.IndexRight.MouseButton1Click:Connect(function() -- Line 857
+    --[[ Upvalues[2]:
+        [1]: var3077_upvw (read and write)
+        [2]: var3080_upvw (read and write)
+    ]]
+    if 4 <= var3077_upvw then
+    else
+        if var3080_upvw then return end
+        IndexChange(1)
+        script.Parent["Click Sound"]:Play()
+    end
+end)
+ServerCreation_upvr_7.ServerInfo.SetupFrame.ServerNameTextbox.Text = LocalPlayer_upvr_3.DisplayName.."'s Facility"
+ServerCreation_upvr_7.ServerInfo.SetupFrame.ServerNameTextbox.InputEnded:Connect(function() -- Line 870
+    --[[ Upvalues[2]:
+        [1]: ReplicatedStorage_upvr_3 (readonly)
+        [2]: ServerCreation_upvr_7 (readonly)
+    ]]
+    ServerCreation_upvr_7.ServerInfo.SetupFrame.ServerNameTextbox.Text = ReplicatedStorage_upvr_3.TextFilterCheck:InvokeServer(ServerCreation_upvr_7.ServerInfo.SetupFrame.ServerNameTextbox.Text)
+end)
+function TriggerServerCreation() -- Line 875
+    --[[ Upvalues[7]:
+        [1]: TweenService_upvr_3 (readonly)
+        [2]: TeleportService_upvr_2 (readonly)
+        [3]: ReplicatedStorage_upvr_3 (readonly)
+        [4]: const_string_upvw_4 (read and write)
+        [5]: ServerCreation_upvr_7 (readonly)
+        [6]: var3077_upvw (read and write)
+        [7]: tbl_252_upvr (readonly)
+    ]]
+    script.Parent.ConsoleBeep:Play()
+    local TweenInfo_new_result1_15 = TweenInfo.new(0.5, Enum.EasingStyle.Linear)
+    for _, v_13 in script.Parent.Parent.LoadingScreen:GetDescendants() do
+        if v_13.Name == "Logo1" then
+            TweenService_upvr_3:Create(v_13, TweenInfo_new_result1_15, {
+                ImageTransparency = 0.76;
+            }):Play()
+        else
+            if v_13:IsA("Frame") then
+                TweenService_upvr_3:Create(v_13, TweenInfo_new_result1_15, {
+                    BackgroundTransparency = 0;
+                }):Play()
+            end
+            if v_13:IsA("ImageLabel") then
+                TweenService_upvr_3:Create(v_13, TweenInfo_new_result1_15, {
+                    ImageTransparency = 0;
+                }):Play()
+            end
+            if v_13:IsA("TextLabel") then
+                TweenService_upvr_3:Create(v_13, TweenInfo_new_result1_15, {
+                    TextTransparency = 0;
+                }):Play()
+            end
+        end
+    end
+    TeleportService_upvr_2:SetTeleportGui(script.Parent.Parent.LoadingScreen)
+    if const_string_upvw_4 == "LoadSave" then
+    else
+    end
+    if ReplicatedStorage_upvr_3.TeleportEvent:InvokeServer(true, true, nil, ServerCreation_upvr_7.ServerInfo.SetupFrame.PasswordTextbox.Text, var3077_upvw, tbl_252_upvr["Testing Mode"], nil, false, nil, ServerCreation_upvr_7.ServerInfo.SetupFrame.ServerNameTextbox.Text) then
+    else
+        for _, v_31 in script.Parent.Parent.LoadingScreen:GetDescendants() do
+            if v_31:IsA("Frame") then
+                v_31.BackgroundTransparency = 1
+            end
+            if v_31:IsA("ImageLabel") then
+                v_31.ImageTransparency = 1
+            end
+            if v_31:IsA("TextLabel") then
+                v_31.TextTransparency = 1
+            end
+        end
+        script.Parent["Incorrect Buzzer"]:Play()
+    end
+end
+ServerCreation_upvr_7.ServerInfo.SetupFrame.ConfirmButton.MouseButton1Click:Connect(function() -- Line 921
+    --[[ Upvalues[6]:
+        [1]: var3080_upvw (read and write)
+        [2]: var3081_upvw (read and write)
+        [3]: const_string_upvw_4 (read and write)
+        [4]: ServerCreation_upvr_7 (readonly)
+        [5]: TweenService_upvr_3 (readonly)
+        [6]: var3033_upvr (readonly)
+    ]]
+    if var3080_upvw then
+    else
+        script.Parent["Click Sound"]:Play()
+        if not var3081_upvw or const_string_upvw_4 ~= "NewSave" then
+            TriggerServerCreation()
+            return
+        end
+        ServerCreation_upvr_7.ServerInfo.IntroFrame.BackgroundTransparency = 0
+        TweenService_upvr_3:Create(ServerCreation_upvr_7.ServerInfo.IntroFrame, var3033_upvr, {
+            BackgroundTransparency = 1;
+        }):Play()
+        for _, v_32 in ServerCreation_upvr_7.ServerInfo.IntroFrame:GetChildren() do
+            if v_32:IsA("ImageLabel") then
+                v_32.ImageTransparency = 0
+                TweenService_upvr_3:Create(v_32, var3033_upvr, {
+                    ImageTransparency = 1;
+                }):Play()
+            end
+        end
+        ServerCreation_upvr_7.ServerInfo.SetupFrame.Visible = false
+        ServerCreation_upvr_7.ServerInfo.OverwriteFrame.Visible = true
+    end
+end)
+ServerCreation_upvr_7.ServerInfo.OverwriteFrame.YButton.MouseButton1Click:Connect(function() -- Line 946
+    TriggerServerCreation()
+end)
+ServerCreation_upvr_7.ServerInfo.OverwriteFrame.NButton.MouseButton1Click:Connect(function() -- Line 950
+    --[[ Upvalues[3]:
+        [1]: ServerCreation_upvr_7 (readonly)
+        [2]: TweenService_upvr_3 (readonly)
+        [3]: var3033_upvr (readonly)
+    ]]
+    script.Parent["Click Sound"]:Play()
+    ServerCreation_upvr_7.ServerInfo.IntroFrame.BackgroundTransparency = 0
+    TweenService_upvr_3:Create(ServerCreation_upvr_7.ServerInfo.IntroFrame, var3033_upvr, {
+        BackgroundTransparency = 1;
+    }):Play()
+    for _, v_14 in ServerCreation_upvr_7.ServerInfo.IntroFrame:GetChildren() do
+        if v_14:IsA("ImageLabel") then
+            v_14.ImageTransparency = 0
+            TweenService_upvr_3:Create(v_14, var3033_upvr, {
+                ImageTransparency = 1;
+            }):Play()
+        end
+    end
+    ServerCreation_upvr_7.ServerInfo.SetupFrame.Visible = true
+    ServerCreation_upvr_7.ServerInfo.OverwriteFrame.Visible = false
+end)
+local cframe_upvw_3 = CFrame.new(0, 0, 0)
+local Camera_upvr = Instance.new("Camera")
+Camera_upvr.CFrame = cframe_upvw_3
+Camera_upvr.Parent = script.Parent
+ServerBrowser_upvr_4.ViewportFrame.CurrentCamera = Camera_upvr
+local clone_21_upvr = script.StartPoint:Clone()
+clone_21_upvr.Parent = ServerBrowser_upvr_4.ViewportFrame
+clone_21_upvr:PivotTo(CFrame.new((Camera_upvr.CFrame * CFrame.new(0, 0, -25)).Position) * CFrame.new(0, -20, 0))
+for _, v_15 in clone_21_upvr.Connections:GetChildren() do
+    table.insert({}, v_15)
+    local var3210_upvr
+end
+local random_state_upvr_4 = Random.new(1)
+local var3212_upvw = 0
+function GenerateLine() -- Line 1002
+    --[[ Upvalues[5]:
+        [1]: var3210_upvr (readonly)
+        [2]: clone_21_upvr (readonly)
+        [3]: ServerBrowser_upvr_4 (readonly)
+        [4]: random_state_upvr_4 (readonly)
+        [5]: var3212_upvw (read and write)
+    ]]
+    local var3221
+    for i_20, v_16 in var3210_upvr do
+        if not var3221 or (v_16.Position - clone_21_upvr.Part.Position).Magnitude < (var3210_upvr[var3221].Position - clone_21_upvr.Part.Position).Magnitude then
+            var3221 = i_20
+        end
+    end
+    local var3222 = var3210_upvr[var3221]
+    local clone_20 = script.Connection:Clone()
+    clone_20.Parent = ServerBrowser_upvr_4.ViewportFrame
+    local children_21 = clone_20.Connections:GetChildren()
+    local any_NextInteger_result1_4 = random_state_upvr_4:NextInteger(1, #children_21)
+    clone_20.PrimaryPart = children_21[any_NextInteger_result1_4]
+    clone_20:PivotTo(var3222.CFrame * CFrame.Angles(0, math.rad(-180 + random_state_upvr_4:NextInteger(-45, 45)), 0))
+    if var3222:GetAttribute("Multi") or random_state_upvr_4:NextInteger(1, 10) <= 9 then
+        table.remove(var3210_upvr, var3221)
+    else
+        var3222:SetAttribute("Multi", true)
+    end
+    table.remove(children_21, any_NextInteger_result1_4)
+    if (clone_20.Part.Position - clone_21_upvr.Part.Position).Magnitude <= 20 or #var3210_upvr == 1 or random_state_upvr_4:NextInteger(1, 2) == 1 then
+        for _, v_17 in children_21 do
+            table.insert(var3210_upvr, v_17)
+        end
+    end
+    var3212_upvw += 1
+    if var3212_upvw == 10 then
+        local Part_5 = Instance.new("Part")
+        Part_5.CFrame = clone_20.Part.CFrame * CFrame.Angles(0, 0.7853981633974483, 0) * CFrame.new(0, 1, 0)
+        Part_5.Size = Vector3.new(1.10000, 0.10000, 1.10000)
+        Part_5.Color = Color3.fromRGB(255, 0, 0)
+        Part_5.Material = Enum.Material.Neon
+        Part_5.Anchored = true
+        Part_5.Parent = ServerBrowser_upvr_4.ViewportFrame.FreePoints
+        var3212_upvw = 0
+    end
+end
+local var3227_upvw
+ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.TextButton.MouseButton1Click:Connect(function() -- Line 1054
+    --[[ Upvalues[5]:
+        [1]: var3227_upvw (read and write)
+        [2]: TweenService_upvr_3 (readonly)
+        [3]: TeleportService_upvr_2 (readonly)
+        [4]: ReplicatedStorage_upvr_3 (readonly)
+        [5]: tbl_252_upvr (readonly)
+    ]]
+    if var3227_upvw[5] ~= "" then
+    else
+        local TweenInfo_new_result1_13 = TweenInfo.new(0.5, Enum.EasingStyle.Linear)
+        for _, v_33 in script.Parent.Parent.LoadingScreen:GetDescendants() do
+            if v_33.Name == "Logo1" then
+                TweenService_upvr_3:Create(v_33, TweenInfo_new_result1_13, {
+                    ImageTransparency = 0.76;
+                }):Play()
+            else
+                if v_33:IsA("Frame") then
+                    TweenService_upvr_3:Create(v_33, TweenInfo_new_result1_13, {
+                        BackgroundTransparency = 0;
+                    }):Play()
+                end
+                if v_33:IsA("ImageLabel") then
+                    TweenService_upvr_3:Create(v_33, TweenInfo_new_result1_13, {
+                        ImageTransparency = 0;
+                    }):Play()
+                end
+                if v_33:IsA("TextLabel") then
+                    TweenService_upvr_3:Create(v_33, TweenInfo_new_result1_13, {
+                        TextTransparency = 0;
+                    }):Play()
+                end
+            end
+        end
+        TeleportService_upvr_2:SetTeleportGui(script.Parent.Parent.LoadingScreen)
+        local _7_3 = var3227_upvw[7]
+        if not _7_3 then
+            _7_3 = tbl_252_upvr["Testing Mode"]
+        end
+        if ReplicatedStorage_upvr_3.TeleportEvent:InvokeServer(false, false, var3227_upvw[1], nil, nil, _7_3) then return end
+        script.Parent["Incorrect Buzzer"]:Play()
+        for _, v_34 in script.Parent.Parent.LoadingScreen:GetDescendants() do
+            if v_34:IsA("Frame") then
+                v_34.BackgroundTransparency = 1
+            end
+            if v_34:IsA("ImageLabel") then
+                v_34.ImageTransparency = 1
+            end
+            if v_34:IsA("TextLabel") then
+                v_34.TextTransparency = 1
+            end
+        end
+    end
+end)
+ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.PasswordFrame.TextButton.MouseButton1Click:Connect(function() -- Line 1103
+    --[[ Upvalues[6]:
+        [1]: var3227_upvw (read and write)
+        [2]: ServerBrowser_upvr_4 (readonly)
+        [3]: TweenService_upvr_3 (readonly)
+        [4]: TeleportService_upvr_2 (readonly)
+        [5]: ReplicatedStorage_upvr_3 (readonly)
+        [6]: tbl_252_upvr (readonly)
+    ]]
+    if ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.PasswordFrame.TextBox.Text == var3227_upvw[5] then
+        local TweenInfo_new_result1_12 = TweenInfo.new(0.5, Enum.EasingStyle.Linear)
+        for _, v_18 in script.Parent.Parent.LoadingScreen:GetDescendants() do
+            if v_18.Name == "Logo1" then
+                TweenService_upvr_3:Create(v_18, TweenInfo_new_result1_12, {
+                    ImageTransparency = 0.76;
+                }):Play()
+            else
+                if v_18:IsA("Frame") then
+                    TweenService_upvr_3:Create(v_18, TweenInfo_new_result1_12, {
+                        BackgroundTransparency = 0;
+                    }):Play()
+                end
+                if v_18:IsA("ImageLabel") then
+                    TweenService_upvr_3:Create(v_18, TweenInfo_new_result1_12, {
+                        ImageTransparency = 0;
+                    }):Play()
+                end
+                if v_18:IsA("TextLabel") then
+                    TweenService_upvr_3:Create(v_18, TweenInfo_new_result1_12, {
+                        TextTransparency = 0;
+                    }):Play()
+                end
+            end
+        end
+        TeleportService_upvr_2:SetTeleportGui(script.Parent.Parent.LoadingScreen)
+        local _7_6 = var3227_upvw[7]
+        if not _7_6 then
+            _7_6 = tbl_252_upvr["Testing Mode"]
+        end
+        if ReplicatedStorage_upvr_3.TeleportEvent:InvokeServer(false, false, var3227_upvw[1], nil, nil, _7_6) then return end
+        script.Parent["Incorrect Buzzer"]:Play()
+        for _, v_19 in script.Parent.Parent.LoadingScreen:GetDescendants() do
+            if v_19:IsA("Frame") then
+                v_19.BackgroundTransparency = 1
+            end
+            if v_19:IsA("ImageLabel") then
+                v_19.ImageTransparency = 1
+            end
+            if v_19:IsA("TextLabel") then
+                v_19.TextTransparency = 1
+            end
+        end
+    end
+end)
+local tbl_117_upvr = {
+    ["Server Name"] = "";
+    ["Day Limit"] = 50;
+    ["Players Limit"] = 50;
+    Region = "All";
+    ["Exclude Passwork"] = false;
+}
+local tbl_305 = {{"Server Name", "TextBox"}, {"Day Limit", "TextBox", "50"}, {"Players Limit", "TextBox", "50"}, {"Region", "ListBox", "All"}, {"Exclude Passwork", "CheckBox", false}}
+if var2973_upvr then
+    tbl_117_upvr["Testing Mode"] = false
+    table.insert(tbl_305, {"Testing Mode", "CheckBox", false})
+end
+local tbl_116_upvw = {
+    All = true;
+}
+local var3279_upvw = false
+local var3280_upvw
+function RefreshServerList() -- Line 1175
+    --[[ Upvalues[15]:
+        [1]: var3279_upvw (read and write)
+        [2]: tbl_116_upvw (read and write)
+        [3]: ServerBrowser_upvr_4 (readonly)
+        [4]: ReplicatedStorage_upvr_3 (readonly)
+        [5]: tbl_117_upvr (readonly)
+        [6]: Players_upvr_2 (readonly)
+        [7]: LocalPlayer_upvr_3 (readonly)
+        [8]: var3280_upvw (read and write)
+        [9]: cframe_upvw_3 (read and write)
+        [10]: var3080_upvw (read and write)
+        [11]: var3227_upvw (read and write)
+        [12]: var3081_upvw (read and write)
+        [13]: tbl_146_upvr (readonly)
+        [14]: tbl_156_upvr (readonly)
+        [15]: TweenService_upvr_3 (readonly)
+    ]]
+    if var3279_upvw then
+    else
+        var3279_upvw = true
+        tbl_116_upvw = {
+            All = true;
+        }
+        local _, pcall_result2_3 = pcall(function() -- Line 1182
+            --[[ Upvalues[14]:
+                [1]: ServerBrowser_upvr_4 (copied, readonly)
+                [2]: ReplicatedStorage_upvr_3 (copied, readonly)
+                [3]: tbl_117_upvr (copied, readonly)
+                [4]: tbl_116_upvw (copied, read and write)
+                [5]: Players_upvr_2 (copied, readonly)
+                [6]: LocalPlayer_upvr_3 (copied, readonly)
+                [7]: var3280_upvw (copied, read and write)
+                [8]: cframe_upvw_3 (copied, read and write)
+                [9]: var3080_upvw (copied, read and write)
+                [10]: var3227_upvw (copied, read and write)
+                [11]: var3081_upvw (copied, read and write)
+                [12]: tbl_146_upvr (copied, readonly)
+                [13]: tbl_156_upvr (copied, readonly)
+                [14]: TweenService_upvr_3 (copied, readonly)
+            ]]
+            -- KONSTANTERROR: [0] 1. Error Block 79 start (CF ANALYSIS FAILED)
+            local children_20, _, NONE_117 = ServerBrowser_upvr_4.ServerList.ScrollingFrame:GetChildren()
+            local var3306
+            for _, v_35 in children_20, var3306, NONE_117 do
+                if not v_35:IsA("UIListLayout") and not v_35:IsA("UIPadding") and not v_35:IsA("UIStroke") then
+                    v_35:Destroy()
+                end
+            end
+            var3306 = ReplicatedStorage_upvr_3
+            local any_InvokeServer_result1_6 = var3306.ServerListGet:InvokeServer()
+            var3306 = 0
+            for i_42, v_36 in any_InvokeServer_result1_6 do
+                var3306 += 1
+            end
+            while true do
+                v_36 = ServerBrowser_upvr_4
+                i_42 = v_36.ViewportFrame
+                v_36 = ServerBrowser_upvr_4.ViewportFrame
+                i_42 = v_36.TakenPoints:GetChildren()
+                if #i_42.FreePoints:GetChildren() + #i_42 >= var3306 then break end
+                GenerateLine()
+            end
+            print(var3306.." - "..#ServerBrowser_upvr_4.ViewportFrame.FreePoints:GetChildren())
+            for _, v_37 in ServerBrowser_upvr_4.ViewportFrame.TakenPoints:GetChildren() do
+                v_37.Parent = ServerBrowser_upvr_4.ViewportFrame.FiltertingPoints
+            end
+            for _, v_38 in any_InvokeServer_result1_6 do
+                if v_38 then
+                    if typeof(v_38) == "table" then
+                        local SOME_3 = ServerBrowser_upvr_4.ViewportFrame.FiltertingPoints:FindFirstChild(v_38[1])
+                        if SOME_3 then
+                            SOME_3.Parent = ServerBrowser_upvr_4.ViewportFrame.TakenPoints
+                        end
+                    end
+                end
+            end
+            for _, v_39 in ServerBrowser_upvr_4.ViewportFrame.FiltertingPoints:GetChildren() do
+                v_39.Parent = ServerBrowser_upvr_4.ViewportFrame.FreePoints
+            end
+            -- KONSTANTERROR: [0] 1. Error Block 79 end (CF ANALYSIS FAILED)
+            -- KONSTANTERROR: [358] 260. Error Block 49 start (CF ANALYSIS FAILED)
+            -- KONSTANTERROR: [358] 260. Error Block 49 end (CF ANALYSIS FAILED)
+            -- KONSTANTERROR: [155] 110. Error Block 24 start (CF ANALYSIS FAILED)
+            -- KONSTANTERROR: [155] 110. Error Block 24 end (CF ANALYSIS FAILED)
+        end)
+        print(pcall_result2_3)
+        print("Server List Finished")
+        var3279_upvw = false
+    end
+end
+function SearchServerListFilter() -- Line 1402
+    --[[ Upvalues[2]:
+        [1]: ServerBrowser_upvr_4 (readonly)
+        [2]: tbl_117_upvr (readonly)
+    ]]
+    for _, v_20 in ServerBrowser_upvr_4.ServerList.ScrollingFrame:GetChildren() do
+        local var3325
+        if var3325 then
+            local function INLINED_52() -- Internal function, doesn't exist in bytecode
+                var3325 = string.find(string.lower(v_20.ActualName.Value), string.lower(tbl_117_upvr["Server Name"]), 1, true)
+                return var3325
+            end
+            local function INLINED_53() -- Internal function, doesn't exist in bytecode
+                var3325 = false
+                return v_20:GetAttribute("ActualDay") <= tonumber(tbl_117_upvr["Day Limit"])
+            end
+            local function INLINED_54() -- Internal function, doesn't exist in bytecode
+                var3325 = false
+                return v_20:GetAttribute("ActualPlrCount") <= tonumber(tbl_117_upvr["Players Limit"])
+            end
+            if tbl_117_upvr["Server Name"] == "" or INLINED_52() or INLINED_53() and INLINED_54() then
+                local function INLINED_55() -- Internal function, doesn't exist in bytecode
+                    var3325 = not v_20:GetAttribute("HasPasswork")
+                    return var3325
+                end
+                if not tbl_117_upvr["Exclude Passwork"] or INLINED_55() then
+                    var3325 = true
+                    if tbl_117_upvr.Region ~= "All" then
+                        if v_20:GetAttribute("Region") ~= tbl_117_upvr.Region then
+                            var3325 = false
+                        else
+                            var3325 = true
+                        end
+                    end
+                end
+            end
+            if var3325 then
+                v_20.Visible = true
+            else
+                v_20.Visible = false
+            end
+        end
+    end
+end
+RefreshServerList()
+local var3327_upvw = true
+ServerBrowser_upvr_4.ServerList.RefreshButton.MouseButton1Click:Connect(function() -- Line 1425
+    --[[ Upvalues[2]:
+        [1]: var3327_upvw (read and write)
+        [2]: ServerBrowser_upvr_4 (readonly)
+    ]]
+    if not var3327_upvw then
+    else
+        var3327_upvw = false
+        script.Parent["ui_refresh-feed"]:Play()
+        RefreshServerList()
+        for i_46 = 1, 10 do
+            ServerBrowser_upvr_4.ServerList.RefreshButton.Text = "Refresh ("..(10 - i_46).."s)"
+            task.wait(1)
+        end
+        ServerBrowser_upvr_4.ServerList.RefreshButton.Text = "Refresh"
+        var3327_upvw = true
+    end
+end)
+for _, v_21_upvr in tbl_305 do
+    local clone_34_upvr = script.FilterTemplate:Clone()
+    clone_34_upvr.TextLabel.Text = v_21_upvr[1]
+    clone_34_upvr[v_21_upvr[2]].Visible = true
+    clone_34_upvr.Parent = ServerBrowser_upvr_4.ServerList.FilterFrame.ScrollingFrame
+    local var3330
+    if v_21_upvr[1] == "Region" then
+        clone_34_upvr.ZIndex += 1
+    end
+    local function INLINED_56() -- Internal function, doesn't exist in bytecode
+        var3330 = tostring(v_21_upvr[3])
+        return var3330
+    end
+    if not v_21_upvr[3] or not INLINED_56() then
+        var3330 = ""
+    end
+    clone_34_upvr.TextBox.Text = var3330
+    clone_34_upvr.TextBox:GetPropertyChangedSignal("Text"):Connect(function() -- Line 1455
+        --[[ Upvalues[3]:
+            [1]: tbl_117_upvr (readonly)
+            [2]: v_21_upvr (readonly)
+            [3]: clone_34_upvr (readonly)
+        ]]
+        tbl_117_upvr[v_21_upvr[1]] = clone_34_upvr.TextBox.Text
+        SearchServerListFilter()
+    end)
+    var3330 = clone_34_upvr.CheckBox.TextButton
+    var3330.MouseButton1Click:Connect(function() -- Line 1460
+        --[[ Upvalues[3]:
+            [1]: tbl_117_upvr (readonly)
+            [2]: v_21_upvr (readonly)
+            [3]: clone_34_upvr (readonly)
+        ]]
+        tbl_117_upvr[v_21_upvr[1]] = not tbl_117_upvr[v_21_upvr[1]]
+        clone_34_upvr.CheckBox.ImageLabel.Visible = tbl_117_upvr[v_21_upvr[1]]
+        if v_21_upvr[1] == "Testing Mode" then
+            RefreshServerList()
+        else
+            SearchServerListFilter()
+        end
+    end)
+    var3330 = clone_34_upvr.ListBox
+    var3330.MouseButton1Click:Connect(function() -- Line 1470
+        --[[ Upvalues[4]:
+            [1]: clone_34_upvr (readonly)
+            [2]: v_21_upvr (readonly)
+            [3]: tbl_116_upvw (read and write)
+            [4]: tbl_117_upvr (readonly)
+        ]]
+        clone_34_upvr.ListBox.ScrollingFrame.Visible = not clone_34_upvr.ListBox.ScrollingFrame.Visible
+        if not clone_34_upvr.ListBox.ScrollingFrame.Visible then
+        else
+            for _, v_40 in clone_34_upvr.ListBox.ScrollingFrame:GetChildren() do
+                if v_40:IsA("Frame") then
+                    v_40:Destroy()
+                end
+            end
+            if v_21_upvr[1] == "Region" then
+                for i_48_upvr, _ in tbl_116_upvw do
+                    local clone_7 = script.ListBoxTemplate:Clone()
+                    clone_7.TextButton.Text = i_48_upvr
+                    clone_7.Parent = clone_34_upvr.ListBox.ScrollingFrame
+                    clone_7.TextButton.MouseButton1Click:Connect(function() -- Line 1489
+                        --[[ Upvalues[4]:
+                            [1]: clone_34_upvr (copied, readonly)
+                            [2]: i_48_upvr (readonly)
+                            [3]: tbl_117_upvr (copied, readonly)
+                            [4]: v_21_upvr (copied, readonly)
+                        ]]
+                        clone_34_upvr.ListBox.ScrollingFrame.Visible = false
+                        clone_34_upvr.ListBox.Text = i_48_upvr
+                        tbl_117_upvr[v_21_upvr[1]] = i_48_upvr
+                        SearchServerListFilter()
+                    end)
+                end
+            end
+        end
+    end)
+end
+ServerBrowser_upvr_4.ServerList.CodeFrame.TextButton.MouseButton1Click:Connect(function() -- Line 1504
+    --[[ Upvalues[5]:
+        [1]: TweenService_upvr_3 (readonly)
+        [2]: TeleportService_upvr_2 (readonly)
+        [3]: ReplicatedStorage_upvr_3 (readonly)
+        [4]: tbl_252_upvr (readonly)
+        [5]: ServerBrowser_upvr_4 (readonly)
+    ]]
+    local TweenInfo_new_result1_10 = TweenInfo.new(0.5, Enum.EasingStyle.Linear)
+    for _, v_22 in script.Parent.Parent.LoadingScreen:GetDescendants() do
+        if v_22.Name == "Logo1" then
+            TweenService_upvr_3:Create(v_22, TweenInfo_new_result1_10, {
+                ImageTransparency = 0.76;
+            }):Play()
+        else
+            if v_22:IsA("Frame") then
+                TweenService_upvr_3:Create(v_22, TweenInfo_new_result1_10, {
+                    BackgroundTransparency = 0;
+                }):Play()
+            end
+            if v_22:IsA("ImageLabel") then
+                TweenService_upvr_3:Create(v_22, TweenInfo_new_result1_10, {
+                    ImageTransparency = 0;
+                }):Play()
+            end
+            if v_22:IsA("TextLabel") then
+                TweenService_upvr_3:Create(v_22, TweenInfo_new_result1_10, {
+                    TextTransparency = 0;
+                }):Play()
+            end
+        end
+    end
+    TeleportService_upvr_2:SetTeleportGui(script.Parent.Parent.LoadingScreen)
+    if ReplicatedStorage_upvr_3.TeleportEvent:InvokeServer(false, false, nil, nil, nil, tbl_252_upvr["Testing Mode"], ServerBrowser_upvr_4.ServerList.CodeFrame.TextBox.Text) then
+    else
+        script.Parent["Incorrect Buzzer"]:Play()
+        for _, v_42 in script.Parent.Parent.LoadingScreen:GetDescendants() do
+            if v_42:IsA("Frame") then
+                v_42.BackgroundTransparency = 1
+            end
+            if v_42:IsA("ImageLabel") then
+                v_42.ImageTransparency = 1
+            end
+            if v_42:IsA("TextLabel") then
+                v_42.TextTransparency = 1
+            end
+        end
+    end
+end)
+clone_34_upvr = ServerBrowser_upvr_4.ServerInfo
+clone_34_upvr.ConnectionInfo.Frame.AbnorFrame.TextButton.MouseButton1Click:Connect(function() -- Line 1544
+    --[[ Upvalues[2]:
+        [1]: var3080_upvw (read and write)
+        [2]: ServerBrowser_upvr_4 (readonly)
+    ]]
+    if var3080_upvw then
+    else
+        if ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.Frame.Visible then return end
+        ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.Frame.Visible = true
+        ServerBrowser_upvr_4.ServerInfo.ConnectionInfo.Frame.AbnorFrame.Visible = false
+    end
+end)
+local CameraPart_upvr_2 = workspace:WaitForChild("CameraPart")
+local mouse_upvr = LocalPlayer_upvr_3:GetMouse()
+RunService_4.RenderStepped:Connect(function(arg1) -- Line 1558
+    --[[ Upvalues[6]:
+        [1]: MainMenu_upvr_7 (readonly)
+        [2]: CurrentCamera_upvr_2 (readonly)
+        [3]: CameraPart_upvr_2 (readonly)
+        [4]: mouse_upvr (readonly)
+        [5]: Camera_upvr (readonly)
+        [6]: cframe_upvw_3 (read and write)
+    ]]
+    local var3363 = math.sin(tick()) / 2
+    local var3364 = math.cos(tick()) / 2
+    MainMenu_upvr_7.NewGameHolder.AnchorPoint = Vector2.new(var3363 / 10 + 0.5, var3364 / 10 + 0.5)
+    MainMenu_upvr_7.LoadGameHolder.AnchorPoint = Vector2.new(var3363 / -10 + 0.5, var3364 / 10 + 0.5)
+    MainMenu_upvr_7.ServerBrowserHolder.AnchorPoint = Vector2.new(var3363 / 10 + 0.5, var3364 / -10 + 0.5)
+    CurrentCamera_upvr_2.CFrame = CameraPart_upvr_2.CFrame * CFrame.Angles(math.rad((mouse_upvr.Y - mouse_upvr.ViewSizeY / 2) / mouse_upvr.ViewSizeY * -10), math.rad((mouse_upvr.X - mouse_upvr.ViewSizeX / 2) / mouse_upvr.ViewSizeX * -10), 0) * CFrame.new(var3363, var3364, 0)
+    Camera_upvr.CFrame = Camera_upvr.CFrame:Lerp(cframe_upvw_3 * CFrame.Angles(-0.6108652381980153, 0, 0) * CFrame.new(var3363, var3364, 0), 0.99 * arg1 * 10)
+end)

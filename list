@@ -1,0 +1,2327 @@
+-- replicatedstorage.Shared.Depedencies.Skills
+local rs = game:GetService("ReplicatedStorage")
+local debris = game:GetService("Debris")
+local cs = game:GetService("CollectionService")
+local SoundService = game:GetService("SoundService")
+local PlayVFX = rs:FindFirstChild("PlayVFX") or rs:WaitForChild("PlayVFX")
+
+local skills = {
+	["right_chop"] = {
+		points_required = 1,
+		type = "movement",
+		cooldown = 15,
+		description = "Quick move right then sudden turn.",
+		animation = "RightChop",
+		sfx_name = "Chop",
+		movement = {
+			{CFrame.new(0.1, 0, 0.1), 0.2},
+			{CFrame.new(25, 0, -1), 0.3}
+		}
+	},
+	["left_chop"] = {
+		points_required = 1,
+		type = "movement",
+		cooldown = 15,
+		description = "Quick move left then sudden turn.",
+		animation = "LeftChop",
+		sfx_name = "Chop",
+		movement = {
+			{CFrame.new(0.1, 0, -0.1), 0.2},
+			{CFrame.new(-25, 0, -1), 0.3}
+		}
+	},
+	["left_side_feint"] = {
+		points_required = 1,
+		type = "movement",
+		cooldown = 15,
+		description = "Fake to the left then quick cut.",
+		animation = "lfeint",
+		sfx_name = "Feint",
+		movement = {
+			{CFrame.new(-30,0,-10),0.4},
+			{CFrame.new(30,0,-25),0.5}
+		}
+	},
+	["right_side_feint"] = {
+		points_required = 1,
+		type = "movement",
+		cooldown = 15,
+		description = "Fake to the right then quick cut.",
+		animation = "rfeint",
+		sfx_name = "Feint",
+		movement = {
+			{CFrame.new(30,0,-10),0.4},
+			{CFrame.new(-30,0,-25),0.5}
+		}
+	},
+	["right_speed_elastic"] = {
+		points_required = 2,
+		type = "movement",
+		cooldown = 15,
+		description = "Activating this performs a sudden step to the right, then a high speed sprint forwards.",
+		animation = "RightSpeedElastic",
+		sfx_name = "Elastic",
+		movement = {
+			{ CFrame.new(0, 0, -1), 0.4 },
+			{ CFrame.new(30, 0, 0), 0.4 },
+			{ CFrame.new(0, 0, -49), 0.4 }
+		}
+	},
+	["left_speed_elastic"] = {
+		points_required = 2,
+		type = "movement",
+		cooldown = 15,
+		description = "Activating this performs a sudden step to the left, then a high speed sprint forwards.",
+		animation = "LeftSpeedElastic",
+		sfx_name = "Elastic",
+		movement = {
+			{ CFrame.new(0, 0, -1), 0.4 },
+			{ CFrame.new(-30, 0, 0), 0.4 },
+			{ CFrame.new(0, 0, -49), 0.4 }
+		}
+	},
+	["super_jump"] = {
+		points_required = 1,
+		type = "utility",
+		cooldown = 10,
+		description = "Jump 3x higher than normal.",
+		animation = "SuperJump",
+		sfx_name = "SuperJump",
+		activate = function(ctx)
+			local plr = ctx.player
+			if not plr then return end
+			local char = plr.Character
+			if not char then return end
+			local humanoid = char:FindFirstChildOfClass("Humanoid")
+			local root = char:FindFirstChild("HumanoidRootPart")
+			if not humanoid or not root then return end
+			plr:SetAttribute("SuperJumpLock", true)
+			local prevAuto = humanoid.AutoRotate
+			local prevAnchored = root.Anchored
+			root.AssemblyLinearVelocity = Vector3.zero
+			root.AssemblyAngularVelocity = Vector3.zero
+			humanoid.AutoRotate = false
+			root.Anchored = true
+			task.delay(1, function()
+				plr:SetAttribute("SuperJumpLock", false)
+				local c = plr.Character
+				local h = c and c:FindFirstChildOfClass("Humanoid")
+				local r = c and c:FindFirstChild("HumanoidRootPart")
+				if not h or not r then return end
+				r.Anchored = prevAnchored
+				h.AutoRotate = prevAuto
+				local bv = Instance.new("BodyVelocity")
+				bv.MaxForce = Vector3.new(0,1e6,0)
+				bv.Velocity = Vector3.new(0,65,0)
+				bv.Parent = r
+				debris:AddItem(bv, 0.3)
+				if PlayVFX then PlayVFX:FireAllClients({ name = "SuperjumpVFX", attachTo = r }) end
+				h.Jump = true
+			end)
+		end,
+	},
+	["dash"] = {
+		points_required = 1,
+		type = "utility",
+		cooldown = 60,
+		description = "Dash instantly in your movement direction.",
+		sfx_name = "Dash"
+	},
+	["sprint_burst"] = {
+		points_required = 1,
+		type = "utility",
+		cooldown = 45,
+		description = "Increase your speed for 8 seconds.",
+		animation = "SprintBurst",
+		sfx_name = "Sprint",
+		activate = function(ctx)
+			local char = ctx.player.Character
+			if not char then return end
+			local humanoid = char:FindFirstChildOfClass("Humanoid")
+			local root = char:FindFirstChild("HumanoidRootPart")
+			if not humanoid or not root then return end
+			cs:AddTag(humanoid, "sprint_burst")
+			char:SetAttribute("SprintBurstActive", true)
+			task.delay(8, function()
+				if char then
+					char:SetAttribute("SprintBurstActive", false)
+				end
+			end)
+		end,
+	},
+	["nagi_air_trap"] = {
+		points_required = 3,
+		type = "utility",
+		cooldown = 35,
+		description = "Jump and trap a neutral ball in mid-air.",
+		animation = "AirTrap",
+		sfx_name = "AirTrap",
+		special = "nagi_air_trap"
+	},
+	["long_diddy"] = {
+		points_required = 2,
+		type = "shoot",
+		cooldown = 30,
+		description = "Strong forward drive shot.",
+		animation = "LongDiddy",
+		shot = "long_diddy",
+		sfx_name = "LongShot",
+	},
+	["gyro_shot"] = {
+		points_required = 3,
+		type = "shoot",
+		cooldown = 30,
+		description = "A rising spiral shot.",
+		animation = "GyroShot",
+		shot = "gyro_shot",
+		sfx_name = "Gyro",
+	},
+	["lob"] = {
+		points_required = 1,
+		type = "shoot",
+		cooldown = 15,
+		description = "A high lob kick.",
+		animation = "Lob",
+		shot = "lob",
+	},
+	["strong_left_curve"] = {
+		points_required = 4,
+		type = "shoot",
+		cooldown = 30,
+		description = "An extreme left spin shot.",
+		animation = "StrongLeftCurve",
+		shot = "strong_left_curve",
+		sfx_name = "Curve",
+	},
+	["strong_right_curve"] = {
+		points_required = 4,
+		type = "shoot",
+		cooldown = 30,
+		description = "An extreme right spin shot.",
+		animation = "StrongRightCurve",
+		shot = "strong_right_curve",
+		sfx_name = "Curve",
+	},
+	["back_kick"] = {
+		points_required = 2,
+		type = "shoot",
+		cooldown = 1,
+		description = "Kicks the ball backward.",
+		anim_charge = "BackKickCharge",
+		anim_release = "BackKickRelease",
+		charge_freeze_time = 1.0,
+		shot = "back_kick",
+	},
+	["kaiser_impact"] = {
+		points_required = 4,
+		type = "shoot",
+		cooldown = 140,
+		description = "An unstoppable, straight-line power shot.",
+		anim_release = "KaiserRelease",
+		shot = "kaiser_impact",
+		sfx_name = "KaiserRelease",
+	},
+	["direct_shot"] = {
+		points_required = 3,
+		type = "shoot",
+		cooldown = 15,
+		description = "orewa striker",
+		animation = "DirectShot",
+		shot = "direct_shot",
+		sfx_name = "DirectShot",
+	},
+	["big_bang_drive"] = {
+		points_required = 4,
+		type = "shoot",
+		cooldown = 80,
+		description = "this is so cool",
+		animation = "BigBangDrive",
+		shot = "big_bang_drive",
+		sfx_name = "BBD",
+	},
+	["rainbow_flick"] = {
+		points_required = 3,
+		type = "movement",
+		cooldown = 35,
+		description = "Rainbow Flick: ball pops up then drives forward.",
+		animation = "RainbowFlick",
+		special = "rainbow_flick",
+	},
+	["ultra_fast_steps"] = {
+		points_required = 2,
+		type = "movement",
+		cooldown = 25,
+		description = "Ball and player burst forward together.",
+		special = "ultra_fast_steps",
+		sfx_name = "UltraFast",
+	},
+	["god_speed"] = {
+		points_required = 3,
+		type = "defensive",
+		cooldown = 120,
+		description = "wowers",
+		animation = "GodSpeed",
+		sfx_name = "GodSpeed",
+		special = "god_speed"
+	},
+	["serpent"] = {
+		points_required = 2,
+		type = "defensive",
+		cooldown = 140,
+		description = "pubbie..",
+		animation = "Serpent",
+		sfx_name = "Serpent",
+	},
+	
+}
+
+return skills
+
+--in localplayer scripts
+local Players = game:GetService("Players")
+local RS = game:GetService("ReplicatedStorage")
+local UIS = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local Lighting = game:GetService("Lighting")
+local RunService = game:GetService("RunService")
+
+local LP = Players.LocalPlayer
+
+local Remotes = RS:WaitForChild("SkillTreeRemotes")
+local GetDataRF = Remotes:WaitForChild("GetData")
+local ActionRE = Remotes:WaitForChild("Action")
+local SlotsUpdateRE = Remotes:WaitForChild("SlotsUpdate")
+local SkillUseRE = RS:WaitForChild("Skill")
+
+local ShootSkillSelectedEvent = RS:FindFirstChild("ShootSkillSelected")
+if not ShootSkillSelectedEvent or not ShootSkillSelectedEvent:IsA("BindableEvent") then
+	if ShootSkillSelectedEvent then ShootSkillSelectedEvent:Destroy() end
+	ShootSkillSelectedEvent = Instance.new("BindableEvent")
+	ShootSkillSelectedEvent.Name = "ShootSkillSelected"
+	ShootSkillSelectedEvent.Parent = RS
+end
+
+local PlayerGui = LP:WaitForChild("PlayerGui")
+local Screen = PlayerGui:WaitForChild("SkillTreeUI")
+local Card = Screen:WaitForChild("Card")
+local Overlay = Screen:WaitForChild("Overlay")
+
+local uiScale = Card:FindFirstChild("UIScale") or Instance.new("UIScale", Card)
+uiScale.Name = "UIScale"
+
+local function updateScale()
+	if not Screen or not Card then return end
+	local screenSize = Screen.AbsoluteSize
+	local cardSize = Vector2.new(860, 560)
+
+	local scaleX = screenSize.X / cardSize.X
+	local scaleY = screenSize.Y / cardSize.Y
+	local scale = math.min(scaleX, scaleY, 1)
+
+	uiScale.Scale = scale
+end
+
+Screen:GetPropertyChangedSignal("AbsoluteSize"):Connect(updateScale)
+updateScale()
+
+local Tabs = Card:WaitForChild("Tabs")
+local Panels = Card:WaitForChild("Panels")
+local Left = Panels:WaitForChild("LeftPanel")
+local Right = Panels:WaitForChild("RightPanel")
+local PointsLabel = Card:WaitForChild("PointsContainer"):WaitForChild("PointsLabel")
+local Filter = Left:WaitForChild("Search")
+local List = Left:WaitForChild("SkillList")
+local UIList = List:WaitForChild("UIListLayout")
+
+local InfoTitle = Right:WaitForChild("InfoTitle")
+local InfoText = Right:WaitForChild("InfoText")
+local ReqText = Right:WaitForChild("ReqContainer"):WaitForChild("ReqText")
+local BtnFrame = Right:WaitForChild("BtnFrame")
+
+local BtnUnlock = BtnFrame:WaitForChild("Unlock")
+local BtnE1 = BtnFrame:WaitForChild("Equip1")
+local BtnE2 = BtnFrame:WaitForChild("Equip2")
+local BtnE3 = BtnFrame:WaitForChild("Equip3")
+local BtnE4 = BtnFrame:WaitForChild("Equip4")
+local BtnE5 = BtnFrame:WaitForChild("Equip5")
+
+local blur = Lighting:FindFirstChild("SkillTreeBlur") or Instance.new("BlurEffect", Lighting)
+blur.Name = "SkillTreeBlur"
+blur.Enabled = false
+blur.Size = 0
+
+local SkillBook, State
+local SelectedKey
+local SelectedShootSkill = nil
+local SelectedShootSlot = nil
+local activeCategory = "All"
+local activeCDs = {}
+
+local TYPE_TO_CAT = {
+	movement="Dribbling",
+	shoot="Shooting",
+	utility="Utility",
+	defensive="Defensive"
+}
+
+local CAT_TO_TYPE = {
+	All=false,
+	Dribbling="movement",
+	Shooting="shoot",
+	Utility="utility",
+	Defensive="defensive"
+}
+
+local function getGameUI() return PlayerGui:FindFirstChild("GameUI") end
+local function getSkillsBar()
+	local g = getGameUI()
+	return g and g:FindFirstChild("Skills")
+end
+local function getSlot(i)
+	local b = getSkillsBar()
+	return b and (b:FindFirstChild("Skill"..i) or b:FindFirstChild(tostring(i)))
+end
+
+local function prettyNameFromKey(key)
+	local s = key:gsub("_"," ")
+	return s:sub(1,1):upper()..s:sub(2)
+end
+
+local function setSlotName(slotIndex, prettyName)
+	local slot = getSlot(slotIndex)
+	if not slot then return end
+	local nameLabel = slot:FindFirstChild("SkillName")
+	if nameLabel and nameLabel:IsA("TextLabel") then
+		nameLabel.Text = prettyName or ""
+		nameLabel.TextColor3 = Color3.fromRGB(240,240,240)
+	end
+	slot:SetAttribute("SkillPrettyName", prettyName or "")
+end
+
+local function highlightSlot(slotIndex, active)
+	local slot = getSlot(slotIndex)
+	if not slot then return end
+
+	local scale = slot:FindFirstChild("SelectionScale")
+	if not scale then
+		scale = Instance.new("UIScale")
+		scale.Name = "SelectionScale"
+		scale.Parent = slot
+	end
+
+	if active then
+		TweenService:Create(scale, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Scale = 1.3}):Play()
+	else
+		TweenService:Create(scale, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Scale = 1}):Play()
+	end
+end
+
+local function deselectShoot()
+	if SelectedShootSlot then highlightSlot(SelectedShootSlot, false) end
+	SelectedShootSkill = nil; SelectedShootSlot = nil
+end
+
+local function selectShoot(slotIndex, key)
+	deselectShoot()
+	SelectedShootSkill = key; SelectedShootSlot = slotIndex
+	highlightSlot(slotIndex, true)
+	ShootSkillSelectedEvent:Fire({ key = key, slot = slotIndex })
+end
+
+ShootSkillSelectedEvent.Event:Connect(function(msg)
+	if typeof(msg) == "table" and msg.clear then deselectShoot() end
+end)
+
+local function startCooldown(slotIndex, seconds)
+	local slot = getSlot(slotIndex)
+	if not slot then return end
+	activeCDs[slotIndex] = os.clock() + math.max(0, seconds or 0)
+end
+
+local custom = {
+	["timestop"] = { type = "movement" }
+}
+
+RunService.RenderStepped:Connect(function()
+	local now = os.clock()
+	for i, untilT in pairs(activeCDs) do
+		local slot = getSlot(i)
+		if slot then
+			local nameLabel = slot:FindFirstChild("SkillName")
+			local originalName = slot:GetAttribute("SkillPrettyName") or ""
+			local left = untilT - now
+			if left <= 0 then
+				activeCDs[i] = nil
+				if nameLabel then nameLabel.Text = originalName; nameLabel.TextColor3 = Color3.fromRGB(240,240,240) end
+			else
+				if nameLabel then nameLabel.Text = string.format("%.1fs", left); nameLabel.TextColor3 = Color3.fromRGB(255,80,80) end
+			end
+		else
+			activeCDs[i] = nil
+		end
+	end
+end)
+
+local function closeUI()
+	TweenService:Create(blur, TweenInfo.new(0.18), {Size=0}):Play()
+	Overlay.Visible = false
+	Card.Visible = false
+	blur.Enabled = false
+	Screen.Enabled = false
+end
+
+local function openUI()
+	Screen.Enabled = true
+	Overlay.Visible = true
+	Card.Visible = true
+	blur.Enabled = true
+	updateScale()
+	TweenService:Create(blur, TweenInfo.new(0.18), {Size=12}):Play()
+end
+
+local function setupTabs()
+	local tabAll = Tabs:WaitForChild("Tab_All"); tabAll.MouseButton1Click:Connect(function() activeCategory="All"; rebuildList() end)
+	local tabDrib = Tabs:WaitForChild("Tab_Dribbling"); tabDrib.MouseButton1Click:Connect(function() activeCategory="Dribbling"; rebuildList() end)
+	local tabShoot = Tabs:WaitForChild("Tab_Shooting"); tabShoot.MouseButton1Click:Connect(function() activeCategory="Shooting"; rebuildList() end)
+	local tabUtil = Tabs:WaitForChild("Tab_Utility"); tabUtil.MouseButton1Click:Connect(function() activeCategory="Utility"; rebuildList() end)
+	local tabDef = Tabs:WaitForChild("Tab_Defensive"); tabDef.MouseButton1Click:Connect(function() activeCategory="Defensive"; rebuildList() end)
+	local btnClose = Tabs:WaitForChild("Close"); btnClose.MouseButton1Click:Connect(closeUI)
+end
+
+local function colorForType(tp)
+	if tp == "movement" then return Color3.fromRGB(82,161,255)
+	elseif tp == "utility" then return Color3.fromRGB(255,196,86)
+	elseif tp == "shoot" then return Color3.fromRGB(255,120,120)
+	elseif tp == "defensive" then return Color3.fromRGB(100,255,100)
+	else return Color3.fromRGB(200,200,200) end
+end
+
+local function iconForType(tp)
+	if tp == "shoot" then return "rbxassetid://6031094678"
+	elseif tp == "movement" then return "rbxassetid://6031097225"
+	elseif tp == "utility" then return "rbxassetid://6031091004"
+	elseif tp == "defensive" then return "rbxassetid://6031091004"
+	else return "rbxassetid://6031097225" end
+end
+
+local function itemMatches(item)
+	local want = CAT_TO_TYPE[activeCategory]
+
+	if activeCategory == "Defensive" then
+		if item.type == "defensive" then return true end
+		return false
+	elseif activeCategory == "Dribbling" then
+		if item.type ~= "movement" then return false end
+	elseif want and item.type ~= want then
+		return false
+	end
+
+	local q = (Filter.Text or ""):lower()
+	if q == "" then return true end
+	if string.find(item.name:lower(), q, 1, true) then return true end
+	if string.find((TYPE_TO_CAT[item.type] or item.type):lower(), q, 1, true) then return true end
+	return false
+end
+
+local function clearListButtons()
+	for _,c in ipairs(List:GetChildren()) do
+		if c:IsA("TextButton") then c:Destroy() end
+	end
+end
+
+local function makeSkillRow(item)
+	local btn = Instance.new("TextButton")
+	btn.Name = item.key
+	btn.Size = UDim2.new(1,0,0,50)
+	btn.BackgroundColor3 = Color3.fromRGB(30,32,40)
+	btn.Text = ""
+	btn.AutoButtonColor = false
+	Instance.new("UICorner", btn).CornerRadius = UDim.new(0,6)
+
+	local selection = Instance.new("UIStroke", btn)
+	selection.Color = Color3.fromRGB(80,80,90)
+	selection.Thickness = 1; selection.Transparency = 0.5
+
+	local iconBg = Instance.new("Frame", btn)
+	iconBg.Size = UDim2.new(0,36,0,36); iconBg.Position = UDim2.new(0,8,0.5,0); iconBg.AnchorPoint = Vector2.new(0,0.5)
+	iconBg.BackgroundColor3 = colorForType(item.type):Lerp(Color3.new(0,0,0), 0.6)
+	Instance.new("UICorner", iconBg).CornerRadius = UDim.new(0,6)
+
+	local icon = Instance.new("ImageLabel", iconBg)
+	icon.BackgroundTransparency = 1; icon.Size = UDim2.new(0,20,0,20); icon.Position = UDim2.fromScale(0.5,0.5); icon.AnchorPoint = Vector2.new(0.5,0.5)
+	icon.Image = iconForType(item.type); icon.ImageColor3 = colorForType(item.type)
+
+	local title = Instance.new("TextLabel", btn)
+	title.Text = item.name; title.Font = Enum.Font.GothamBold; title.TextSize = 14; title.TextColor3 = Color3.new(1,1,1)
+	title.BackgroundTransparency = 1; title.Position = UDim2.new(0, 54, 0.3, 0); title.TextXAlignment = Enum.TextXAlignment.Left
+
+	local cdLabel = Instance.new("TextLabel", btn)
+	cdLabel.Text = string.format("Cooldown: %.1fs", item.cooldown or 0); cdLabel.Font = Enum.Font.Gotham; cdLabel.TextSize = 12
+	cdLabel.TextColor3 = Color3.fromRGB(150,150,160); cdLabel.BackgroundTransparency = 1
+	cdLabel.Position = UDim2.new(0, 54, 0.7, -5); cdLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+	local status = Instance.new("Frame", btn)
+	status.Size = UDim2.new(0,4,1,0); status.BorderSizePixel = 0
+	status.BackgroundColor3 = (State and State.unlocked and State.unlocked[item.key]) and Color3.fromRGB(80,255,100) or Color3.fromRGB(40,40,40)
+	Instance.new("UICorner", status).CornerRadius = UDim.new(0,2)
+
+	btn.MouseEnter:Connect(function() TweenService:Create(btn,TweenInfo.new(.15),{BackgroundColor3=Color3.fromRGB(40,42,50)}):Play() end)
+	btn.MouseLeave:Connect(function() TweenService:Create(btn,TweenInfo.new(.15),{BackgroundColor3=Color3.fromRGB(30,32,40)}):Play() end)
+
+	btn.MouseButton1Click:Connect(function()
+		SelectedKey = item.key
+		InfoTitle.Text = item.name
+		InfoText.Text = item.desc ~= "" and item.desc or "No description."
+		ReqText.Text = string.format("Cost: %d Points", item.points or 0)
+	end)
+	return btn
+end
+
+function rebuildList()
+	clearListButtons()
+	for _,item in ipairs(SkillBook or {}) do
+		if itemMatches(item) then
+			makeSkillRow(item).Parent = List
+		end
+	end
+	List.CanvasSize = UDim2.new(0,0,0, UIList.AbsoluteContentSize.Y + 10)
+end
+
+setupTabs()
+
+Filter:GetPropertyChangedSignal("Text"):Connect(rebuildList)
+
+local function updatePointsAndColors()
+	PointsLabel.Text = string.format("Points: %d", (State and State.points) or 0)
+	rebuildList()
+end
+
+local function pushEquippedToGameUI()
+	if not State then return end
+	for i=1,5 do
+		local key = State.equipped and State.equipped[i] or ""
+		local pretty = key ~= "" and prettyNameFromKey(key) or ""
+		setSlotName(i, pretty)
+	end
+end
+
+local function requestData()
+	local payload = GetDataRF:InvokeServer()
+	SkillBook = payload.book
+	State = payload.state
+	rebuildList()
+	updatePointsAndColors()
+	pushEquippedToGameUI()
+
+	if State and State.cooldowns then
+		for slotIndex, left in pairs(State.cooldowns) do
+			if typeof(slotIndex) == "number" and left > 0 then startCooldown(slotIndex, left) end
+		end
+		for key, left in pairs(State.cooldowns) do
+			if typeof(key) == "string" and left > 0 and State.equipped then
+				for i=1,5 do if State.equipped[i] == key then startCooldown(i, left) end end
+			end
+		end
+	end
+end
+
+local function requestUnlock()
+	if not SelectedKey then return end
+	ActionRE:FireServer({ kind="unlock", key=SelectedKey })
+end
+local function requestEquip(slotIndex)
+	if not SelectedKey or not State then return end
+	if not (State.unlocked and State.unlocked[SelectedKey]) then return end
+	ActionRE:FireServer({ kind="equip", key=SelectedKey, slot=slotIndex })
+end
+
+BtnUnlock.MouseButton1Click:Connect(requestUnlock)
+BtnE1.MouseButton1Click:Connect(function() requestEquip(1) end)
+BtnE2.MouseButton1Click:Connect(function() requestEquip(2) end)
+BtnE3.MouseButton1Click:Connect(function() requestEquip(3) end)
+BtnE4.MouseButton1Click:Connect(function() requestEquip(4) end)
+BtnE5.MouseButton1Click:Connect(function() requestEquip(5) end)
+
+SlotsUpdateRE.OnClientEvent:Connect(function(msg)
+	if not msg or type(msg) ~= "table" then return end
+	if msg.state then
+		State = msg.state
+		pushEquippedToGameUI()
+		rebuildList()
+		updatePointsAndColors()
+	end
+	if msg.type == "equipped" and msg.equipped then
+		State.equipped = msg.equipped
+		pushEquippedToGameUI()
+	end
+	if msg.type == "cooldown" then
+		if msg.slot and msg.seconds then
+			startCooldown(msg.slot, msg.seconds)
+		elseif msg.key and msg.seconds and State and State.equipped then
+			for i=1,5 do if State.equipped[i] == msg.key then startCooldown(i, msg.seconds) end end
+		end
+	end
+	if msg.cooldowns then
+		for k,left in pairs(msg.cooldowns) do
+			if typeof(k) == "number" then startCooldown(k, left)
+			elseif typeof(k) == "string" and State and State.equipped then
+				for i=1,5 do if State.equipped[i]==k then startCooldown(i,left) end end
+			end
+		end
+	end
+end)
+
+local keyToSlot = {[Enum.KeyCode.One]=1, [Enum.KeyCode.Two]=2, [Enum.KeyCode.Three]=3, [Enum.KeyCode.Four]=4, [Enum.KeyCode.Five]=5}
+
+local function getForwardVector()
+	local char = LP.Character
+	if char and char:FindFirstChild("HumanoidRootPart") then
+		local lv = char.HumanoidRootPart.CFrame.LookVector
+		return Vector3.new(lv.X, 0, lv.Z).Unit
+	end
+	return Vector3.new(0, 0, -1)
+end
+
+local function triggerArcBypass(slot)
+	local direction = nil; local pressed = false
+	local conn = UIS.InputBegan:Connect(function(input, gpe)
+		if gpe then return end
+		if input.KeyCode == Enum.KeyCode.V then direction = "left"; pressed = true
+		elseif input.KeyCode == Enum.KeyCode.M then direction = "right"; pressed = true end
+	end)
+	task.wait(1)
+	if conn then conn:Disconnect() end
+	if not pressed then return end
+	SkillUseRE:FireServer(slot, 0, direction)
+end
+
+UIS.InputBegan:Connect(function(input, gp)
+	if gp then return end
+	if input.KeyCode == Enum.KeyCode.K then
+		if not Screen.Enabled then requestData(); openUI() else closeUI() end
+		return
+	end
+	local slot = keyToSlot[input.KeyCode]
+	if SkillUseRE and slot and not UIS:GetFocusedTextBox() then
+		if activeCDs[slot] then return end
+		if not State or not State.equipped then return end
+		local key = State.equipped[slot] or ""
+		if key ~= "" then
+			local tp
+			for _, item in ipairs(SkillBook or {}) do
+				if item.key == key then tp = item.type break end
+			end
+			if not tp and custom[key] then
+				tp = custom[key].type
+			end
+
+			if tp == "shoot" then
+				if LP:GetAttribute("IsChargingSkill") == true then return end
+				if key == "direct_shot" or key == "big_bang_drive" then
+					SkillUseRE:FireServer(slot, 0, getForwardVector())
+					return
+				end
+				if SelectedShootSlot == slot then
+					deselectShoot()
+					ShootSkillSelectedEvent:Fire({ clear = true })
+				else
+					selectShoot(slot, key)
+				end
+				return
+			end
+			if key == "arc_bypass" then triggerArcBypass(slot); return end
+		end
+		if key ~= "" then SkillUseRE:FireServer(slot, 0, getForwardVector()) end
+	end
+end)
+
+Overlay.InputBegan:Connect(function(i)
+	if i.UserInputType == Enum.UserInputType.MouseButton1 then closeUI() end
+end)
+
+local function setupMobileUIInteractions()
+	if not UIS.TouchEnabled then return end
+	local gameUI = PlayerGui:WaitForChild("GameUI")
+	local mobileBtns = gameUI:FindFirstChild("MobileButtons")
+
+	if mobileBtns then
+		local btnOpen = mobileBtns:FindFirstChild("OpenSkillGUI", true)
+		if btnOpen then
+			btnOpen.MouseButton1Click:Connect(function()
+				if not Screen.Enabled then requestData(); openUI() else closeUI() end
+			end)
+		end
+	end
+
+	local skillsBar = gameUI:FindFirstChild("Skills")
+	if skillsBar then
+		for i = 1, 5 do
+			local slotBtn = skillsBar:FindFirstChild("Skill"..i)
+			if slotBtn and slotBtn:IsA("GuiButton") then
+				slotBtn.MouseButton1Click:Connect(function()
+					if activeCDs[i] then return end
+					if not State or not State.equipped then return end
+					local key = State.equipped[i] or ""
+					if key ~= "" then
+						local tp
+						for _, item in ipairs(SkillBook or {}) do if item.key == key then tp = item.type break end end
+						if tp == "shoot" then
+							if LP:GetAttribute("IsChargingSkill") == true then return end
+							if key == "direct_shot" or key == "big_bang_drive" then
+								SkillUseRE:FireServer(i, 0, getForwardVector())
+								return
+							end
+							if SelectedShootSlot == i then
+								deselectShoot()
+								ShootSkillSelectedEvent:Fire({ clear = true })
+							else
+								selectShoot(i, key)
+							end
+						elseif key == "arc_bypass" then triggerArcBypass(i)
+						else
+							SkillUseRE:FireServer(i, 0, getForwardVector())
+						end
+					end
+				end)
+			end
+		end
+	end
+end
+
+task.spawn(setupMobileUIInteractions)
+requestData()
+
+--in serverscriptservice
+local rs = game:GetService("ReplicatedStorage")
+local db = game:GetService("Debris")
+local cs = game:GetService("CollectionService")
+local players = game:GetService("Players")
+local SoundService = game:GetService("SoundService")
+
+local BuffUtils = require(rs.Shared.Dependencies.BuffUtils)
+local skills = require(rs.Shared.Dependencies.Skills)
+
+local rem = rs:FindFirstChild("Skill") or Instance.new("RemoteEvent")
+rem.Name = "Skill"
+rem.Parent = rs
+
+local PlayAnimation = rs:FindFirstChild("PlayAnimation") or Instance.new("RemoteEvent")
+PlayAnimation.Name = "PlayAnimation"
+PlayAnimation.Parent = rs
+
+local PlayVFX = rs:FindFirstChild("PlayVFX") or Instance.new("RemoteEvent")
+PlayVFX.Name = "PlayVFX"
+PlayVFX.Parent = rs
+
+local ShootChargeState = rs:FindFirstChild("ShootChargeState")
+local STR = rs:FindFirstChild("SkillTreeRemotes")
+local SlotsUpdateRE = STR and STR:FindFirstChild("SlotsUpdate")
+local ShotFeedback = rs:FindFirstChild("ShotFeedback") or rs:WaitForChild("ShotFeedback")
+
+local Assets = rs:FindFirstChild("Assets")
+local Anims = Assets and Assets:FindFirstChild("Animations")
+local SkillAnims = Anims and Anims:FindFirstChild("SkillAnimations")
+local BackKickChargeAnim = SkillAnims and SkillAnims:FindFirstChild("BackKickCharge")
+
+local BALL_NAMES = { "HITBOX_BALL", "BallHitbox", "Ball" }
+
+local SFX_ROOT = SoundService:WaitForChild("SFX"):WaitForChild("Skills")
+local Folder_Shooting = SFX_ROOT:FindFirstChild("Shooting")
+local Folder_Utility = SFX_ROOT:FindFirstChild("Utility")
+local Folder_Movement = SFX_ROOT:FindFirstChild("Movement") or Folder_Utility
+local Folder_Defensive = SFX_ROOT:FindFirstChild("Defensive")
+
+local PlayerCooldowns = {}
+local GlobalMoveCD = {}
+
+rs:GetAttributeChangedSignal("TrainingMode"):Connect(function()
+	if rs:GetAttribute("TrainingMode") == true then
+		PlayerCooldowns = {}
+		GlobalMoveCD = {}
+	end
+end)
+
+local function calculateCDMultiplier(p, skillType)
+	if p:GetAttribute("FlowActive") ~= true then return 1 end
+	local flow = p:GetAttribute("CurrentFlowBuff")
+	if flow == "Isagi" then return 0.85 end
+	if flow == "Rin" and skillType == "utility" then return 0.67 end
+	if flow == "Shidou" and skillType == "shoot" then return 0.67 end
+	if flow == "Sae" and skillType == "movement" then return 0.67 end
+	return 1
+end
+
+local function isBallPart(inst)
+	if not inst:IsA("BasePart") then return false end
+	if table.find(BALL_NAMES, inst.Name) then return true end
+	if cs:HasTag(inst, "ball") or cs:HasTag(inst, "ball_hitbox") then return true end
+	return false
+end
+
+local function getball(root, maxDist, p)
+	local distLimit = maxDist
+	if p then distLimit = maxDist * BuffUtils.getBuff(p, "Hitbox") end
+	local ballModel = workspace.Objects.Balls:FindFirstChild("PLAIN_BALL")
+	if not ballModel then return nil end
+	local hitbox = ballModel:FindFirstChild("HITBOX_BALL")
+	if not hitbox then return nil end
+	if distLimit and (hitbox.Position - root.Position).Magnitude > distLimit then
+		return nil
+	end
+	return hitbox
+end
+
+local function getBallModelNearRoot(root, maxDist, p)
+	local part = getball(root, maxDist or 30, p)
+	if not part then return nil, nil end
+	local model = part:FindFirstAncestorOfClass("Model")
+	return model, part
+end
+
+local function getPossessorState(p, root)
+	local model, ballPart = getBallModelNearRoot(root, 35, p)
+	if not model then return false, false, nil, nil end
+	local poss = model:GetAttribute("Possessor")
+	local neutral = poss == nil
+	local own = typeof(poss) == "number" and poss == p.UserId
+	return own, neutral, model, ballPart
+end
+
+local function claimBall(p, ballPart)
+	if not ballPart or not p then return end
+	local model = ballPart:FindFirstAncestorOfClass("Model")
+	if not model then return end
+	model:SetAttribute("Possessor", p.UserId)
+	model:SetAttribute("LastPossessor", p.UserId)
+
+	if ballPart:IsA("BasePart") and not ballPart.Anchored then
+		pcall(function()
+			ballPart:SetNetworkOwner(p)
+		end)
+	end
+end
+
+local function setBallVelocity(ball, vel)
+	if not ball or not ball:IsA("BasePart") then return end
+
+	for _, child in ipairs(ball:GetChildren()) do
+		if child:IsA("BodyVelocity") then
+			child:Destroy()
+		end
+	end
+
+	local bv = Instance.new("BodyVelocity")
+	bv.Name = "SkillVelocity"
+	bv.MaxForce = Vector3.new(1e9, 1e9, 1e9)
+	bv.Velocity = vel
+	bv.Parent = ball
+
+	db:AddItem(bv, 0.45)
+end
+
+local function playSkillSound(attachTo, skillData)
+	if not attachTo or not skillData or not skillData.sfx_name then return end
+
+	local soundName = skillData.sfx_name
+	local soundType = skillData.type
+
+	local targetFolder
+	if soundType == "shoot" then
+		targetFolder = Folder_Shooting
+	elseif soundType == "utility" then
+		targetFolder = Folder_Utility
+	elseif soundType == "movement" then
+		targetFolder = Folder_Movement
+	elseif soundType == "defensive" then
+		targetFolder = Folder_Defensive
+	end
+
+	if targetFolder then
+		local template = targetFolder:FindFirstChild(soundName)
+		if template and template:IsA("Sound") then
+			local clone = template:Clone()
+			clone.Parent = attachTo
+			clone:Play()
+			db:AddItem(clone, clone.TimeLength + 1)
+		end
+	end
+end
+
+local function playShootSound(ball)
+	if not ball then return end
+	local shootSound = ball:FindFirstChild("ShootSound")
+	if shootSound and shootSound:IsA("Sound") then
+		shootSound.TimePosition = 0
+		shootSound:Play()
+	end
+end
+
+local function applyBallIframe(ball, duration)
+	if not ball or not ball:IsA("BasePart") then return end
+	local model = ball:FindFirstAncestorOfClass("Model")
+	if not model then return end
+	model:SetAttribute("Iframed", true)
+	task.delay(duration or 1, function()
+		if model and model.Parent then
+			model:SetAttribute("Iframed", false)
+		end
+	end)
+end
+
+local function isGrounded(root)
+	local params = RaycastParams.new()
+	params.FilterDescendantsInstances = {root.Parent}
+	params.FilterType = Enum.RaycastFilterType.Exclude
+	local result = workspace:Raycast(root.Position + Vector3.new(0,1,0), Vector3.new(0, -6, 0), params)
+	return result ~= nil
+end
+
+local function isBallAirborne(ballPart)
+	if not ballPart then return false end
+	local params = RaycastParams.new()
+	params.FilterDescendantsInstances = {ballPart, ballPart.Parent}
+	params.FilterType = Enum.RaycastFilterType.Exclude
+
+	local result = workspace:Raycast(ballPart.Position, Vector3.new(0, -1.5, 0), params)
+	return result == nil
+end
+
+local function haltVerticalVelocity(root)
+	if not root then return end
+	local currentVel = root.AssemblyLinearVelocity
+	root.AssemblyLinearVelocity = Vector3.new(currentVel.X, 0, currentVel.Z)
+end
+
+local function nagiAirTrap(p, r, skillData)
+	r.AssemblyLinearVelocity = Vector3.zero
+	haltVerticalVelocity(r)
+
+	local freezeBv = Instance.new("BodyVelocity")
+	freezeBv.Name = "SkillFreeze"
+	freezeBv.MaxForce = Vector3.new(1e9, 0, 1e9)
+	freezeBv.Velocity = Vector3.zero
+	freezeBv.Parent = r
+	db:AddItem(freezeBv, 0.4)
+
+	p:SetAttribute("MoveSkillActive", true)
+	p:SetAttribute("DisableDribble", true)
+	p:SetAttribute("DisableLift", true)
+
+	local hum = p.Character:FindFirstChildOfClass("Humanoid")
+	if hum then
+		hum.WalkSpeed = 0
+		hum.JumpPower = 0
+		hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
+	end
+
+	if PlayAnimation then PlayAnimation:FireClient(p, "AirTrapCharge") end
+	playSkillSound(r, skillData)
+
+	task.wait(0.3)
+
+	if freezeBv then freezeBv:Destroy() end
+
+	local jumpBv = Instance.new("BodyVelocity")
+	jumpBv.MaxForce = Vector3.new(0, 1e6, 0)
+	jumpBv.Velocity = Vector3.new(0, 85, 0)
+	jumpBv.Parent = r
+	db:AddItem(jumpBv, 0.1)
+
+	if PlayAnimation then PlayAnimation:FireClient(p, "AirTrap") end
+
+	task.wait(0.1)
+
+	local targetBall = nil
+	local searchDuration = 1
+	local t0 = os.clock()
+
+	while os.clock() - t0 < searchDuration do
+		if not r or not r.Parent then break end
+		local own, neutral, _, ballPart = getPossessorState(p, r)
+		if (own or neutral) and ballPart then
+			local dist = (ballPart.Position - r.Position).Magnitude
+			if dist <= (20 * BuffUtils.getBuff(p, "Hitbox")) then
+				targetBall = ballPart
+				break
+			end
+		end
+		task.wait()
+	end
+
+	local joint
+	if targetBall then
+		local ballPart = targetBall
+		if hum then hum.WalkSpeed = 0 end
+		r.AssemblyLinearVelocity = Vector3.zero
+		r.Anchored = true
+
+		local sfx2 = Folder_Utility:FindFirstChild("AirTrap2")
+		if sfx2 then
+			local cpy = sfx2:Clone()
+			cpy.Parent = r
+			cpy:Play()
+			db:AddItem(cpy, 3)
+		end
+
+		claimBall(p, ballPart)
+		applyBallIframe(ballPart, 2.2)
+
+		local desiredOffset = CFrame.new(0, -1, -2.5)
+		ballPart.CFrame = r.CFrame * desiredOffset
+
+		joint = Instance.new("Motor6D")
+		joint.Name = "_NagiTrapM6D"
+		joint.Part0 = r
+		joint.Part1 = ballPart
+		joint.C0 = desiredOffset
+		joint.Parent = r
+		ballPart.CanCollide, ballPart.Massless = false, true
+
+		p:SetAttribute("NagiTrapActive", true)
+		p:SetAttribute("BreakNagiTrap", false)
+
+		PlayAnimation:FireClient(p, {name = "AirTrap", mode = "freeze", override = true})
+
+		local start = os.clock()
+		while os.clock() - start < 2 do
+			if not r.Parent or not ballPart.Parent or not p:GetAttribute("NagiTrapActive") then break end
+			if p:GetAttribute("BreakNagiTrap") == true then
+				local bm = ballPart:FindFirstAncestorOfClass("Model")
+				if bm then bm:SetAttribute("Iframed", false) end
+				break
+			end
+			task.wait()
+		end
+	end
+
+	if joint then joint:Destroy() end
+	if targetBall then targetBall.CanCollide, targetBall.Massless = true, false end
+
+	if r then r.Anchored = false end
+	if hum then
+		hum.JumpPower = 50
+		hum.WalkSpeed = 22
+		hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+	end
+	p:SetAttribute("MoveSkillActive", false)
+	p:SetAttribute("DisableDribble", false)
+	p:SetAttribute("DisableLift", false)
+
+	if p:GetAttribute("NagiTrapActive") then
+		p:SetAttribute("NagiTrapActive", false)
+		PlayAnimation:FireClient(p, {name = "AirTrap", mode = "unfreeze"})
+	end
+	p:SetAttribute("BreakNagiTrap", false)
+end
+
+local ts = game:GetService("TweenService")
+local workspace = game:GetService("Workspace")
+
+local afterImageSpeed = 0.976
+local afterImageCount = 0.09
+local activeTrails = {}
+
+local function mkball(char)
+	local p = Instance.new("Part")
+	p.Shape = Enum.PartType.Ball
+	p.Size = Vector3.new(1,1,1)
+	p.Anchored = true
+	p.CanCollide = false
+	p.Material = Enum.Material.ForceField
+	p.CFrame = char:FindFirstChild("HumanoidRootPart").CFrame
+	p.Parent = workspace
+
+	local mesh = Instance.new("SpecialMesh")
+	mesh.MeshId = "rbxassetid://482906818"
+	mesh.TextureId = "rbxassetid://5101923607"
+	mesh.Scale = p.Size
+	mesh.Parent = p
+
+	return p, mesh
+end
+
+local function getInsideTargets(center,radius,ignoreModel)
+	local inside = {}
+	for _,plr in pairs(players:GetPlayers()) do
+		if plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") and plr.Character ~= ignoreModel then
+			local hrp = plr.Character.HumanoidRootPart
+			if (hrp.Position - center.Position).Magnitude <= radius then
+				table.insert(inside,plr.Character)
+			end
+		end
+	end
+	for _,m in pairs(workspace:GetChildren()) do
+		if m:IsA("Model") and m:FindFirstChild("HumanoidRootPart") and m ~= ignoreModel then
+			local hrp = m.HumanoidRootPart
+			if (hrp.Position - center.Position).Magnitude <= radius then
+				table.insert(inside,m)
+			end
+		end
+	end
+	return inside
+end
+
+local function freezeModel(model)
+	for _,v in pairs(model:GetDescendants()) do
+		if v:IsA("BasePart") then v.Anchored = true end
+	end
+end
+local function unfreezeModel(model)
+	for _,v in pairs(model:GetDescendants()) do
+		if v:IsA("BasePart") then v.Anchored = false end
+	end
+end
+
+local function createAfterImage(char)
+	if not char or not char:IsA("Model") then return end
+	char.Archivable = true
+	local function afterImage()
+		if not activeTrails[char] then return end
+		local newChar = char:Clone()
+		newChar.Name = ""
+		for _, c in pairs(newChar:GetChildren()) do
+			if c:IsA("Tool") then c:Destroy() end
+		end
+		local hrp = newChar:FindFirstChild("HumanoidRootPart")
+		if hrp then hrp.Anchored = true end
+		local humanoid = newChar:FindFirstChildOfClass("Humanoid")
+		if humanoid then humanoid:Destroy() end
+		for _, v in ipairs(newChar:GetDescendants()) do
+			if v:IsA("BasePart") then
+				v.Transparency = 0.2
+				v.CanCollide = false
+				v.Anchored = true
+				ts:Create(v, TweenInfo.new(afterImageSpeed), {Transparency = 1}):Play()
+			elseif v:IsA("Decal") then
+				v.Transparency = 0.2
+				ts:Create(v, TweenInfo.new(afterImageSpeed), {Transparency = 1}):Play()
+			end
+		end
+		newChar.Parent = workspace
+		task.wait(afterImageSpeed)
+		newChar:Destroy()
+	end
+	task.spawn(function()
+		while activeTrails[char] do
+			task.spawn(afterImage)
+			task.wait(afterImageCount)
+		end
+	end)
+end
+local function startTrail(char) activeTrails[char] = true createAfterImage(char) end
+local function stopTrail(char) activeTrails[char] = false end
+
+local function domove(p, r, m, skKey, skillData)
+	haltVerticalVelocity(r)
+	p:SetAttribute("DisableLift", true)
+	p:SetAttribute("MoveSkillActive", true)
+
+	local hum = p.Character and p.Character:FindFirstChild("Humanoid")
+	if hum then
+		hum.JumpPower = 0
+		hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
+
+		if skKey == "left_chop" or skKey == "right_chop" then
+			hum.WalkSpeed = 0
+		end
+	end
+
+	playSkillSound(r, skillData)
+
+	if skKey:find("feint") and PlayVFX then
+		PlayVFX:FireAllClients({ name = "feint", attachTo = r })
+	end
+
+	local b = getball(r, 25, p)
+	if b then claimBall(p, b) end
+
+	local joint
+	if b then
+		for _, j in ipairs(r:GetChildren()) do
+			if j:IsA("Motor6D") and j.Name == "_SkillTempM6D" then j:Destroy() end
+		end
+		local desiredOffset = CFrame.new(0, -2, -2)
+		b.CFrame = r.CFrame * desiredOffset
+		joint = Instance.new("Motor6D")
+		joint.Name = "_SkillTempM6D"
+		joint.Part0 = r
+		joint.Part1 = b
+		joint.C0 = desiredOffset
+		joint.C1 = CFrame.new()
+		joint.Parent = r
+		b.CanCollide, b.Massless = false, true
+
+		if skKey == "left_chop" or skKey == "right_chop" then
+			applyBallIframe(b, 0.7)
+		elseif skKey:find("feint") then
+			applyBallIframe(b, 0.5)
+		elseif skKey:find("speed_elastic") then
+			applyBallIframe(b, 0.4)
+			task.delay(0.7, function()
+				if b and b.Parent then
+					applyBallIframe(b, 0.4)
+				end
+			end)
+		end
+	end
+	
+	local char = p.Character
+	if not char then return end
+	
+	--[[if skKey == "timestop" then
+		local bball, mesh = mkball(char)
+		local radius = 15
+
+		task.spawn(function()
+			for _=1,20 do
+				local targets = getInsideTargets(bball, mesh.Scale.X/2, char)
+				for _, t in pairs(targets) do
+					freezeModel(t)
+				end
+				task.wait(0.1)
+			end
+		end)
+		print("bbno$")
+
+		local grow = ts:Create(mesh, TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {Scale = Vector3.new(300,300,300)})
+		grow:Play()
+		startTrail(char)
+
+		grow.Completed:Connect(function()
+			task.delay(10, function()
+				stopTrail(char)
+				local die = ts:Create(mesh, TweenInfo.new(0.6, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {Scale=Vector3.new(0,0,0)})
+				die:Play()
+				die.Completed:Connect(function() bball:Destroy() end)
+
+				local targets = getInsideTargets(bball, mesh.Scale.X/2, char)
+				for _, t in pairs(targets) do
+					unfreezeModel(t)
+				end
+			end)
+		end)
+
+		local re = game:GetService("ReplicatedStorage"):WaitForChild("special")
+		if re then
+			re:FireClient(p, "start", p)
+		end
+	end
+    ]]
+	for _, s in ipairs(m) do
+		if p:GetAttribute("MoveSkillActive") ~= true then break end
+
+		local offset, dur = s[1], s[2]
+		local worldVec = r.CFrame:VectorToWorldSpace(offset.Position or offset.p)
+		worldVec = Vector3.new(worldVec.X, 0, worldVec.Z)
+
+		haltVerticalVelocity(r)
+		if b then claimBall(p, b) end
+
+		local distance = worldVec.Magnitude
+		local speed = distance / dur
+		local bv = Instance.new("BodyVelocity")
+		bv.MaxForce = Vector3.new(1e6, 1e6, 1e6)
+		local moveVel = (distance > 0 and worldVec.Unit or Vector3.new()) * speed
+		bv.Velocity = Vector3.new(moveVel.X, -2, moveVel.Z)
+		bv.Parent = r
+		task.wait(dur)
+		bv:Destroy()
+	end
+
+	if hum then
+		hum.JumpPower = 50
+		hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+		hum.WalkSpeed = 22
+	end
+
+	local dir = r.CFrame.LookVector
+	if joint and joint.Parent then
+		local ball = joint.Part1
+		if PlayVFX then
+			PlayVFX:FireAllClients({ name = "_CLEAR_CURVE_", ball = ball })
+		end
+		joint:Destroy()
+		if ball then
+			ball.CanCollide, ball.Massless = true, false
+			claimBall(p, ball)
+			setBallVelocity(ball, dir * 25)
+		end
+	end
+
+	p:SetAttribute("DisableLift", false)
+	p:SetAttribute("MoveSkillActive", false)
+	if not rs:GetAttribute("TrainingMode") then
+		GlobalMoveCD[p] = os.clock() + 2
+	end
+end
+
+local function findLongShotSfx()
+	local sfx = SoundService:FindFirstChild("SFX")
+	if not sfx then return nil end
+	local a = sfx:FindFirstChild("skills") or sfx:FindFirstChild("Skills")
+	if not a then return nil end
+	local b = a:FindFirstChild("Shooting")
+	if not b then return nil end
+	return b:FindFirstChild("LongShot")
+end
+
+local function computeUpwardY(ratio)
+	local r = math.clamp(tonumber(ratio) or 0, 0, 1)
+	local eased = r ^ 1.2
+	return 10 + (24 - 10) * eased
+end
+
+local function coerceAimVector(arg, fallbackDir)
+	if typeof(arg) == "Vector3" then
+		if arg.Magnitude > 0 then return arg.Unit end
+	elseif typeof(arg) == "table" then
+		local x, y, z = arg.x or arg.X, arg.y or arg.Y, arg.z or arg.Z
+		if typeof(x) == "number" and typeof(y) == "number" and typeof(z) == "number" then
+			local v = Vector3.new(x, y, z)
+			if v.Magnitude > 0 then return v.Unit end
+		end
+	elseif typeof(arg) == "number" then
+		return (Vector3.new(fallbackDir.X, arg, fallbackDir.Z)).Unit
+	end
+	return fallbackDir.Unit
+end
+
+local function buildLaunchDirForCurve(rootCF, aimArg)
+	local forward = rootCF.LookVector
+	local flat = Vector3.new(forward.X, 0, forward.Z)
+	if flat.Magnitude == 0 then flat = forward end
+	local aimDir = coerceAimVector(aimArg, forward)
+	local y = math.clamp(aimDir.Y, -0.85, 0.85)
+	local dir = (flat.Unit + Vector3.new(0, y, 0)).Unit
+	if dir.Magnitude < 0.05 then dir = forward.Unit end
+	return dir
+end
+
+local function hasAttachJoint(ball)
+	if not ball then return false end
+	for _, name in ipairs({ "_SkillTempM6D", "_NagiTrapM6D", "_RainbowFlickM6D" }) do
+		if ball:FindFirstChild(name) then return true end
+	end
+	return false
+end
+
+local function applycurve(ball,angle,delay,time)
+	task.spawn(function()
+		task.wait(delay or 0.4)
+
+		local t=tick()
+		while hasAttachJoint(ball) and tick()-t<0.45 do
+			task.wait(0.01)
+		end
+
+		if not ball or not ball.Parent then return end
+
+		local bv
+		for _,v in ipairs(ball:GetDescendants()) do
+			if v:IsA("BodyVelocity") and v.Name=="SkillVelocity" then
+				bv=v
+				break
+			end
+		end
+
+		if not bv then
+			local root=ball.AssemblyRootPart or ball
+			if not root then return end
+			bv=Instance.new("BodyVelocity")
+			bv.Name="SkillVelocity"
+			bv.MaxForce=Vector3.new(1e5,1e5,1e5)
+			bv.Velocity=root.AssemblyLinearVelocity
+			bv.Parent=root
+		end
+
+		local s=tick()
+		local a=math.rad(angle or 22)
+		local d=time or 0.7
+
+		while bv and bv.Parent and tick()-s<d do
+			local p=(tick()-s)/d
+			if p>1 then break end
+			local vel=bv.Velocity
+			if vel.Magnitude>0.01 then
+				bv.Velocity=(CFrame.Angles(0,a*p,0)*vel.Unit)*vel.Magnitude
+			end
+			task.wait(0.03)
+		end
+
+		if bv and bv.Parent then
+			bv:Destroy()
+		end
+	end)
+end
+
+local function doshot(p, sk, ratio, aimArg)
+	local c = p.Character
+	if not c then return end
+	local r = c:FindFirstChild("HumanoidRootPart")
+	if not r then return end
+	local b = getball(r, 30, p)
+	if not b then return end
+
+	local trapJoint = r:FindFirstChild("_NagiTrapM6D")
+	if trapJoint then
+		trapJoint:Destroy()
+		r.Anchored = false
+		b.CanCollide, b.Massless = true, false
+		p:SetAttribute("NagiTrapActive", false)
+		PlayAnimation:FireClient(p, {name = "AirTrap", mode = "unfreeze"})
+	end
+
+	local pwrMult = BuffUtils.getBuff(p, "Power")
+
+	if sk.shot ~= "big_bang_drive" then
+		claimBall(p, b)
+	end
+
+	local ballModel = b:FindFirstAncestorOfClass("Model")
+	if ballModel then
+		ballModel:SetAttribute("IsSkillShotActive", true)
+	end
+
+	if PlayVFX then PlayVFX:FireAllClients({ name = "_CLEAR_CURVE_", ball = b }) end
+
+	local dir
+	if aimArg and typeof(aimArg) == "Vector3" and aimArg.Magnitude > 0 then
+		dir = aimArg.Unit
+	else
+		dir = r.CFrame.LookVector
+	end
+
+	local side = r.CFrame.RightVector
+
+	local charge = math.clamp(ratio or 0, 0, 1)
+
+	local vfxDir = Vector3.new(dir.X, 0, dir.Z).Unit
+	if vfxDir.Magnitude == 0 then vfxDir = Vector3.new(0, 0, -1) end
+
+	if sk.shot ~= "big_bang_drive" then
+		if sk.sfx_name then
+			playSkillSound(b, sk)
+		else
+			playShootSound(b)
+		end
+	end
+
+	if sk.shot == "strong_left_curve" then
+		local base = 55
+		local power = (base + (55 * charge)) * pwrMult
+		local launchDir = buildLaunchDirForCurve(r.CFrame, aimArg)
+		local ybias = Vector3.new(0, 0.03, 0)
+
+		setBallVelocity(b, (launchDir + ybias).Unit * power + side * 9)
+
+		if not sk.sfx_name then playShootSound(b) end
+
+		if PlayAnimation then PlayAnimation:FireClient(p, "LCurveRelease") end
+
+		if PlayVFX then
+			PlayVFX:FireAllClients({ name = "CurveHitVFX", position = b.Position, direction = vfxDir })
+			PlayVFX:FireAllClients({ name = "_ATTACH_CURVE_", ball = b })
+		end
+
+		task.spawn(function()
+			task.wait(0.4)
+			local t=0.7
+			local s=tick()
+			local a=math.rad(22)
+			while tick()-s<t and b and b.Parent do
+				local r=b.AssemblyRootPart
+				if r then
+					local p=(tick()-s)/t
+					local v=r.AssemblyLinearVelocity
+					if v.Magnitude>0 then
+						r.AssemblyLinearVelocity=(CFrame.Angles(0,a*p,0)*v.Unit)*v.Magnitude
+					end
+				end
+				task.wait(0.03)
+			end
+		end)
+
+	elseif sk.shot == "strong_right_curve" then
+		local base = 55
+		local power = (base + (55 * charge)) * pwrMult
+		local launchDir = buildLaunchDirForCurve(r.CFrame, aimArg)
+		local ybias = Vector3.new(0, 0.03, 0)
+
+		setBallVelocity(b, (launchDir + ybias).Unit * power - side * 9)
+
+		if not sk.sfx_name then playShootSound(b) end
+
+		if PlayAnimation then PlayAnimation:FireClient(p, "RCurveRelease") end
+
+		if PlayVFX then
+			PlayVFX:FireAllClients({ name = "CurveHitVFX", position = b.Position, direction = vfxDir })
+			PlayVFX:FireAllClients({ name = "_ATTACH_CURVE_", ball = b })
+		end
+
+		task.spawn(function()
+			task.wait(0.4)
+			local t=0.7
+			local s=tick()
+			local a=math.rad(-22)
+			while tick()-s<t and b and b.Parent do
+				local r=b.AssemblyRootPart
+				if r then
+					local p=(tick()-s)/t
+					local v=r.AssemblyLinearVelocity
+					if v.Magnitude>0 then
+						r.AssemblyLinearVelocity=(CFrame.Angles(0,a*p,0)*v.Unit)*v.Magnitude
+					end
+				end
+				task.wait(0.03)
+			end
+		end)
+
+	elseif sk.shot == "long_diddy" then
+		local m2power = 50 + 70 * charge
+		local mult = 1.15
+		local power2 = ((m2power * mult) * 1.15) * pwrMult
+		local upY = computeUpwardY(charge) * mult
+		setBallVelocity(b, dir * power2 + Vector3.new(0, upY, 0))
+
+		if not sk.sfx_name then
+			local sfx = findLongShotSfx()
+			if sfx then
+				local cpy = sfx:Clone()
+				cpy.Parent = b
+				cpy:Play()
+				db:AddItem(cpy, 3)
+			else
+				playShootSound(b)
+			end
+		end
+		if PlayVFX then
+			PlayVFX:FireAllClients({ name = "Long Shot VFX", position = b.Position, direction = vfxDir })
+		end
+
+	elseif sk.shot == "gyro_shot" then
+		local base = 50
+		local power3 = (base + (65 * charge)) * pwrMult
+		local upY = 26 + (30 * charge)
+		setBallVelocity(b, dir * power3 + Vector3.new(0, upY, 0) + side * 6)
+
+		if not sk.sfx_name then
+			local sfx = SoundService:FindFirstChild("SFX")
+			if sfx then
+				local skillsFolder = sfx:FindFirstChild("Skills")
+				if skillsFolder then
+					local shootingFolder = skillsFolder:FindFirstChild("Shooting")
+					if shootingFolder then
+						local gyro = shootingFolder:FindFirstChild("Gyro")
+						if gyro then
+							local cpy = gyro:Clone()
+							cpy.Parent = b
+							cpy:Play()
+							db:AddItem(cpy, 3)
+						end
+					end
+				end
+			end
+		end
+		if PlayAnimation then PlayAnimation:FireClient(p, "GyroShot") end
+		if PlayVFX then PlayVFX:FireAllClients({ name = "GyroShot", position = b.Position, direction = vfxDir }) end
+
+	elseif sk.shot == "lob" then
+		local base = 20
+		local power4 = (base + (25 * charge)) * pwrMult
+		local upY = 25 + (25 * charge)
+		setBallVelocity(b, dir * power4 + Vector3.new(0, upY, 0))
+		if not sk.sfx_name then playShootSound(b) end
+
+	elseif sk.shot == "back_kick" then
+		local flatDir = Vector3.new(dir.X, 0, dir.Z).Unit
+		local base = 45
+		local power5 = (base + (55 * charge)) * pwrMult
+		setBallVelocity(b, -flatDir * power5)
+		if not sk.sfx_name then playShootSound(b) end
+
+	elseif sk.shot == "kaiser_impact" then
+		local base = 160
+		local power6 = ((base + (180 * charge)) * 1.20) * pwrMult
+		setBallVelocity(b, dir * power6)
+
+		if not sk.sfx_name then
+			local sfx = SoundService:FindFirstChild("SFX")
+			if sfx then
+				local skillsFolder = sfx:FindFirstChild("Skills")
+				if skillsFolder then
+					local shootingFolder = skillsFolder:FindFirstChild("Shooting")
+					if shootingFolder then
+						local kaiser = shootingFolder:FindFirstChild("Kaiser")
+						if kaiser then
+							local cpy = kaiser:Clone()
+							cpy.Parent = b
+							cpy:Play()
+							db:AddItem(cpy, 3)
+						end
+					end
+				end
+			end
+		end
+		if PlayVFX then PlayVFX:FireAllClients({ name = "KaiserImpact", position = b.Position, direction = vfxDir }) end
+
+	elseif sk.shot == "direct_shot" then
+		--if own then return end
+		local power = 175 * pwrMult
+		local straightDir = dir
+		local flat = Vector3.new(straightDir.X, 0, straightDir.Z)
+		if flat.Magnitude > 0 then straightDir = flat.Unit end
+
+		setBallVelocity(b, straightDir * power + Vector3.new(0, 3, 0))
+		applyBallIframe(b, 0.5)
+
+		if sk.sfx_name then
+			playSkillSound(b, sk)
+		else
+			playShootSound(b)
+		end
+
+		if PlayVFX then
+			PlayVFX:FireAllClients({ name = "DirectShot", attachTo = r })
+		end
+
+	elseif sk.shot == "big_bang_drive" then
+		if not isBallAirborne(b) then return end
+
+		claimBall(p, b)
+
+		local power = 250 * pwrMult
+		local lookDir = dir
+		local flatLook = Vector3.new(lookDir.X, 0, lookDir.Z).Unit
+		local reverseDir = -flatLook
+
+		setBallVelocity(b, reverseDir * power + Vector3.new(0, 6, 0))
+
+		local sfxRelease = Folder_Shooting:FindFirstChild("BBDRelease")
+		if sfxRelease then
+			local c = sfxRelease:Clone()
+			c.Parent = b
+			c:Play()
+			db:AddItem(c, 2)
+		end
+
+		if PlayVFX then
+			PlayVFX:FireAllClients({ name = "BigBangDrive", attachTo = r })
+			PlayVFX:FireAllClients({ name = "_ATTACH_BBD_", ball = b })
+		end
+
+	else
+		warn("Warning: Unknown shot type: " .. tostring(sk.shot))
+	end
+
+	ShotFeedback:FireClient(p, "shot", { ratio = charge })
+end
+
+local function getRightFoot(c)
+	local foot = c and (c:FindFirstChild("RightFoot") or c:FindFirstChild("Right Leg"))
+	return foot
+end
+
+local function rainbowFlick(p, r, ballModel, ballPart)
+	haltVerticalVelocity(r)
+	p:SetAttribute("DisableLift", true)
+	p:SetAttribute("MoveSkillActive", true)
+
+	local b = ballPart or getball(r, 30, p)
+	if not b then
+		p:SetAttribute("DisableLift", false)
+		p:SetAttribute("MoveSkillActive", false)
+		return
+	end
+
+	claimBall(p, b)
+
+	local hum = p.Character and p.Character:FindFirstChild("Humanoid")
+	if hum then
+		hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
+		hum.JumpPower = 0
+	end
+
+	for _, obj in ipairs(b:GetChildren()) do
+		if obj:IsA("BodyVelocity") then obj:Destroy() end
+	end
+	b.AssemblyLinearVelocity = Vector3.zero
+	applyBallIframe(b, 1)
+	local c = p.Character
+	local foot = getRightFoot(c)
+	local joint
+	if foot then
+		for _, j in ipairs(foot:GetChildren()) do
+			if j:IsA("Motor6D") and j.Name == "_RainbowFlickM6D" then j:Destroy() end
+		end
+		local desiredOffset = CFrame.new(0, -0.2, -0.55)
+		b.CFrame = foot.CFrame * desiredOffset
+		joint = Instance.new("Motor6D")
+		joint.Name = "_RainbowFlickM6D"
+		joint.Part0 = foot
+		joint.Part1 = b
+		joint.C0 = desiredOffset
+		joint.C1 = CFrame.new()
+		joint.Parent = foot
+		b.CanCollide, b.Massless = false, true
+	end
+	if PlayVFX then
+		PlayVFX:FireAllClients({ name = "Impact", attachTo = r })
+	end
+	task.delay(0.05, function()
+		if joint and joint.Parent then
+			joint:Destroy()
+			if b then
+				b.CanCollide, b.Massless = true, false
+				claimBall(p, b)
+			end
+		end
+		if not (r and r.Parent and b and b.Parent) then
+			p:SetAttribute("DisableLift", false)
+			p:SetAttribute("MoveSkillActive", false)
+			if not rs:GetAttribute("TrainingMode") then
+				GlobalMoveCD[p] = os.clock() + 2
+			end
+			return
+		end
+		local look = r.CFrame.LookVector
+		local flat = Vector3.new(look.X, 0, look.Z)
+		if flat.Magnitude == 0 then flat = Vector3.new(0, 0, -1) end
+
+		setBallVelocity(b, flat.Unit * 70 + Vector3.new(0, 24, 0))
+
+		local bv = Instance.new("BodyVelocity")
+		bv.MaxForce = Vector3.new(1e6, 1e6, 1e6)
+		bv.Velocity = flat.Unit * 70 + Vector3.new(0, 24, 0)
+		bv.Parent = b
+
+		task.delay(0.35, function()
+			if b and b.Parent and bv.Parent == b then
+				bv.Velocity = flat.Unit * 70 + Vector3.new(0, -50, 0)
+			end
+		end)
+		task.delay(0.7, function()
+			if bv and bv.Parent then bv:Destroy() end
+			if b then claimBall(p, b) end
+			p:SetAttribute("DisableLift", false)
+			p:SetAttribute("MoveSkillActive", false)
+			if not rs:GetAttribute("TrainingMode") then
+				GlobalMoveCD[p] = os.clock() + 2
+			end
+		end)
+		task.delay(0.5, function()
+			if not (r and r.Parent) then return end
+			haltVerticalVelocity(r)
+			local dash = Instance.new("BodyVelocity")
+			dash.MaxForce = Vector3.new(1e6, 0, 1e6)
+			dash.Velocity = flat.Unit * 120
+			dash.Parent = r
+			db:AddItem(dash, 0.3)
+			if hum then
+				hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+				hum.JumpPower = 50
+			end
+		end)
+	end)
+end
+
+local function ultraFastSteps(p, r, ballModel, ballPart, skillData)
+	haltVerticalVelocity(r)
+
+	playSkillSound(r, skillData)
+
+	local b = ballPart or getball(r, 30, p)
+	if not b then return end
+
+	claimBall(p, b)
+
+	local hum = p.Character and p.Character:FindFirstChild("Humanoid")
+	if hum then
+		hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
+		hum.JumpPower = 0
+	end
+
+	p:SetAttribute("UFSActive", true)
+	p:SetAttribute("DisableDribble", true)
+	p:SetAttribute("DisableLift", true)
+	p:SetAttribute("MoveSkillActive", true)
+
+	if PlayAnimation then
+		PlayAnimation:FireClient(p, "UltraFastStart")
+	end
+
+	if PlayVFX then
+		PlayVFX:FireAllClients({ name = "UltraGround", attachTo = r })
+		PlayVFX:FireAllClients({ name = "UltraAura", attachTo = r })
+	end
+	for _, j in ipairs(r:GetChildren()) do
+		if j:IsA("Motor6D") and j.Name == "_SkillTempM6D" then j:Destroy() end
+	end
+	local desiredOffset = CFrame.new(0, -2, -2)
+	b.CFrame = r.CFrame * desiredOffset
+	local joint = Instance.new("Motor6D")
+	joint.Name = "_SkillTempM6D"
+	joint.Part0 = r
+	joint.Part1 = b
+	joint.C0 = desiredOffset
+	joint.C1 = CFrame.new()
+	joint.Parent = r
+	b.CanCollide, b.Massless = false, true
+	r.AssemblyLinearVelocity = Vector3.new(r.AssemblyLinearVelocity.X, 0, r.AssemblyLinearVelocity.Z)
+	local slow = Instance.new("BodyVelocity")
+	slow.MaxForce = Vector3.new(1e6, 1e6, 1e6)
+	slow.Parent = r
+	local t0 = tick()
+	while tick() - t0 < 1.0 do
+		if not r or not r.Parent then break end
+		local lk = r.CFrame.LookVector
+		local fl = Vector3.new(lk.X, 0, lk.Z)
+		if fl.Magnitude == 0 then fl = Vector3.new(0, 0, -1) end
+		slow.Velocity = Vector3.new(fl.Unit.X * 22, 0, fl.Unit.Z * 22)
+
+		haltVerticalVelocity(r)
+		if b then claimBall(p, b) end
+
+		task.wait(0.05)
+	end
+	if slow and slow.Parent then slow:Destroy() end
+	if joint and joint.Parent then
+		joint:Destroy()
+		b.CanCollide, b.Massless = true, false
+		claimBall(p, b)
+	end
+
+	local isOwner = false
+	if b and b.Parent then
+		local bm = b:FindFirstAncestorOfClass("Model")
+		if bm and bm:GetAttribute("Possessor") == p.UserId then
+			isOwner = true
+		end
+	end
+
+	if not (r and r.Parent and b and b.Parent and isOwner) then
+		if PlayVFX then
+			PlayVFX:FireAllClients({ name = "_CLEAR_ULTRA_", attachTo = r })
+		end
+		p:SetAttribute("UFSActive", false)
+		p:SetAttribute("DisableDribble", false)
+		p:SetAttribute("DisableLift", false)
+		p:SetAttribute("MoveSkillActive", false)
+		if not rs:GetAttribute("TrainingMode") then
+			GlobalMoveCD[p] = os.clock() + 2
+		end
+		if hum then hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, true); hum.JumpPower = 50 end
+		return
+	end
+
+	if PlayAnimation then
+		PlayAnimation:FireClient(p, "UltraFastEnd")
+	end
+
+	local lookNow = r.CFrame.LookVector
+	local dirNow = Vector3.new(lookNow.X, 0, lookNow.Z)
+	if dirNow.Magnitude == 0 then dirNow = Vector3.new(0, 0, -1) end
+	dirNow = dirNow.Unit
+
+	setBallVelocity(b, dirNow * 95 + Vector3.new(0, 3, 0))
+
+	local burst = Instance.new("BodyVelocity")
+	burst.MaxForce = Vector3.new(1e6, 1e6, 1e6)
+	burst.Velocity = dirNow * 120 + Vector3.new(0, -5, 0)
+	burst.Parent = r
+	if PlayVFX then
+		PlayVFX:FireAllClients({ name = "UltraBurst", attachTo = r })
+		PlayVFX:FireAllClients({ name = "_CLEAR_ULTRA_", attachTo = r })
+	end
+	db:AddItem(burst, 0.3)
+	task.delay(0.35, function()
+		if p and p.Parent then
+			p:SetAttribute("UFSActive", false)
+			p:SetAttribute("DisableDribble", false)
+			p:SetAttribute("DisableLift", false)
+			p:SetAttribute("MoveSkillActive", false)
+			if not rs:GetAttribute("TrainingMode") then
+				GlobalMoveCD[p] = os.clock() + 2
+			end
+		end
+		if hum then hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, true); hum.JumpPower = 50 end
+	end)
+end
+
+local function normalizePretty(s)
+	if typeof(s) ~= "string" then return "" end
+	return (s:lower():gsub("%s+", ""))
+end
+
+local function hasBackKickEquipped(p)
+	local pg = p:FindFirstChild("PlayerGui") if not pg then return false end
+	local gameUI = pg:FindFirstChild("GameUI") if not gameUI then return false end
+	local bar = gameUI:FindFirstChild("Skills") if not bar then return false end
+	for i = 1, 5 do
+		local slot = bar:FindFirstChild("Skill"..i) or bar:FindFirstChild(tostring(i))
+		if slot then
+			local candidate = ""
+			for _, ch in ipairs(slot:GetChildren()) do
+				if ch:IsA("StringValue") and ch.Value ~= "" then
+					candidate = ch.Value
+				elseif ch:IsA("TextLabel") and ch.Text ~= "" then
+					candidate = ch.Text
+				end
+			end
+			local n = normalizePretty(candidate)
+			if n == "backkick" then return true end
+		end
+	end
+	return false
+end
+
+local BackKickChargeTrack = {}
+
+local function stopBackKickCharge(p)
+	local tr = BackKickChargeTrack[p]
+	if tr then
+		pcall(function() tr:AdjustSpeed(0) tr:Stop(0.05) end)
+		BackKickChargeTrack[p] = nil
+	end
+end
+
+local function playAndHoldBackKickCharge(p)
+	if not BackKickChargeAnim then return end
+	local c = p.Character
+	if not c then return end
+	local hum = c:FindFirstChildOfClass("Humanoid")
+	if not hum then return end
+	local animator = hum:FindFirstChildOfClass("Animator")
+	if not animator then
+		animator = Instance.new("Animator")
+		animator.Parent = hum
+	end
+	local tr = animator:LoadAnimation(BackKickChargeAnim)
+	BackKickChargeTrack[p] = tr
+	tr:Play(0.1, 1, 1)
+	task.delay(0.99, function()
+		if BackKickChargeTrack[p] == tr and tr.IsPlaying then
+			local holdAt = 0.99
+			pcall(function()
+				local len = tr.Length
+				if typeof(len) == "number" and len > 0 then
+					holdAt = math.min(holdAt, math.max(0, len - 0.02))
+				end
+				tr.TimePosition = holdAt
+				tr:AdjustSpeed(0)
+			end)
+		end
+	end)
+end
+
+if ShootChargeState then
+	ShootChargeState.OnServerEvent:Connect(function(p, state)
+		if p:GetAttribute("SuperJumpLock") == true then return end
+		if typeof(state) ~= "string" then return end
+		local phase = state:lower()
+
+		if p:GetAttribute("NagiTrapActive") == true and (phase == "begin" or phase == "charge") then
+			p:SetAttribute("BreakNagiTrap", true)
+		end
+
+		if not hasBackKickEquipped(p) then return end
+		if phase == "begin" or phase == "charge" then
+			playAndHoldBackKickCharge(p)
+		elseif phase == "end" then
+			stopBackKickCharge(p)
+		end
+	end)
+end
+
+rem.OnServerEvent:Connect(function(p, slotIndex, ratio, aimArg)
+	if not skills then return end
+	if p:GetAttribute("SuperJumpLock") == true then return end
+	if p:GetAttribute("UFSActive") == true then return end
+	if p:GetAttribute("StaminaRechargeActive") == true then return end
+
+	if p:GetAttribute("IsRagdolled") == true then return end
+
+	local g = p:FindFirstChild("PlayerGui") if not g then return end
+	local s = g:FindFirstChild("GameUI") if not s then return end
+	s = s:FindFirstChild("Skills") if not s then return end
+
+	local f = s:FindFirstChild("Skill"..slotIndex) or s:FindFirstChild(tostring(slotIndex))
+	if not f then return end
+
+	local now = os.clock()
+	PlayerCooldowns[p] = PlayerCooldowns[p] or {}
+
+	local lbl, val
+	for _, v in ipairs(f:GetChildren()) do
+		if v:IsA("TextLabel") then lbl = v elseif v:IsA("StringValue") then val = v end
+	end
+	local prettyName = (val and val.Value ~= "" and val.Value) or (lbl and lbl.Text) or ""
+	if prettyName == "" or tonumber(prettyName) then return end
+	local key = prettyName:lower():gsub("%s+", "_"):gsub("_?([a-z])([A-Z])", "%1_%2"):lower()
+
+	local isTraining = rs:GetAttribute("TrainingMode") == true
+	if not isTraining then
+		if PlayerCooldowns[p][key] and now < PlayerCooldowns[p][key] then
+			return
+		end
+	end
+
+	local sk = skills[key] if not sk then return end
+
+	if p:GetAttribute("MoveSkillActive") == true then
+		if not (p:GetAttribute("NagiTrapActive") == true and sk.type == "shoot") then
+			return
+		end
+	end
+
+	local c = p.Character if not c then return end
+	local r = c:FindFirstChild("HumanoidRootPart") if not r then return end
+
+	local own, neutral, model, ballPart = getPossessorState(p, r)
+	local executed, closeEnough = false, false
+
+	if ballPart then
+		local dist = (ballPart.Position - r.Position).Magnitude
+		closeEnough = dist <= (19 * BuffUtils.getBuff(p, "Hitbox"))
+	end
+
+	if sk.type == "movement" or sk.type == "defensive" or sk.type == "utility" or sk.type == "shoot" then
+		local cdMult = calculateCDMultiplier(p, sk.type)
+		local finalCD = (sk.cooldown or 0) * cdMult
+
+		if sk.type == "movement" then
+			if p:GetAttribute("IsGoalkeeper") == true and p:GetAttribute("HasBall") == true then return end
+			if sk.special ~= "god_speed" and not isGrounded(r) then return end
+			if GlobalMoveCD[p] and now < GlobalMoveCD[p] then return end
+			if p:GetAttribute("IsCharging") == true then return end
+			if (own or (neutral and closeEnough)) or sk.special == "god_speed" then
+				if not isTraining and finalCD > 0 then
+					PlayerCooldowns[p][key] = now + finalCD
+					if SlotsUpdateRE then SlotsUpdateRE:FireClient(p, { type = "cooldown", slot = slotIndex, seconds = finalCD }) end
+				end
+				if sk.animation and PlayAnimation then PlayAnimation:FireClient(p, sk.animation) end
+				if sk.special == "rainbow_flick" then rainbowFlick(p, r, model, ballPart) executed = true
+				elseif sk.special == "ultra_fast_steps" then ultraFastSteps(p, r, model, ballPart, sk) executed = true
+				elseif sk.movement then domove(p, r, sk.movement, key, sk) executed = true
+				elseif sk.activate then sk.activate({ player = p }) executed = true end
+			end
+		elseif sk.type == "defensive" then
+			if not isTraining and finalCD > 0 then
+				PlayerCooldowns[p][key] = now + finalCD
+				if SlotsUpdateRE then SlotsUpdateRE:FireClient(p, { type = "cooldown", slot = slotIndex, seconds = finalCD }) end
+			end
+			if sk.animation and PlayAnimation then PlayAnimation:FireClient(p, sk.animation) end
+			if sk.sfx_name then playSkillSound(r, sk) end
+			if key == "serpent" then
+				local bv = Instance.new("BodyVelocity")
+				bv.MaxForce = Vector3.new(0, 1e6, 0)
+				bv.Velocity = Vector3.new(0, 50, 0)
+				bv.Parent = r
+				db:AddItem(bv, 0.3)
+				if PlayVFX then PlayVFX:FireAllClients({ name = "Serpent", attachTo = r }) end
+				local bp = getball(r, 22, p)
+				if bp then
+					local bm = bp:FindFirstAncestorOfClass("Model")
+					if bm and not bm:GetAttribute("Iframed") then
+						claimBall(p, bp)
+						local clearDir = (r.CFrame.LookVector + Vector3.new(0, 0.5, 0)).Unit
+						setBallVelocity(bp, clearDir * 100)
+						applyBallIframe(bp, 1.5)
+						if bm then bm:SetAttribute("IsSkillShotActive", true) end
+						if PlayVFX then PlayVFX:FireAllClients({ name = "SerpentTrail", ball = bp }) end
+					end
+				end
+				executed = true
+			elseif sk.special == "god_speed" then
+				p:SetAttribute("MoveSkillActive", true)
+				local hum = c:FindFirstChild("Humanoid")
+				if hum then hum.WalkSpeed = 0 hum.JumpPower = 0 hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, false) end
+				r.Anchored = true
+				r.AssemblyLinearVelocity = Vector3.zero
+				if PlayVFX then PlayVFX:FireAllClients({ name = "GSpeedVFX", attachTo = r }) end
+				playSkillSound(r, sk)
+				task.wait(0.1)
+				if not r or not r.Parent then return end
+				local look = (typeof(aimArg) == "Vector3" and aimArg.Magnitude > 0) and aimArg.Unit or r.CFrame.LookVector
+				local tpDist = 60
+				local startPos = r.Position
+				local dest = startPos + (look * tpDist)
+				local rayP = RaycastParams.new()
+				rayP.FilterDescendantsInstances = {c, workspace.Objects.Balls}
+				rayP.FilterType = Enum.RaycastFilterType.Exclude
+				local rc = workspace:Raycast(startPos, look * tpDist, rayP)
+				if rc then dest = rc.Position - (look * 3) end
+				local targetBall = nil
+				local ballM = workspace.Objects.Balls:FindFirstChild("PLAIN_BALL")
+				if ballM then
+					local hb = ballM:FindFirstChild("HITBOX_BALL")
+					if hb then
+						local bPos = hb.Position
+						local toB = bPos - startPos
+						local dLine = toB:Dot(look)
+						if dLine > -5 and dLine < (tpDist + 5) then
+							local cp = startPos + (look * dLine)
+							local diff = bPos - cp
+							if Vector3.new(diff.X, 0, diff.Z).Magnitude < (12 * BuffUtils.getBuff(p, "Hitbox")) and math.abs(diff.Y) < 25 then
+								if not ballM:GetAttribute("Iframed") then targetBall = hb end
+							end
+						end
+					end
+				end
+				local nCF = CFrame.lookAt(dest, dest + look)
+				if targetBall then
+					claimBall(p, targetBall)
+					r.CFrame = nCF
+					targetBall.CFrame = nCF * CFrame.new(0, -2, -2)
+					setBallVelocity(targetBall, r.CFrame.LookVector * 15)
+					r.AssemblyLinearVelocity = Vector3.zero
+				else
+					r.CFrame = nCF
+					r.AssemblyLinearVelocity = Vector3.zero
+				end
+				if r and r.Parent then r.Anchored = false end
+				if hum and hum.Parent then hum.WalkSpeed = 22 hum.JumpPower = 50 hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, true) end
+				p:SetAttribute("MoveSkillActive", false)
+				executed = true
+			end
+		elseif sk.type == "utility" then
+			if p:GetAttribute("IsGoalkeeper") == true and p:GetAttribute("HasBall") == true and key == "dash" then return end
+
+			if sk.special == "nagi_air_trap" and own then
+				return
+			end
+
+			if not isTraining and finalCD > 0 then
+				PlayerCooldowns[p][key] = now + finalCD
+				if SlotsUpdateRE then SlotsUpdateRE:FireClient(p, { type = "cooldown", slot = slotIndex, seconds = finalCD }) end
+			end
+
+			if sk.special ~= "nagi_air_trap" and key ~= "dash" then
+				if sk.animation and PlayAnimation then PlayAnimation:FireClient(p, sk.animation) end
+				if sk.sfx_name then playSkillSound(r, sk) end
+			end
+
+			if sk.special == "nagi_air_trap" then
+				nagiAirTrap(p, r, sk)
+				executed = true
+			elseif key == "super_jump" then
+				sk.activate({ player = p })
+				task.delay(1, function() if PlayVFX then PlayVFX:FireAllClients({ name = "SuperjumpVFX", attachTo = r }) end end)
+				executed = true
+			elseif key == "dash" then
+				local hum = c:FindFirstChild("Humanoid")
+				if hum then
+					local moveDir = hum.MoveDirection
+					local look = r.CFrame.LookVector
+					local right = r.CFrame.RightVector
+					local dashDir = look
+					local animName = "Dash"
+
+					local rel = r.CFrame:VectorToObjectSpace(moveDir)
+
+					if moveDir.Magnitude > 0.1 then
+						if math.abs(rel.X) > math.abs(rel.Z) then
+							if rel.X < 0 then
+								animName = "LDash"
+								dashDir = -right
+							else
+								animName = "RDash"
+								dashDir = right
+							end
+						else
+							if rel.Z > 0 then
+								animName = "BDash"
+								dashDir = -look
+							else
+								animName = "Dash"
+								dashDir = look
+							end
+						end
+					else
+						dashDir = look
+						animName = "Dash"
+					end
+
+					r.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+
+					local bv = Instance.new("BodyVelocity")
+					bv.Name = "DashVelocity"
+					bv.MaxForce = Vector3.new(1e9, 1e9, 1e9)
+					bv.Velocity = Vector3.new(dashDir.X * 145, 4, dashDir.Z * 145)
+					bv.Parent = r
+					db:AddItem(bv, 0.25)
+
+					playSkillSound(r, sk)
+
+					if PlayAnimation then PlayAnimation:FireClient(p, animName) end
+					if PlayVFX then PlayVFX:FireAllClients({ name = "Dash VFX", attachTo = r }) end
+				end
+				executed = true
+			elseif sk.activate then
+				sk.activate({ player = p })
+				executed = true
+			end
+		elseif sk.type == "shoot" and sk.shot then
+			if key == "back_kick" then stopBackKickCharge(p) end
+			if sk.shot == "direct_shot" then
+				if own then return end
+
+				if not isTraining and finalCD > 0 then
+					PlayerCooldowns[p][key] = now + finalCD
+					if SlotsUpdateRE then SlotsUpdateRE:FireClient(p, { type = "cooldown", slot = slotIndex, seconds = finalCD }) end
+				end
+				if sk.animation and PlayAnimation then PlayAnimation:FireClient(p, sk.animation) end
+
+				if not (neutral or own) or not closeEnough then return end
+			elseif sk.shot == "big_bang_drive" then
+				if not isTraining and finalCD > 0 then
+					PlayerCooldowns[p][key] = now + finalCD
+					if SlotsUpdateRE then SlotsUpdateRE:FireClient(p, { type = "cooldown", slot = slotIndex, seconds = finalCD }) end
+				end
+				if sk.animation and PlayAnimation then PlayAnimation:FireClient(p, sk.animation) end
+
+				local sfxCharge = Folder_Shooting:FindFirstChild("BBDCharge")
+				if sfxCharge then
+					local cpy = sfxCharge:Clone()
+					cpy.Parent = r
+					cpy:Play()
+					db:AddItem(cpy, 2)
+				end
+
+				haltVerticalVelocity(r)
+				local jumpBv = Instance.new("BodyVelocity")
+				jumpBv.Name = "BBDJump"
+				jumpBv.MaxForce = Vector3.new(0, 1e6, 0)
+				jumpBv.Velocity = Vector3.new(0, 20, 0)
+				jumpBv.Parent = r
+				db:AddItem(jumpBv, 0.2)
+
+				if not own and (not neutral or not closeEnough) then
+					return
+				end
+
+			else
+				if not (neutral or own) or not closeEnough then return end
+				if sk.anim_release and PlayAnimation then PlayAnimation:FireClient(p, sk.anim_release)
+				elseif sk.animation and PlayAnimation then PlayAnimation:FireClient(p, sk.animation) end
+				if not isTraining and finalCD > 0 then
+					PlayerCooldowns[p][key] = now + finalCD
+					if SlotsUpdateRE then SlotsUpdateRE:FireClient(p, { type = "cooldown", slot = slotIndex, seconds = finalCD }) end
+				end
+			end
+			doshot(p, sk, ratio, aimArg)
+			executed = true
+		end
+	end
+end)
+
+-- replicatedstorage.Configs.cmdr
+
+local Local = {}
+local Shared = {}
+
+Shared.Admins = {
+	5300801005, -- cinn
+	476449201 -- yolas
+}
+
+return Shared
